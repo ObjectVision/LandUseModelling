@@ -1,0 +1,321 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - June 2018                                  //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This DMS-file is being referred to by ScenarioComponents.dms                         //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// In this configurationfile the suitability maps of the endogenous land use classes    //
+//                for the scenario B1 Strong Europe (SE) are defined                    //
+//                                                                                      //
+//  Basic logic                                                                         //
+//   * The model starts with an empty map. Therefore, we first include current land use //
+//     The suitability logic is that this saves building costs (it is already there)    //
+//     It also saves demolition costs (current land use cells do not need to relocate)  //
+//   * Then, we define other suitability factors for future landuse, categorized in:    //
+//      - Policy maps                                                                   //
+//      - Thematic maps                                                                 //
+//      - Safety maps                                                                   //
+//      - Distance decay maps                                                           //
+//   * Attractive = (+), unattractive = (-)                                             //
+//   * Use the following guidelines for setting the the suitability factors:            //
+//      - Whenever possible, use the same values for similar components                 //
+//      - Consider that pronounced suitability definitions (relatively high values for  //
+//        a limited number of aspects) provide pronounced results                       //
+//      - Giving low values to almost all aspects result in fairly homogeneous results  //
+//        as all locations are equally attractive                                       //
+//   * Check the suitability map result for components that overlap c.q. influence      //
+//     the same cells. If necessary, adjust suitability weights and check again         //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container B1_SE
+: Using  = "current_landuse;policy_maps;thematic_maps"
+, url = "%projDir%/data/metadata/scenarios.htm#B1"
+{
+// ========================= RESIDENTIAL
+
+	attribute <Eur_M2> residential (domain) := 
+	//Current Landuse
+		   20.0 [Eur_M2] * current_landuse/residential                              / domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature                                   / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot                              / domain/NrHaPerCell // you may consider buildinglots likely locations for development
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Water/intake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Water/disaster_retention [float32]
+		 -  0.0 [Eur_M2] * Water/space_for_rivers [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_intrusion [float32]
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
+
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+  	//Distance decay maps
+  	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
+  	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/residential
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/residential
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/residential
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/birdhabitat
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+ 		; 
+
+// ========================= INDUSTRIAL
+	attribute <Eur_M2> industrial (domain):= 
+	//Current Landuse
+		   18.0 [Eur_M2] * current_landuse/industrial      							/ domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell // you may consider buildinglots likely locations for development
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Water/intake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Water/disaster_retention [float32]
+		 -  0.0 [Eur_M2] * Water/space_for_rivers [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_intrusion [float32]
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
+
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+  	//Distance decay maps
+  	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
+  	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/industrial
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/industrial
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/industrial
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+ 		; 
+
+// ========================= RECREATION
+
+	attribute <Eur_M2> recreation (domain):=
+	//Current Landuse
+		   18.0 [Eur_M2] * current_landuse/recreation      							/ domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell // you may consider buildinglots likely locations for development
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Water/intake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Water/disaster_retention [float32]
+		 -  0.0 [Eur_M2] * Water/space_for_rivers [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_intrusion [float32]
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
+
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+  	//Distance decay maps
+  	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
+  	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/recreation
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/recreation
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/recreation
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+ 		; 
+
+// ========================= NATURE
+
+	attribute <Eur_M2> nature (domain):=
+	//Current Landuse
+		   12.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * (current_landuse/residential + current_landuse/industrial)			/ domain/NrHaPerCell // a value can be added to prevent development in current residential areas
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Water/intake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Water/disaster_retention [float32]
+		 -  0.0 [Eur_M2] * Water/space_for_rivers [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_intrusion [float32]
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
+
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+  	//Distance decay maps
+  	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
+  	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/nature
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/nature
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/nature
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+ 		; 
+
+// ========================= AGRICULTURE
+
+	attribute <Eur_M2> agriculture (domain):=
+	//Current Landuse
+		   14.0 [Eur_M2] * current_landuse/agriculture     							/ domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell // you may consider buildinglots likely locations for development
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Water/intake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Water/disaster_retention [float32]
+		 -  0.0 [Eur_M2] * Water/space_for_rivers [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_intrusion [float32]
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
+
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+  	//Distance decay maps
+  	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
+  	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/agriculture
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/agriculture
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/agriculture
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+ 		; 
+	
+// ========================= BUILDINGLOT
+
+	attribute <Eur_M2> buildinglot(domain):=
+	//Current Landuse
+		    5.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature          						 	/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Water/intake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Water/disaster_retention [float32]
+		 -  0.0 [Eur_M2] * Water/space_for_rivers [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Water/groundwater_intrusion [float32]
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
+
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
+  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+  	//Distance decay maps
+  	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
+  	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/buildinglot
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/buildinglot
+  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/buildinglot
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+ 		; 
+}

@@ -1,0 +1,34 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - January 2022                               //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This DMS-file is being referred to by Present.dms                                    //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// In this configurationfile the dms-trees for current landuse are worked out:          //
+//  * The LUMOS demo-landusesmap 2010 in 9 classes                                      //
+//    based on CBS Soil Statistics 2010, edited by VU-SPINlab                           //
+//  * Predominant landuse in 9 classes                                                  //
+//                                                                                      //
+// /////////////////////////////////////////////////////////////////////////////////////// 
+  
+container Current_landuse :=
+	for_each_ndva(
+	   Classifications/ggModel/Name                                                               // name
+	  ,domain                                                                                  // domain unit
+	  ,ha                                                                                    // values units
+	  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/StartYear)+'/bbg'+string(ModelParameters/StartYear)+'_LUSdemo_'+ModelParameters/ModelResolution+'_'+Classifications/ggModel/name+'.tif' // storage name
+  )
+{
+	parameter<YearRange> RefJaar              := value(ModelParameters/StartYear, YearRange), IsHidden = "true";
+	attribute<Ha>        Total       (domain) := ='add('+asItemList(Classifications/ggModel/Name)+' )', IsHidden = "true";
+	attribute<LUclasses> predominant (domain) := ='argmax('+asItemList(ggModel/Name)+')[LUclasses]';
+}
+

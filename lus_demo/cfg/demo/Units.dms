@@ -1,0 +1,60 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - Januray 2022                               //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This DMS-file is being referred to by Demo.dms                                       //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// In this configurationfile the units are defined                                      //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container Units : IsHidden = "true"
+{
+	unit<Float32> Meter:           = BaseUnit('m', float32), cdf = "Classifications/Altitude8K/Classes";
+	unit<Float32> Km:              = 1000.0 * Meter,         cdf = "Classifications/Km_7k/Classes";
+	unit<Float32> Dm:              =    0.1 * Meter;
+	unit<Float32> Year:            = BaseUnit('Yr', float32);
+	unit<Float32> Meter2:          = Meter * Meter;
+	unit<Float32> Ha:              = 10000.0 * Meter * Meter, cdf = "Classifications/landuseHaK/Classes";
+	unit<Float32> HaDiff:          = Ha,                      cdf = "Classifications/HaChangeK/Classes";
+
+	unit<Float32> claimHa:         = Ha, cdf = "Classifications/ClaimHa9K/Classes";
+	unit<Float32> claimHa2:       = claimHa * claimHa;
+
+	unit<Float32> DemandUnit:     = BaseUnit('ClaimDemand', float32), Descr = "used for Aj balancing Factor";
+	unit<Float32> BcUnit:         = Ha / DemandUnit, Descr = "used for Bj balancing Factor";
+	unit<Float32> Ratio:          = 1.0 * Ha / Ha,           cdf = "Classifications/Ratio6k/Classes";
+	unit<Float32> Percent:        = 100.0 * Ha / Ha,         cdf = "Classifications/Percentage13K/Classes";
+	unit<Float32> Eur:            = BaseUnit('EURO', float32);
+	unit<Float32> kEur:           = 1000.0 * Eur;
+	unit<Float32> mEur:           = 1000.0 * kEur;
+	unit<Float32> Eur_Ha:         = Eur / Ha;
+	unit<Float32> kEur_Ha:        = 1000.0 * Eur_Ha;
+	unit<Float32> mEur_Ha:        = 1000.0 * kEur_Ha;
+	unit<Float32> Eur_M2:         = Eur / Meter2,                cdf = "Classifications/Eur_M2_15K/Classes";
+	unit<Float32> M2_Eur:         = 1.0 / Eur_M2;
+	unit<float32> mEur_yr:        = mEur / Year;
+
+	unit<Float32> NrPersons:      = BaseUnit('Inwoners', float32), cdf  = "Classifications/NrInhabitants12K/Classes"
+	{
+		parameter<Float64> DotValuePalette: DialogType = "DotValuePalette", = 100.0;
+	}
+	
+// ============ Artificial quantities, relate to EUR_M2
+	unit<Float32> Potentiaal: cdf = "Classifications/Potentiaal10K/Classes";
+
+// ============ Required ranges 
+	unit<Int8>   ValuationRange : Range = "[-4, 5)" , cdf = "Classifications/ValuationRange10K/Classes";
+	unit<Int8>   LossOrGain: Range = "[-1, 1)" , cdf = "Classifications/LossOrGain_Class/Classes";
+	unit<UInt16> YearRange:     Range = "[1900, 2100)";
+	unit<UInt16> IterRange:     nrofrows = 999;
+	unit<Int16>  YearDiffRange: Range = "[-100, 100)";
+}

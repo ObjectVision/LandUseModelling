@@ -1,0 +1,149 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - January 2022                               //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This DMS-file is being referred to by Demo.dms                                       //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This file refers using include-statements to the dms-files with:                     //
+// * The claims of the spatial scenario's (Corop, Lei14, Provincial and National level) //
+//     - RstIntPer_A1.dms                                                               //
+//     - RstIntPer_A2.dms                                                               //
+//     - RstIntPer_B1.dms                                                               //
+//     - RstIntPer_B2.dms                                                               //
+// * The four spatial scenario's                                                        //
+//     - A1_GE.dms                                                                      //
+//     - A2_TM.dms                                                                      //
+//     - B1_SE.dms                                                                      //
+//     - B2_RC.dms                                                                      //
+// * The exogenous developments                                                         //
+// * Flood risk calculations                                                            //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container Scenario_Components
+:	Using  = "Units;Geography;Classifications"
+,	url    = "http://www.welvaartenleefomgeving.nl/context_UK.html"
+{
+	container Local_Suitability: Using = "Current_situation/current_landuse;Current_situation/policy_maps;Current_situation/Distance_decay"
+	{
+		#include <A1.dms>
+		#include <A2.dms>
+		#include <B1.dms>
+		#include <B2.dms>
+	}
+	container Regional_Demand 
+	:	Using           = "geography/RegionalUnits"
+	,	Source          = "Future land use demand: Adapted from WLO(2006), Netherlands Environmental Assessment Agency (PBL)"
+	{
+		unit<uint32> residential_src
+		:	StorageName = "%ProjDir%/data/Scenarioclaims/Residential_rstintper.csv"
+		,	StorageType = "gdal.vect"
+		,	SyncMode    = "all"
+		,	isHidden = "True";
+		
+		unit<uint32> industrial_src
+		:	StorageName = "%ProjDir%/data/Scenarioclaims/Industrial_rstintper.csv"
+		,	StorageType = "gdal.vect"
+		,	SyncMode    = "all"
+		,	isHidden = "True";
+
+		unit<uint32> recreation_src
+		:	StorageName = "%ProjDir%/data/Scenarioclaims/Recreation_rstintper.csv"
+		,	StorageType = "gdal.vect"
+		,	SyncMode    = "all"
+		,	isHidden = "True";
+
+		unit<uint32> nature_src
+		:	StorageName = "%ProjDir%/data/Scenarioclaims/Nature_rstintper.csv"
+		,	StorageType = "gdal.vect"
+		,	SyncMode    = "all"
+		,	isHidden = "True";
+
+		unit<uint32> agriculture_src
+		:	StorageName = "%ProjDir%/data/Scenarioclaims/Agriculture_rstintper.csv"
+		,	StorageType = "gdal.vect"
+		,	SyncMode    = "all"
+		,	isHidden = "True";
+
+		unit<uint32> buildinglot_src
+		:	StorageName = "%ProjDir%/data/Scenarioclaims/Buildinglot_rstintper.csv"
+		,	StorageType = "gdal.vect"
+		,	SyncMode    = "all"
+		,	isHidden = "True";
+
+		#include <RstIntPer_A1.dms>
+		#include <RstIntPer_A2.dms>
+		#include <RstIntPer_B1.dms>
+		#include <RstIntPer_B2.dms>
+	}
+	container Exogenous_Landuse : Descr = "Reference to exogenous developments (e.g. proposed roads or railway lines) can be included here. Spatial representations of such developments are, however, not included in this demo"
+	{
+		container Exogenous_developments: DialogType= "hidden"
+		{
+			attribute<Ha> infrastructure (domain) := current_situation/current_landuse/infrastructure;
+			attribute<Ha> water          (domain) := current_situation/current_landuse/water;
+			attribute<Ha> exterior       (domain) := current_situation/current_landuse/exterior;
+		}
+		container A1_GE: Descr = "Exogenous claims for A1"
+		{
+			attribute<Ha> infrastructure (domain):= Exogenous_developments/infrastructure;
+			attribute<Ha> water          (domain):= Exogenous_developments/water;
+			attribute<Ha> exterior       (domain):= Exogenous_developments/exterior;
+		}
+		
+		container A2_TM: Descr = "Exogenous claims for A2"
+		{
+			attribute<Ha> infrastructure (domain):= Exogenous_developments/infrastructure;
+			attribute<Ha> water          (domain):= Exogenous_developments/water;
+			attribute<Ha> exterior       (domain):= Exogenous_developments/exterior;
+		}
+		
+		container B1_SE: Descr = "Exogenous claims for B1"
+		{
+			attribute<Ha> infrastructure (domain):= Exogenous_developments/infrastructure;
+			attribute<Ha> water          (domain):= Exogenous_developments/water;
+			attribute<Ha> exterior       (domain):= Exogenous_developments/exterior;
+		}
+		
+		container B2_RC: Descr = "Exogenous claims for B2"
+		{
+			attribute<Ha> infrastructure (domain):= Exogenous_developments/infrastructure;
+			attribute<Ha> water          (domain):= Exogenous_developments/water;
+			attribute<Ha> exterior       (domain):= Exogenous_developments/exterior;
+		}
+	}
+	container Floodrisk: isHidden = "True"
+	{
+		unit<uint32> DamageFactors 
+		: 	StorageName = "%ProjDir%/data/DamageFactors.csv"
+		,	StorageType = "gdal.vect"
+		{
+		// this empty attribute is required to provide a tree item where the damage factors can be listed from the table that is read from the csv file specified above
+		}
+
+	//	============= LAND USE SPECIFIC CALCULATIONS
+		container Curr
+		{
+			container DepthDataFactors:= 
+				for_each_nedv(
+					ggModel/Name
+					, 'interpolate_linear(Current_Situation/Thematic_maps/Safety/floodWaterdepth, DamageFactors/Depth[Meter], Float32(DamageFactors/'+ggModel/Name+'))'
+					, domain
+					, Float32
+				);
+				
+			attribute<LUclasses> LandUse (domain) := Current_situation/current_landuse/predominant;
+			attribute<mEur_Ha>   Damage  (domain) := ='switch('+asItemList('case(LandUse == value('+String(ID(LUclasses))+', LUclasses), DepthDataFactors/'+LUclasses/Name+')')+', 0f) * LUclasses/MaxDamagePerHa[LandUse]';
+
+			attribute<mEur>      DamagePerDikeRing (RegionalUnits/DijkRing):= Sum(Damage * 1[Ha],RegioGrids/DijkRing_2009);
+		}
+	}
+}

@@ -1,0 +1,223 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - January 2022                               //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This DMS-file is being referred to by Demo.dms                                       //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// In this configurationfile geography (regio-partitions and distancesmatrices)         //
+// is defined                                                                           //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container Geography: Using = "Units", isHidden = "True"
+{ 
+	parameter<float64> GeoDMSVersion := GeoDMSVersion();
+	unit<fpoint> rdc_base : Format = "EPSG:28992"
+	, DialogData = "= GeoDMSVersion < float64(7.165) ? 'geography/RegionalUnits/Province/VAT/LabelMap' : 'ngr_layer'"; // wms achtergrondlaag voor kaarten met rd coordinaten
+	
+	unit<FPoint> rdc_meter := range(rdc_base, point(300000f,0f), point(625000f,280000f));
+
+	parameter<meter> gridsize_100m := 100[meter];
+	parameter<meter> gridsize_500m := 500[meter];
+	parameter<meter> x_min := 0[meter];
+	parameter<meter> x_max := 280000[meter];
+	parameter<meter> y_min := 300000[meter];
+	parameter<meter> y_max := 625000[meter];
+	
+	parameter<int16> nr_cols_100m := int16((x_max - x_min) / gridsize_100m);
+	parameter<int16> nr_rows_100m := int16((y_max - y_min) / gridsize_100m);
+	parameter<int16> nr_cols_500m := int16((x_max - x_min) / gridsize_500m);
+	parameter<int16> nr_rows_500m := int16((y_max - y_min) / gridsize_500m);
+	
+	unit<SPoint> rdc_500lu :=
+			range(
+				gridset(
+					  rdc_meter
+					, point(-gridsize_500m, gridsize_500m, rdc_meter)
+					, point(y_max, x_min, rdc_meter)
+					, spoint
+				)
+				,point(0s, 0s)
+				, point(nr_rows_500m, nr_cols_500m)
+			)
+			, DialogData = "rdc_meter"
+	{
+		parameter<ha> NrHaPerCell: [25];
+		attribute<domain>    domain_rel := id(.)[domain];
+	}
+
+	unit<SPoint> rdc_100lu :=
+			range(
+				gridset(
+					  rdc_meter
+					, point(-gridsize_100m, gridsize_100m, rdc_meter)
+					, point(y_max, x_min, rdc_meter)
+					, spoint
+				)
+				,point(0s, 0s)
+				, point(nr_rows_100m, nr_cols_100m)
+			)
+			, DialogData = "rdc_meter"
+	{
+		attribute<rdc_500lu>    rdc_500lu_rel := id(.)[rdc_500lu];
+		parameter<ha> NrHaPerCell: [1];
+	}
+
+	#include <ngr_layer.dms>
+			
+	container DistMatrices
+	{
+		unit<UInt32>  Dist2Range;
+
+		unit<SPoint> pot100Range: Range = "[{-100, -100}, {101, 101})"
+		{
+			// straal afkapcirkel = 100.5^2
+			attribute<Dist2Range> distMatr100   := dist2(point(Int16(0), Int16(0), pot100Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr100 <= 10100, Float32(1.0) / Float32(distMatr100+2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32(1.0) );
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+		unit<SPoint> pot50Range: Range = "[{-50, -50}, {51, 51})"
+		{
+			// straal afkapcirkel = 50.5^2
+			attribute<Dist2Range> distMatr50    := dist2(point(Int16(0), Int16(0), pot50Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr50 <= 2550, Float32(1.0) / Float32(distMatr50 +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32( 1.0) );
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+		unit<SPoint> pot20Range: Range = "[{-20, -20}, {21, 21})"
+		{
+			// straal afkapcirkel = 20.5^2
+			attribute<Dist2Range> distMatr20    := dist2(point(Int16(0), Int16(0), pot20Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr20 <= 420, Float32(1.0) / Float32(distMatr20 +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32( 1.0) );
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+		unit<SPoint> pot10Range: Range = "[{-10, -10}, {11, 11})"
+		{
+			attribute<Dist2Range> distMatr10    := dist2(point(Int16(0), Int16(0), pot10Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr10 <= 110, Float32(1.0) / Float32(distMatr10 +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32(1.0));
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+		unit<SPoint> pot06Range: Range = "[{-6, -6}, {7, 7})"
+		{
+			attribute<Dist2Range> distMatr06    := dist2(point(Int16(0), Int16(0), pot06Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr06 <= 42, Float32(1.0) / Float32(distMatr06 +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32(1.0) );
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+		unit<SPoint> pot05Range: Range = "[{-5, -5}, {6, 6})"
+		{
+			attribute<Dist2Range> distMatr05    := dist2(point(Int16(0), Int16(0), pot05Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr05 <= 30, Float32(1.0) / Float32(distMatr05 +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32(1.0) );
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+		unit<SPoint> pot04Range: Range = "[{-4, -4}, {5, 5})"
+		{
+			attribute<Dist2Range> distMatr      := dist2(point(Int16(0), Int16(0), pot04Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr <= 20, Float32(1.0) / Float32(distMatr +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32(1.0) );
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+		unit<SPoint> pot03Range: Range = "[{-3, -3}, {4, 4})"
+		{
+			attribute<Dist2Range> distMatr03    := dist2(point(Int16(0), Int16(0), pot03Range), Dist2Range);
+			// straal afkapcirkel = 3.5^2
+			attribute<Potentiaal> AbsWeight     := iif(distMatr03 <= 12, Float32(1.0) / Float32(distMatr03 +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32(1.0));
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0));
+		}
+		unit<SPoint> pot02Range: Range = "[{-2, -2}, {3, 3})"
+		{
+			attribute<Dist2Range> distMatr02    := dist2(point(Int16(0), Int16(0), pot02Range), Dist2Range);
+			attribute<Potentiaal> AbsWeight     := iif(distMatr02 <=  6, Float32(1.0) / Float32(distMatr02 +2), Float32(0.0));
+			attribute<Potentiaal> RelWeight     := scalesum(AbsWeight, Float32(1.0) );
+			attribute<Potentiaal> RelWeightSqrt := scalesum(Sqrt(AbsWeight), Float32( 1.0) );
+		}
+	}
+	container RegionalUnits
+	{
+		unit<UInt32> RandstadIntermediatePeripheral // Regional division in Randstad Intermediate zone and Peripherap zone
+		:	StorageName     = "%projDir%/data/geography/claimregions_2011.shp"
+		, 	StorageType     = "gdal.vect"
+		,	StorageReadOnly = "True"
+		,	Descr           = "This entity contains the shapes of claimregions."
+		{
+			attribute<rdc_meter> geometry (poly);
+			attribute<.>         claimregio                 : Descr = "This is the entity of shapes of claimregions (0=Exterior)";
+			attribute<Meter2>    area                       := area(geometry, meter2);
+			attribute<String>    Label                      : ['none','Randstad','Intermediate zone','Peripheral zone'], DialogType = "LabelText";
+		}
+		
+		unit<UInt32> Province
+		:	StorageName     = "%projDir%/data/geography/provinces_2004_simplified.shp"
+		, 	StorageType     = "gdal.vect"
+		,	StorageReadOnly = "True"
+		,	Descr           = "This entity contains the shapes of provinces. They add up to more than 12, since for example the islands are separate shapes"
+		{
+			attribute<rdc_meter>    geometry (poly);
+			attribute<.>            prvnr           : Descr = "This is the entity of the 12 provinces in the Nederlands (0=Exterior)";
+			attribute<string>       prvnm;
+		}
+		
+		container DijkringImp
+		{
+			unit<uint32> csv
+			: StorageName = "%ProjDir%/data/DijkRingen.csv"
+			, StorageType = "gdal.vect"
+			{
+				attribute<String> Label: DialogType = "LabelText";
+			}
+			unit<uint32> shp
+			: StorageName = "%projDir%/data/geography/dijkringen_2009_selection.shp"
+			, StorageType = "gdal.vect"
+			{
+				attribute<rdc_meter> Geometry (poly);
+			}
+			unit<uint8> EK
+			: DialogData = "DijkRing/AsciiGridCode"
+			, DialogType = "Map";
+		}
+			
+		unit<uint32> DijkRing := DijkRingImp/csv,	Descr      = "This is the entity of the 57 most important flood risk management zones (dike rings) in the Nederlands"
+		{
+			attribute<DijkringImp/shp> Shape_rel      := rlookup(Dijkringnr, DijkringImp/shp/DijkringNr);
+			attribute<rdc_meter>       Geometry(poly) := DijkringImp/shp/Geometry[Shape_rel];
+
+			attribute<DijkringImp/EK> AsciiGridCode := DijkRingImp/csv/AsciiGridCode [DijkringImp/EK];
+			attribute<mEur>           MinDamage     := DijkRingImp/csv/MinSchade [mEur];
+			attribute<mEur>           ExpDamage     := DijkRingImp/csv/ExpSchade [mEur];
+			attribute<mEur>           MaxDamage     := DijkRingImp/csv/MaxSchade [mEur];
+			attribute<NrPersons>      ExpCasualties := DijkRingImp/csv/ExpSlachtoffers [NrPersons];
+			attribute<Year>           NormPeriod    := value( substr(rjoin(Dijkringnr, DijkringImp/shp/Dijkringnr, DijkringImp/shp/NormFreq), 2, 20), Year);
+			container AnnualRisk
+			{
+				attribute <mEur_Yr>      Damage (RegionalUnits/DijkRing) := ExpDamage / NormPeriod;
+			}
+		}
+	}
+	
+	container RegioGrids
+	{
+ 		// container impl
+ 		// {
+			// attribute<RegionalUnits/DijkRingImp/EK> DijkRing_2009 (rdc_500lu)
+			// :	Source      = "SourceData/LUMOS"
+			// ,	StorageName = "%projDir%/data/geography/DijkRing_2009_sel.asc";
+		// }
+
+		attribute<RegionalUnits/RandstadIntermediatePeripheral> claimregions_2011 (domain) := poly2grid(RegionalUnits/RandstadIntermediatePeripheral/geometry, domain);
+		attribute<RegionalUnits/DijkRing>                       DijkRing_2009     (domain) := poly2grid(RegionalUnits/DijkRing/geometry, domain);
+		// attribute<RegionalUnits/DijkRing>                       DijkRing_2009     (domain) := rlookup(RegioGrids/impl/DijkRing_2009[domain/rdc_500lu_rel], RegionalUnits/DijkRing/AsciiGridCode);
+	}
+}

@@ -1,0 +1,30 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - June 2018                                  //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This DMS-file is being referred to by Demo.dms                                       //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This file refers using include-statements to the dms-files with:                     //
+//  * Landuse                            (Present/landuse2010.dms)                      //
+//  * Characteristics of the environment (Present/thematic_maps.dms)                    //
+//  * Policy_maps                        (Present/policy_maps.dms)                      //
+//  * Distance decay maps                (Present/distance_decay.dms)                   //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container Current_Situation:
+	Using = "Units;Geography;Classifications"
+{
+	#include <landuse_2010.dms>
+	#include <policy_maps.dms>
+	#include <thematic_maps.dms>
+	#include <distance_decay.dms>
+}

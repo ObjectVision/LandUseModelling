@@ -1,0 +1,105 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - January 2022                               //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// This DMS-file is being referred to by Present.dms                                    //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+// In this configurationfile the dms-trees for current policy maps are worked out:      //
+//                                                                                      //
+// * policy_maps                                                                        //
+//     - Current policy_maps                                                            //
+//     - New map of the Netherlands 2005 (collection of community plans)                //
+//     - ICES industrial_map                                                            //
+//     - Balanskaart 2010                                                               //
+//     - Plankaart 2030                                                                 //
+// * Nature and landscape policy_maps                                                   //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container Policy_maps
+{
+	container Spatial_plans
+	{
+		container Impl: isHidden = "True"
+		{
+			attribute<YesorNo> residential (rdc_100lu)
+			:	Label       = "residential"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/SpatialPlans_residential.tif";
+			attribute<uint32> industrial (rdc_100lu)
+			:	Label       = "industrial"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/spatialplans_industrial.tif";
+			attribute<YesorNo> recreation (rdc_500lu)
+			:	Label       = "recreation"
+			,	Source      = "Concrete recreation (i.e. bungalows, theme parks etc.) spatial plans (long-term, medium-term & short-term together): Nieuwe Kaart van Nederland (New Map of the Netherlands); revised by SPINlab-VU University Amsterdam"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/recreation_municipalities_hard_nkvnl.asc";
+		}
+		
+		attribute<YesorNo> residential (domain) := Impl/residential[domain/rdc_100lu_rel];
+		attribute<YesorNo> industrial (domain)  := IsDefined(Impl/industrial)[YesorNo][domain/rdc_100lu_rel];
+		attribute<YesorNo> recreation (domain)  := Impl/recreation[domain/rdc_500lu_rel];
+
+	}
+	container NatureLandscape
+	{
+		container Impl: isHidden = "True"
+		{
+			attribute<YesorNo> birdHabitat (rdc_500lu)
+			:	Label       = "Bird and Habitat Directive"
+			,	Source      = "Bird and Habitat Directive: SGR2(LNV);  Vogel- en Habitatrichtlijngebieden (LNV)"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/bird_and_habitat.asc";
+
+			attribute<YesorNo> net_EHS03 (rdc_500lu)
+			:	Label       = "Ecological Main Structure (Net)"
+			,	Source      = "Ecological Main Structure: Nota Ruimte (VROM, LNV, VenW en EZ)"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/EHS_n03_500_NotaRuimte.asc";
+		}
+		
+		attribute<YesorNo> birdHabitat (domain) := Impl/birdHabitat[domain/rdc_500lu_rel];
+		attribute<YesorNo> net_EHS03   (domain) := Impl/net_EHS03[domain/rdc_500lu_rel];
+	}
+
+	container Water
+	{
+		container Impl: isHidden = "True"
+		{
+			attribute<YesorNo> intake_reservoir (rdc_500lu)
+			:	Label       = "Intake reservoir in polder"
+			,	Source      = "Intake reservoir: MNP/RIVM"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/intake_reservoirs.asc";
+
+			attribute<YesorNo> disaster_retention (rdc_500lu)
+			:	Label       = "Disaster retention"
+			,	Source      = "Disaster retention: VenW, RIZA"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/disaster_retention.asc";
+
+			attribute<Ratio> space_for_rivers (rdc_500lu)
+			:	Label       = "Space for rivers restrictive development zones"
+			,	Source      = "PBL"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/SpaceForRivers.asc";
+
+			attribute<Ratio> groundwater_protection (rdc_500lu)
+			:	Label       = "Groundwater protection zones"
+			,	Source      = "PBL"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/GroundWaterProtection.asc";
+
+			attribute<Ratio> groundwater_intrusion (rdc_500lu)
+			:	Label       = "Groundwater intrusion"
+			,	Source      = "PBL"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/GroundWaterIntrusion.asc";
+		}
+		
+		attribute<YesorNo> intake_reservoir       (domain) := Impl/intake_reservoir[domain/rdc_500lu_rel];
+		attribute<YesorNo> disaster_retention     (domain) := Impl/disaster_retention[domain/rdc_500lu_rel];
+		attribute<Ratio>   space_for_rivers       (domain) := Impl/space_for_rivers[domain/rdc_500lu_rel];
+		attribute<Ratio>   groundwater_protection (domain) := Impl/groundwater_protection[domain/rdc_500lu_rel];
+		attribute<Ratio>   groundwater_intrusion  (domain) := Impl/groundwater_intrusion[domain/rdc_500lu_rel];
+	}
+}

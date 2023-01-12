@@ -1,0 +1,79 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                 Configuration Land Use Scanner - Student Edition                     //
+//                          using GeoDMS version 7.130 or newer                         //
+//                                                                                      //
+//                           Vrije Universiteit Amsterdam                               //
+//                               July 2004 - January 2022                               //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container Templates : isHidden = "True", Using = "Geography;Classifications"
+{
+	#include <Allocation_Procedures.dms>
+
+	Template _Iter_AllocatedLand
+	{
+		parameter<ggEndogenous> ggEndogenousID;
+		unit<uint32>            Adomain;
+		///
+		parameter<String>       ggName                   := lookup(ggEndogenousID, ggEndogenous/Name);
+		attribute<Ha>           nrHaPerCell (ADomain)    := ='demand_factor * adjusted_demands/'+ggName, Descr = "Mcj = Bc * Aj * exp(betaFactor*Scj): see formula (3'''')";
+		unit<uint32>            RegioUnit                := Additional_Claims/RegioUnit;
+		attribute<claimHa>      nrHaPerRegio (RegioUnit) := ='sum (nrHaPerCell, CaseData/Compacted/RegioGrids/'+ggName+')', Descr = "Tj= sum ( Mcj (* intensity))";
+		parameter<claimHa>      nrHaAggr                 := sum(nrHaPerRegio);
+		attribute<OperatorType> Operator  (RegioUnit)    := ='Additional_Claims/'+ggName+'/Operator';
+		attribute<claimHa>      Deviation (RegioUnit)    := ='nrHaPerRegio - CaseData/TotalPeriodClaims/'+ggName;
+		attribute<claimHa2>     SqrDevOrg (RegioUnit)    := sqr(Deviation);
+		attribute<claimHa2>     SqrDev    (RegioUnit)    := Operator == 0[OperatorType]
+																? Sqr(max_elem(0[claimHa], Deviation))
+																: Operator == 2[OperatorType]
+																	? Sqr(min_elem(0[claimHa], Deviation))
+																	: Sqr(Deviation);
+	}
+
+	Template _IterTemplate
+	{
+		parameter<IterRange>  i : Descr = "Nr of iterations before this iteration";
+
+		container currValue :=
+			for_each_nedv(
+				  ggEndogenous/Name
+				, 'exp(betaFactor * MakeDefined(Additional_Claims/' + ggEndogenous/Name +'/logAj, 0[EUR_m2]))'
+				, RegioUnit
+				, float32
+			)
+		,	Descr = "Aj: This will be initialized with InitialWeigths and then receives a copy of nextValue (Aj) for each iteration";
+
+		unit<uint32> ADomain := .../Compacted/ADomain;
+
+		container adjusted_demands :=
+			for_each_nedv(
+				  ggEndogenous/Name
+				, 'MakeDefined(CaseData/Compacted/Demands/'+ggEndogenous/Name+' * lookup(CaseData/Compacted/RegioGrids/'+ggEndogenous/Name+', currValue/'+ggEndogenous/Name+'), 0[Units/DemandUnit])'
+				, ADomain
+				, float32
+			), Descr = "Tcj = Aj * exp(beta*Scj): new demands based on given Aj (currValue)";
+
+		attribute<DemandUnit> total_demand  (ADomain) := ='add_list('+asItemList('adjusted_demands/'+ggEndogenous/Name)+')', Descr = "Tc = sum(j, Tcj): total demand on input"; // for unused land category, add "+'value(1.0, DemandUnit)'"		
+		attribute<BcUnit>     demand_factor (ADomain) := CaseData/Land/FreeLand[ADomain/nr_orgEntity] / total_demand, Descr = "Bc = Lc / Tc: see formula 6a";
+		container allocated_land := 
+			for_each_ne(
+				ggEndogenous/Name
+				, '_Iter_AllocatedLand('+String(id(ggEndogenous))+ '[uint8], Adomain)' 
+			);
+
+		parameter<claimHa>  TotalDeviation := ='sqrt(add_list('+asItemList('sum(allocated_land/'+ggEndogenous/Name+'/SqrDev)')+'))', Descr = "Sum of distances between claimed and allocated sums of ha per region";
+		parameter <claimHa> AllocatedAggr  := ='add_list('+asItemList('allocated_land/'+ggEndogenous/Name+'/nrHaAggr')+')';
+
+		parameter<Bool> stop := TotalDeviation < value(12000.0, Ha), Descr = "Stop iteration if the average deviation of the claims is less than 10 square km";
+
+		container nextValue :=
+			for_each_nedv(
+				  ggEndogenous/Name
+				, 'claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+' * currValue/'+ ggEndogenous/Name+', allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio, Additional_Claims/'+ggEndogenous/Name+'/Operator)'
+				, Additional_Claims/RegioUnit
+				, float32
+			), Descr    = "Aj' = Aj * Dj/Tj: see formula (6b')";
+	}
+}
