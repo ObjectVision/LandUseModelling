@@ -3,7 +3,7 @@
 //                 Configuration Land Use Scanner - Student Edition                     //
 //                          using GeoDMS version 7.130 or newer                         //
 //                                                                                      //
-//                                July 2004 - June 2018                                 //
+//                                July 2004 - January 2023                              //
 //                                                                                      //
 //                            Vrije Universiteit Amsterdam                              //
 //                            Spatial Information Laboratory                            //
@@ -30,7 +30,6 @@ container regression_test: IntegrityCheck = "GeoDmsVersion() >= 7.130"
 	#include <%projDir%/cfg/demo/Geography.dms>
 	#include <%projDir%/cfg/demo/Classifications.dms>
 	#include <%projDir%/cfg/demo/Templates.dms>
-
 	#include <%projDir%/cfg/demo/Current_situation.dms>
 	#include <%projDir%/cfg/demo/ScenarioComponents.dms>
 

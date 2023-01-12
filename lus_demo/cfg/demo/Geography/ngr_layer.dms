@@ -4,7 +4,7 @@
 //        Configuratie voor WMS lagen, gedefineerd vanuit een opgevraagd              //
 //        GetCapabilities Request in xml format.                                      //
 //                                                                                    //
-//                              Object Vision 2018                                    //
+//                              Object Vision 2023                                    //
 //                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ container ngr_layer {
 		attribute<uint32>  MatrixHeight      :=  uint32(TileMatrixElems/values[value(id * nr_att + 7, TileMatrixElems)]);
 	}
 
-	parameter<string> layer  := 'grijs';
+	parameter<string> layer  := 'BRT-grijs'; parameter<string> layer_src  := 'grijs';
 
 	parameter<string> image_format := 'png';
 	parameter<string> host   := 'service.pdok.nl';
@@ -59,7 +59,7 @@ container ngr_layer {
 		'?SERVICE=WMTS'
 		'&REQUEST=GetTile'
 		'&VERSION=1.0.0'
-		'&LAYER=' + layer + 
+		'&LAYER=' + layer_src + 
 		'&TILEMATRIXSET=EPSG:28992'
 		'&TILEMATRIX=@TM@'
 		'&TILEROW=@TR@'

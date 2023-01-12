@@ -3,7 +3,7 @@
 //                 Configuration Land Use Scanner - Student Edition                               //
 //                          using GeoDMS version 7.130 or newer                                   //
 //                                                                                                //
-//                                July 2004 - January 2022                                        //
+//                                July 2004 - January 2023                                        //
 //                                                                                                //
 //                            Vrije Universiteit Amsterdam                                        //
 //                            Spatial Information Laboratory                                      //
@@ -44,12 +44,8 @@ container demo: IntegrityCheck = "GeoDmsVersion() >= 7.130"
 	#include <Geography.dms>
 	#include <Classifications.dms>
 	#include <Templates.dms>
-
 	#include <Current_situation.dms>
-
 	#include <ScenarioComponents.dms>
-
-	
 	#include <Simulations.dms>
 	
 	attribute <Classifications/LUclasses> A1_GE_Discr     (domain) := Simulations/A1_GE/Results/Discrete/LandUse/Model, IsHidden = "true";
