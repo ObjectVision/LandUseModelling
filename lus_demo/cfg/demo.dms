@@ -33,7 +33,7 @@ container demo: IntegrityCheck = "GeoDmsVersion() >= 7.130"
 	}
 	container ModelParameters : using = "Units", IsHidden = "true"
 	{
-		parameter<string>    ModelResolution := '500m'; // '100m' '500m'
+		parameter<string>    ModelResolution := '100m'; // '100m' '500m'
 		parameter<Year>      StartYear       := 2015[year];
 		parameter<Year>      ModelYear       := 2040[year];
 		parameter<IterRange> NrOfIterations  := 50[IterRange];
@@ -48,6 +48,15 @@ container demo: IntegrityCheck = "GeoDmsVersion() >= 7.130"
 	#include <ScenarioComponents.dms>
 	#include <Simulations.dms>
 	
-	attribute <Classifications/LUclasses> A1_GE_Discr     (domain) := Simulations/A1_GE/Results/Discrete/LandUse/Model, IsHidden = "true";
-	attribute <Classifications/LUclasses> A1_GE_Cont      (domain) := Simulations/A1_GE/Results/Continuous/LandUse/predominant, IsHidden = "true";
+	container Final_Results : IsHidden = "true"
+	{
+		attribute <Classifications/LUclasses> A1_GE_Discr     (domain) := Simulations/A1_GE/Results/Discrete/LandUse/Model, IsHidden = "true";
+		attribute <Classifications/LUclasses> A1_GE_Cont      (domain) := Simulations/A1_GE/Results/Continuous/LandUse/predominant, IsHidden = "true";
+		attribute <Classifications/LUclasses> A2_TM_Discr     (domain) := Simulations/A2_TM/Results/Discrete/LandUse/Model, IsHidden = "true";
+		attribute <Classifications/LUclasses> A2_TM_Cont      (domain) := Simulations/A2_TM/Results/Continuous/LandUse/predominant, IsHidden = "true";
+		attribute <Classifications/LUclasses> B1_SE_Discr     (domain) := Simulations/B1_SE/Results/Discrete/LandUse/Model, IsHidden = "true";
+		attribute <Classifications/LUclasses> B1_SE_Cont      (domain) := Simulations/B1_SE/Results/Continuous/LandUse/predominant, IsHidden = "true";
+		attribute <Classifications/LUclasses> B2_RC_Discr     (domain) := Simulations/B2_RC/Results/Discrete/LandUse/Model, IsHidden = "true";
+		attribute <Classifications/LUclasses> B2_RC_Cont      (domain) := Simulations/B2_RC/Results/Continuous/LandUse/predominant, IsHidden = "true";
+	}
 }
