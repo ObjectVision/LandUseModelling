@@ -1,5 +1,5 @@
-RstIntPer;Regio;A1;A2;B1;B2;Current
-0;Exterior;0;0;0;0;0
-1;Randstad;24932;12481;18580;7650;0
-2;Intermediate zone;13295;4504;6480;1321;0
-3;Peripheral zone;5448;-376;1045;-1555;0
+RstIntPer,Regio,A1,A2,B1,B2
+0,Exterior,0,0,0,0
+1,Randstad,13510.53185,10370.84344,5665.814604,2090.365925
+2,Intermediate zone,7204.497068,3742.510926,1976.021455,360.9638414
+3,Peripheral zone,2952.245207,0,318.6639538,0

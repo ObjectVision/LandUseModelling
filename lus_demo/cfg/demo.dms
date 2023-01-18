@@ -34,9 +34,9 @@ container demo: IntegrityCheck = "GeoDmsVersion() >= 7.130"
 	container ModelParameters : using = "Units", IsHidden = "true"
 	{
 		parameter<string>    ModelResolution := '100m'; // '100m' '500m'
-		parameter<Year>      StartYear       := 2015[year];
+		parameter<Year>      StartYear       := 2017[year];
 		parameter<Year>      ModelYear       := 2040[year];
-		parameter<IterRange> NrOfIterations  := 50[IterRange];
+		parameter<IterRange> NrOfIterations  := 23[IterRange];
 		parameter<m2_Eur>    BetaFactor      := 1[m2_Eur];
 	}
 	
