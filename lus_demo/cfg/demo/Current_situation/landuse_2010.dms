@@ -24,10 +24,10 @@ container Current_landuse :=
 	   Classifications/ggModel/Name                                                               // name
 	  ,domain                                                                                     // domain unit
 	  ,ha                                                                                         // values units
-	  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/StartYear)+'/bbg'+string(ModelParameters/StartYear)+'_LUSdemo_'+ModelParameters/ModelResolution+'_'+Classifications/ggModel/name+'.tif' // storage name
+	  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/Advanced/StartYear)+'/bbg'+string(ModelParameters/Advanced/StartYear)+'_LUSdemo_'+ModelParameters/ModelResolution+'_'+Classifications/ggModel/name+'.tif' // storage name
   )
 {
-	parameter<YearRange> RefJaar              := value(ModelParameters/StartYear, YearRange), IsHidden = "true";
+	parameter<YearRange> RefJaar              := value(ModelParameters/Advanced/StartYear, YearRange), IsHidden = "true";
 	attribute<Ha>        Total       (domain) := ='add('+asItemList(Classifications/ggModel/Name)+' )', IsHidden = "true";
 	attribute<LUclasses> predominant (domain) := ='argmax('+asItemList(ggModel/Name)+')[LUclasses]';
 }

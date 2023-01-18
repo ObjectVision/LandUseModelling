@@ -20,8 +20,7 @@
 container Geography: Using = "Units", isHidden = "True"
 { 
 	parameter<float64> GeoDMSVersion := GeoDMSVersion();
-	unit<fpoint> rdc_base : Format = "EPSG:28992"
-	, DialogData = "= GeoDMSVersion < float64(7.165) ? 'geography/RegionalUnits/Province/VAT/LabelMap' : 'ngr_layer'"; // wms achtergrondlaag voor kaarten met rd coordinaten
+	unit<fpoint> rdc_base : Format = "EPSG:28992", DialogData = "= GeoDMSVersion >= float64(7.165) && Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/prvnm'"; // wms achtergrondlaag voor kaarten met rd coordinaten
 	
 	unit<FPoint> rdc_meter := range(rdc_base, point(300000f,0f), point(625000f,280000f));
 

@@ -23,35 +23,35 @@ container Simulations: Using = "Units"
 			, Scenario_Components/Exogenous_Landuse/A1_GE
 			, Scenario_Components/Local_Suitability/A1_GE
 			, Scenario_Components/Regional_Demand/A1_GE
-			, (ModelParameters/ModelYear - ModelParameters/StartYear)[YearDiffRange]
-			, ModelParameters/NrOfIterations
-			, ModelParameters/BetaFactor
+			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
+			, ModelParameters/Advanced/NrOfIterations
+			, ModelParameters/Advanced/BetaFactor
 		);
 	container A2_TM := Templates/Allocation_procedures_T(
 			  Current_situation/current_landuse
 			, Scenario_Components/Exogenous_Landuse/A2_TM
 			, Scenario_Components/Local_Suitability/A2_TM
 			, Scenario_Components/Regional_Demand/A2_TM
-			, (ModelParameters/ModelYear - ModelParameters/StartYear)[YearDiffRange]
-			, ModelParameters/NrOfIterations
-			, ModelParameters/BetaFactor
+			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
+			, ModelParameters/Advanced/NrOfIterations
+			, ModelParameters/Advanced/BetaFactor
 		);
 	container B1_SE := Templates/Allocation_procedures_T(
 			  Current_situation/current_landuse
 			, Scenario_Components/Exogenous_Landuse/B1_SE
 			, Scenario_Components/Local_Suitability/B1_SE
 			, Scenario_Components/Regional_Demand/B1_SE
-			, (ModelParameters/ModelYear - ModelParameters/StartYear)[YearDiffRange]
-			, ModelParameters/NrOfIterations
-			, ModelParameters/BetaFactor
+			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
+			, ModelParameters/Advanced/NrOfIterations
+			, ModelParameters/Advanced/BetaFactor
 		);
 	container B2_RC := Templates/Allocation_procedures_T(
 			  Current_situation/current_landuse
 			, Scenario_Components/Exogenous_Landuse/B2_RC
 			, Scenario_Components/Local_Suitability/B2_RC
 			, Scenario_Components/Regional_Demand/B2_RC
-			, (ModelParameters/ModelYear - ModelParameters/StartYear)[YearDiffRange]
-			, ModelParameters/NrOfIterations
-			, ModelParameters/BetaFactor
+			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
+			, ModelParameters/Advanced/NrOfIterations
+			, ModelParameters/Advanced/BetaFactor
 		);
 }
