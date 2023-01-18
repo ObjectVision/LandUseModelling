@@ -23,7 +23,7 @@
 container Current_Situation:
 	Using = "Units;Geography;Classifications"
 {
-	#include <landuse_2010.dms>
+	#include <landuse.dms>
 	#include <policy_maps.dms>
 	#include <thematic_maps.dms>
 	#include <distance_decay.dms>
