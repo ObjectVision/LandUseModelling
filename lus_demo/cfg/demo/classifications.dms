@@ -77,6 +77,8 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<String>       Label          := lookup(NrOrg, ggModel/Label), DialogType = "LabelText";
 		attribute<String>       Name           := lookup(NrOrg, ggModel/Name);
 		attribute<mEUR_ha>      MaxDamagePerHa := lookup(NrOrg, ggModel/MaxDamagePerHa);
+		
+		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
 
 	// =========== landusesTypering: subtypes

@@ -170,9 +170,15 @@ container Evaluation : Descr = "This container contains several evaluation indic
 		container Current
 		{
 			// container            DepthData                                     := Scenario_Components/Floodrisk/Templates/DepthData('%projDir%/data/Current_situation/Thematic_maps/Safety/Waterdepth.asc');
-			attribute<LUclasses> LandUse              (domain)              := Current_situation/current_landuse/predominant, Label = "Current dominant land use";
-			attribute<mEur_Ha>   LU_Damage            (domain)              := ='switch('+asItemList('case(LandUse == value('+String(id(LUclasses))+', LUclasses), /Scenario_Components/Floodrisk/Curr/DepthDataFactors/'+LUclasses/Name+')')+', 0f) * LUclasses/MaxDamagePerHa[LandUse]', Label    = "Potential damage based on dominant land use";
-			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage * 1[Ha],RegioGrids/DijkRing_2009), Label = "Potential damage aggregated to dike rings";
+			attribute<LUclasses> LandUse              (domain)                 := Current_situation/current_landuse/predominant, Label = "Current dominant land use";
+			attribute<mEur>      LU_Damage            (domain)                 := ='switch(
+																						'+asItemList('case(LandUse == LUclasses/V/'+LUclasses/name+'[LUclasses]
+																												, /Scenario_Components/Floodrisk/Curr/DepthDataFactors/'+LUclasses/Name+')')+'
+																									, 0f
+																						)
+																					* LUclasses/MaxDamagePerHa[LandUse]
+																					* domain/NrHaPerCell', Label    = "Potential damage based on dominant land use";
+			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage,RegioGrids/DijkRing_2009), Label = "Potential damage aggregated to dike rings";
 			attribute<mEur>      ExpertDamage         (RegionalUnits/DijkRing) := RegionalUnits/DijkRing/ExpDamage, Label = "Expert-based damage assessments current situation";
 		}
 		
@@ -185,12 +191,9 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			attribute<float32>   LU_DamageChange      (RegionalUnits/DijkRing) := MakeDefined(LU_DamagePerDikeRing  / Current/LU_DamagePerDikeRing,  sum(LU_DamagePerDikeRing ) / sum(Current/LU_DamagePerDikeRing )), Label = "Change ratio of land-use based damage";
 
 			// The expert-based damage assessments for the current situation are multiplied with the damage change ratio to obtain more realistic damage assessments
-			attribute <mEur>     ExpertDamage         (RegionalUnits/DijkRing) := Current/ExpertDamage * LU_DamageChange, Label = "Expert-based assessments * change ratio";
-
-			// a correction is made for regions where the Expert damage for the simulation year equals 0
-			attribute <mEur>     CorrectedDamage      (RegionalUnits/DijkRing) := IsZero(ExpertDamage) ? LU_DamagePerDikering * sum(ExpertDamage) / sum(Current/LU_DamagePerDikering ) : ExpertDamage, Label = "Corrected damage using expert-based assessments";
+			attribute <mEur>     ExpertDamage      (RegionalUnits/DijkRing) := (Current/ExpertDamage * LU_DamageChange) == 0[mEur] ? LU_DamagePerDikering * sum(Current/ExpertDamage * LU_DamageChange) / sum(Current/LU_DamagePerDikering ) : (Current/ExpertDamage * LU_DamageChange), Label = "Expert-based assessments * change ratio";
 				
-			attribute <mEur_Yr>  AnnualRisk           (RegionalUnits/DijkRing) := CorrectedDamage  / RegionalUnits/DijkRing/NormPeriod, Label = "Annual flood risk";
+			attribute <mEur_Yr>  AnnualRisk           (RegionalUnits/DijkRing) := ExpertDamage  / RegionalUnits/DijkRing/NormPeriod, Label = "Annual flood risk";
 		}
 	}
 }
