@@ -132,20 +132,20 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					: 0[Ls_QualPress2k]
 			,	Label = "New built-up area in (very) high quality landscapes";
 
-			unit<uint32> DenseAreas := district(uint8(Builtup_Area))
-			{
-				attribute<DenseAreas> Districts (domain);
-				attribute<Ha>         Size      (DenseAreas) := float32(pcount(Districts)) * 25[Ha];
-				attribute<YesorNo>    IsBuiltup (DenseAreas) := modus(Urbanisation/Builtup_Area, Districts);
-			}
+			// unit<uint32> DenseAreas := district(uint8(Builtup_Area))
+			// {
+				// attribute<DenseAreas> Districts (domain);
+				// attribute<Ha>         Size      (DenseAreas) := float32(pcount(Districts)) * 25[Ha];
+				// attribute<YesorNo>    IsBuiltup (DenseAreas) := modus(Urbanisation/Builtup_Area, Districts);
+			// }
 			
-			unit<uint32> BuiltupAreas:= subset(DenseAreas/IsBuiltup)
-			{
-				attribute<Ha> Size(BuiltupAreas) := DenseAreas/Size[nr_OrgEntity];
-			}
+			// unit<uint32> BuiltupAreas:= subset(DenseAreas/IsBuiltup)
+			// {
+				// attribute<Ha> Size(BuiltupAreas) := DenseAreas/Size[nr_OrgEntity];
+			// }
 			
-			attribute<Ha> DenseAreasSizePerCel (domain) := DenseAreas/Size[DenseAreas/Districts] , cdf = "Classifications/Districts4K/Classes" , Label = "Size Dense Area";
-			attribute<Ha> BuiltupAreasSizePerCel (domain) := Builtup_Area ? DenseAreasSizePerCel : value (0, Ha), cdf   = "Classifications/Districts4K/Classes" , Label = "Size Built-up Area";
+			// attribute<Ha> DenseAreasSizePerCel (domain) := DenseAreas/Size[DenseAreas/Districts] , cdf = "Classifications/Districts4K/Classes" , Label = "Size Dense Area";
+			// attribute<Ha> BuiltupAreasSizePerCel (domain) := Builtup_Area ? DenseAreasSizePerCel : value (0, Ha), cdf   = "Classifications/Districts4K/Classes" , Label = "Size Built-up Area";
 		}
 	}
 	

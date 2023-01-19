@@ -26,15 +26,15 @@ container Classifications: Using = "Units", isHidden = "True"
 		{
 			attribute<String> Text: [ // @USERINPUT
 			//'Name',			'Label',			'Descr',			'IsExogenous',	'r','g','b',		'Claimregion',	'IsUrbaan',	'IsOpenlandscape',	'LandPrice_A1',	'LandPrice_A2',	'LandPrice_B1',	'LandPrice_B2',	'NrInhPerHa',	'MaxDamagePerHa',
-			'exterior',			'exterior',			'exterior',			'TRUE',			'255','255','228',	'',				'FALSE',	'FALSE',			'25',			'24',			'23',			'22',			'0',			'0',
 			'residential',		'residential',		'residential',		'FALSE',		'225','0','0',		'RstIntPer',	'TRUE',		'FALSE',			'40',			'35',			'34',			'30',			'35',			'4',
 			'industrial',		'industrial',		'industrial',		'FALSE',		'128','0','255',	'RstIntPer',	'TRUE',		'FALSE',			'36',			'31',			'32',			'28',			'0',			'6',
 			'recreation',		'recreation',		'recreation',		'FALSE',		'255','228','0',	'RstIntPer',	'FALSE',	'FALSE',			'30',			'28',			'26',			'24',			'0',			'0.3',
-			'agriculture',		'agriculture',		'agriculture',		'FALSE',		'192','255','128',	'RstIntPer',	'FALSE',	'FALSE',			'32',			'27',			'30',			'26',			'0',			'0.1',
 			'nature',			'nature',			'nature',			'FALSE',		'100','192','100',	'RstIntPer',	'FALSE',	'TRUE',				'34',			'29',			'31',			'27',			'0',			'0.2',
+			'agriculture',		'agriculture',		'agriculture',		'FALSE',		'192','255','128',	'RstIntPer',	'FALSE',	'FALSE',			'32',			'27',			'30',			'26',			'0',			'0.1',
 			'buildinglot',		'buildinglot',		'buildinglot',		'FALSE',		'128','128','128',	'RstIntPer',	'FALSE',	'FALSE',			'30',			'28',			'26',			'24',			'0',			'1.3',
 			'infrastructure',	'infrastructure',	'infrastructure',	'TRUE',			'128','0','0',		'',				'FALSE',	'FALSE',			'38',			'33',			'33',			'29',			'0',			'1.9',
-			'water',			'water',			'water',			'TRUE',			'159','255','255',	'',				'FALSE',	'FALSE',			'30',			'28',			'26',			'24',			'0',			'0'
+			'water',			'water',			'water',			'TRUE',			'159','255','255',	'',				'FALSE',	'FALSE',			'30',			'28',			'26',			'24',			'0',			'0',
+			'exterior',			'exterior',			'exterior',			'TRUE',			'255','255','228',	'',				'FALSE',	'FALSE',			'25',			'24',			'23',			'22',			'0',			'0'
 			];
 		}
 		attribute<string>     Lnr:          = string(ID(.)+1b);
@@ -59,15 +59,15 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<mEur_ha>      MaxDamagePerha:   = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 15, Elements)]), mEUR_ha);
 
 		// enumeration, mainly to be used in suitability definitions
-		parameter<.> residential    := value( 0, .);
-		parameter<.> industrial     := value( 1, .);
-		parameter<.> recreation     := value( 2, .);
-		parameter<.> agriculture    := value( 3, .);
-		parameter<.> nature         := value( 4, .);
-		parameter<.> buildinglot    := value( 5, .);
-		parameter<.> infrastructure := value( 6, .);
-		parameter<.> water          := value( 7, .);
-		parameter<.> exterior       := value( 8, .);
+		// parameter<.> residential    := value( 0, .);
+		// parameter<.> industrial     := value( 1, .);
+		// parameter<.> recreation     := value( 2, .);
+		// parameter<.> agriculture    := value( 3, .);
+		// parameter<.> nature         := value( 4, .);
+		// parameter<.> buildinglot    := value( 5, .);
+		// parameter<.> infrastructure := value( 6, .);
+		// parameter<.> water          := value( 7, .);
+		// parameter<.> exterior       := value( 8, .);
 	}
 
 	unit<uint8> LUclasses := Range(ggModel,uint8(0),uint8(nrofrows(ggModel)))
