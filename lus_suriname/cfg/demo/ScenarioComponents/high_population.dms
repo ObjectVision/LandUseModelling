@@ -1,0 +1,443 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                     In this configurationfile the suitability maps of the endogenous land use classes for the high population scenario is defined                        **
+//**                                                                                                                                                                                          **
+//**  Basislogic                                                                                                                                                                              **
+//**   * first attractive (+), then unattractive (-)                                                                                                                                          **
+//**   * start with including current landuse (whenever relevant                                                                                                                              **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container high_population
+{
+	// LANDBOUW ZWERF
+	container landbouw_zwerf
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) * (Landuse/model == classifications/LU/luModel/landbouw_zwerf"
+				"? value(3000, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(2.0) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(1.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(1.5) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+			"  float32(2.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(2.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(0.5) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(-1.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(2.5) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+			
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * value(100,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(0.0) * value(  1, dollar_ha_m)   * Present/physical/elevation"
+			"+ float32(2.0) * (Classifications/soiltypes/total/landbouw_zwerf[Present/physical/soil] * value(500, dollar_ha))";
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr = 
+			"  float32(-1.0) *  (value(500, dollar_ha) * float32(Present/material/goud == TRUE))"
+			"+ float32(-1.0) *  (value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE))"
+			"+ float32(0.0) *  (value(500, dollar_ha) * float32(Present/material/timber == TRUE))";
+		
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) *  (value(1000, dollar_ha) * float32(Present/policy/protected == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// BEBOUWD
+	container bebouwd
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) *  (Landuse/model == classifications/LU/luModel/bebouwd"
+				"? value(7500, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(2.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(-1.0) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.2) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(-2.0) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(2.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(1.0) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.2) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(-2.0) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+			"  float32(0.5) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(0.3) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(2.5) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(2.5) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(1.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(1.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(0.7) * (max_elem(value(500, dollar_ha) - value( 5  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+			
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid): expr =
+			"  float32(-1.0) * value(500,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(0.0) * value(  1, dollar_ha_m)   * Present/physical/elevation"
+			"+ float32(1.0) * (Classifications/soiltypes/total/bebouwd[Present/physical/soil] * value(500, dollar_ha))"; 
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr = 
+			"  float32(0.7) *  (value(500, dollar_ha) * float32(Present/material/goud == TRUE))"
+			"+ float32(0.2) *  (value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE))"
+			"+ float32(0.5) *  (value(500, dollar_ha) * float32(Present/material/timber == TRUE))";
+		
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr = 
+			"  float32(-2.0) *  (value(1000, dollar_ha) * float32(Present/policy/protected == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// LANDBOUW GROOTSCHALIG
+	container landbouw_grootschalig
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) * (Landuse/model == classifications/LU/luModel/landbouw_grootschalig"
+				"? value(5000, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(2.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(2.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(2.0) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(2.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+			"  float32(2.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(2.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(1.5) * (max_elem(value(500, dollar_ha) - value( 5  , dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(0.5) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid): expr =
+			"  float32(-2.0) * value(500,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(-2.0) * value(  1, dollar_ha_m)   * Present/physical/elevation"
+			"+ float32(2.0) * (Classifications/soiltypes/total/landbouw_grootschalig[Present/physical/soil]* value(500, dollar_ha))";
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr =
+			"  float32(-2.0) * (value(500, dollar_ha) * float32(Present/material/goud == TRUE))"
+			"+ float32(-2.0) * (value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE))"
+			"+ float32(-2.0) * (value(500, dollar_ha) * float32(Present/material/timber == TRUE))";
+			
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr = 
+			"  float32(-2.0) * (value(1000, dollar_ha) * float32(Present/policy/protected == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// LANDBOUW KLEINSCHALIG
+	container landbouw_kleinschalig
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) * (Landuse/model == classifications/LU/luModel/landbouw_kleinschalig"
+				"? value(2000, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(-2.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(-2.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * value(250,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(0.0) * value(  1, dollar_ha_m)     * Present/physical/elevation"
+			"+ float32(0.0) * (Classifications/soiltypes/total/landbouw_kleinschalig[Present/physical/soil] * value(500, dollar_ha))";
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * (value(500, dollar_ha) * float32(Present/material/goud == TRUE))"
+			"+ float32(0.0) * (value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE))"
+			"+ float32(0.0) * (value(500, dollar_ha) * float32(Present/material/timber == TRUE))";
+			
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * (value(1000, dollar_ha) * float32(Present/policy/protected == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// LANDBOUW NAT
+	container landbouw_nat
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) * (Landuse/model == classifications/LU/luModel/landbouw_nat"
+				"? value(5000, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.8) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(1.0) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(1.0) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.2) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(1.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";	
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+			"  float32(1.0) * (max_elem(value(500, dollar_ha) - value( 5  , dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(0.7) * (max_elem(value(500, dollar_ha) - value( 5  , dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value( 5  , dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid): expr =
+			"  float32(-1.0) * value(1000,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(-1.0) * value(  10, dollar_ha_m)   * Present/physical/elevation"
+			"+ float32(2.0) * (Classifications/soiltypes/total/landbouw_nat[Present/physical/soil] * value(500, dollar_ha))";
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * (value(500, dollar_ha) * float32(Present/material/goud == TRUE))"
+			"+ float32(0.0) * (value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE))"
+			"+ float32(0.0) * (value(500, dollar_ha) * float32(Present/material/timber == TRUE))";
+			
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr = 
+			" float32(0.0) * (value(1000, dollar_ha) * float32(Present/policy/protected == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// BOS
+	container bos
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) * (Landuse/model == classifications/LU/luModel/bos"
+				"? value(2500, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(-2.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(2.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(-1.0) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(-2.0) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(-1.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+		    "  float32(2.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(2.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(1.0) * (max_elem(value(500, dollar_ha) - value(10  , dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid): expr = 
+			"  float32(1.0) * value( 50,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(1.0) * value(  1, dollar_ha_m)   * Present/physical/elevation"
+			"+ float32(2.0) * (Classifications/soiltypes/total/bos[Present/physical/soil] * value(500, dollar_ha))";
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * (value(500, dollar_ha) * float32(Present/material/goud == TRUE))"
+			"+ float32(0.0) * (value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE))"
+			"+ float32(0.0) * (value(500, dollar_ha) * float32(Present/material/timber == TRUE))";
+
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr = 
+			" float32(0.0) * value(1000, dollar_ha) * float32(Present/policy/protected == TRUE)";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// MOERAS SAVANNE BOS
+	container moeras_savanne_bos
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) * (Landuse/model == classifications/LU/luModel/moeras_savanne_bos"
+				"? value(2500, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid):expr = 
+			"  float32(0.0) * value( 50,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(0.0) * value(  1, dollar_ha_m)     * Present/physical/elevation"
+			"+ float32(0.0) * (Classifications/soiltypes/total/moeras_savanne_bos[Present/physical/soil] * value(500, dollar_ha))";
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr = 
+			"  float32(0.0) * value(500, dollar_ha) * float32(Present/material/goud == TRUE)"
+			"+ float32(0.0) * value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE)"
+			"+ float32(0.0) * value(500, dollar_ha) * float32(Present/material/timber == TRUE)";
+
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr = 
+			" float32(0.0) * value(1000, dollar_ha) * float32(Present/policy/protected == TRUE)";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// OPEN GEBIED
+	container open_gebied
+	{
+		attribute<dollar_ha> CurrentLanduse (Geography/Suriname250mGrid): expr =
+			"float32(1.0) * (Landuse/model == classifications/LU/luModel/open_gebied"
+				"? value( 500, dollar_ha)"
+				": value(   0, dollar_ha))";
+
+		attribute<dollar_ha> neighbourhood (Geography/Suriname250mGrid): expr = 
+			"  float32(0.5) * DistanceDecay/LandUse/pot_km1/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(1.0) * DistanceDecay/LandUse/pot_km1/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km1/bos * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.5) * DistanceDecay/LandUse/pot_km1/open_gebied * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_zwerf * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bebouwd * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_grootschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_kleinschalig * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/landbouw_nat * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/moeras_savanne_bos * value(500, dollar_ha)"
+			"+ float32(0.0) * DistanceDecay/LandUse/pot_km5/open_gebied * value(500, dollar_ha)";
+
+		attribute<dollar_ha> accessibility (Geography/Suriname250mGrid): expr =
+			"  float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_major, value(0,dollar_ha)))"
+			"+ float32(0.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/River_minor, value(0,dollar_ha)))"
+			"+ float32(1.5) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Road_major,  value(0,dollar_ha)))"
+			"+ float32(0.5) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Road_minor,  value(0,dollar_ha)))"
+			"+ float32(1.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Town,        value(0,dollar_ha)))"
+			"+ float32(0.5) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/Village,     value(0,dollar_ha)))"
+			"+ float32(1.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/materials,   value(0,dollar_ha)))"
+			"+ float32(2.0) * (max_elem(value(500, dollar_ha) - value(50  , dollar_ha) * Present/accessibility/airport,     value(0,dollar_ha)))";
+
+		attribute<dollar_ha> physical (Geography/Suriname250mGrid): expr =
+			"  float32(2.0) * value( 50,dollar_ha_degree) * Present/physical/slope" 
+			"+ float32(0.0) * value(  1, dollar_ha_m)   * Present/physical/elevation"
+			"+ float32(1.0) * (Classifications/soiltypes/total/open_gebied[Present/physical/soil] * value(500, dollar_ha))";
+
+		attribute<dollar_ha> material (Geography/Suriname250mGrid): expr = 
+			"  float32(3.0) * value(500, dollar_ha) * float32(Present/material/goud == TRUE)"
+			"+ float32(1.5) * value(500, dollar_ha) * float32(Present/material/bauxiet == TRUE)"
+			"+ float32(0.5) * value(500, dollar_ha) * float32(Present/material/timber == TRUE)";
+
+		attribute<dollar_ha> policy (Geography/Suriname250mGrid): expr = 
+			" float32(-1.0) * value(1000, dollar_ha) * float32(Present/policy/protected == TRUE)";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLanduse + neighbourhood + accessibility + physical + material + policy";
+	}
+
+	// MAXIMALE GESCHIKTHEID
+	attribute<Classifications/LU/luEndogenous> lu_max_suit(Geography/Suriname250mGrid): expr = 
+		"='value("
+			" argmax("
+				"' + AsItemList(Classifications/LU/luEndogenous/name +'/total') +'"
+			" )"
+			",Classifications/LU/luEndogenous"
+		")'";
+}

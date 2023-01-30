@@ -1,0 +1,719 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                           configuration file with configuration of accessibility to relevant locations used as suitability factors                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container accessibility
+{
+
+	attribute<impedance> impedance_grid (Geography/Suriname250mGrid): expr = "preperation/DistTo/resistance/grid";
+
+	attribute<impedance> river_major    (Geography/Suriname250mGrid): expr = "preperation/DistTo/river_major";
+	attribute<impedance> river_minor    (Geography/Suriname250mGrid): expr = "preperation/DistTo/river_minor";
+	attribute<impedance> road_major     (Geography/Suriname250mGrid): expr = "preperation/DistTo/road_major";
+	attribute<impedance> road_minor     (Geography/Suriname250mGrid): expr = "preperation/DistTo/road_minor";
+	attribute<impedance> road_proposed  (Geography/Suriname250mGrid): expr = "preperation/DistTo/road_proposed";
+	attribute<impedance> dam            (Geography/Suriname250mGrid): expr = "preperation/DistTo/dam";
+	attribute<impedance> town           (Geography/Suriname250mGrid): expr = "preperation/DistTo/town";
+	attribute<impedance> village        (Geography/Suriname250mGrid): expr = "preperation/DistTo/village";
+	attribute<impedance> airport        (Geography/Suriname250mGrid): expr = "preperation/DistTo/airport";
+	attribute<impedance> materials      (Geography/Suriname250mGrid): expr = "preperation/DistTo/materials";
+
+	container source_layers
+	{
+		attribute<Geography/SurinameCoord> river_major   (arc, sources/river/major)      : expr = "sources/river/major/geometry";
+		attribute<Geography/SurinameCoord> river_minor   (arc, sources/river/minor)      : expr = "sources/river/minor/geometry";
+		attribute<Geography/SurinameCoord> dam           (arc, sources/dam)              : expr = "sources/dam/geometry";
+		attribute<Geography/SurinameCoord> road_major    (arc, preperation/road/major )  : expr = "preperation/road/major/line";
+		attribute<Geography/SurinameCoord> road_minor    (arc, preperation/road/minor )  : expr = "preperation/road/minor/line";
+		attribute<Geography/SurinameCoord> road_proposed (arc, preperation/road/proposed): expr = "preperation/road/proposed/line";
+		attribute<Geography/SurinameCoord> town          (preperation/town)              : expr = "preperation/town/location";
+		attribute<String>                  town_labels   (preperation/town_labels)       : expr = "preperation/town_labels/name",  DialogType = "LabelText";
+		attribute<Geography/SurinameCoord> village       (preperation/village_ul)        : expr = "preperation/village_ul/location";
+		attribute<Geography/SurinameCoord> airport       (sources/airport)               : expr = "sources/airport/location";
+	}
+
+	container sources: IsHidden = "True"
+	{
+		unit<uint32> materials_lutchman
+		:	DialogData      = "location"
+		,	DialogType      = "Map"
+		,	StorageName     = "%ProjDir%/data/materials/Grondstoffen Lutchman&Karssen.dbf"
+		,	StorageReadOnly = "True"
+		,	SyncMode        = "None"
+		,	IsHidden        = "True"
+		{
+			attribute<geography/SurinameCoord>      location
+			:	label       = "raw material"
+			,	StorageName = "%ProjDir%/data/materials/Grondstoffen Lutchman&Karssen.shp";
+			attribute<Classifications/materialtype> type: expr = "rlookup(GrondStof, Classifications/materialtype/label)", DisableStorage = "True";
+			attribute<String>                       GrondStof;
+			attribute<Geography/Suriname250mGrid>   gridnr: expr =
+				"=GeoDMSVersion() > 7.015"
+					"? 'fpoint(location)[Geography/Suriname250mGrid]'"
+					": 'value("
+						" (fpoint(location) - Geography/Suriname250mGrid/ProjOffset) "
+						" / Geography/Suriname250mGrid/ProjFactor"
+						",Geography/Suriname250mGrid"
+					")'"
+			,	DisableStorage = "True";
+		}
+		
+		unit<uint32> materials_planatlas
+		:	DialogData      = "location"
+		,	DialogType      = "Map"
+		,	StorageName     = "%ProjDir%/data/materials/Grondstoffen_planatlas.dbf"
+		,	StorageReadOnly = "True"
+		,	SyncMode        = "None"
+		,	IsHidden        = "True"
+		{
+			attribute<geography/SurinameCoord>      location
+			:	label       = "raw material"
+			,	StorageName = "%ProjDir%/data/materials/Grondstoffen_planatlas.shp";
+			attribute<Classifications/materialtype> type: expr = "rlookup(GrondStof, Classifications/materialtype/label)", DisableStorage = "True";
+			attribute<String>                       GrondStof;
+			attribute<Geography/Suriname250mGrid>   gridnr: expr =
+				"=GeoDMSVersion() > 7.015"
+					"? 'fpoint(location)[Geography/Suriname250mGrid]'"
+					": 'value("
+						" (fpoint(location) - Geography/Suriname250mGrid/ProjOffset) "
+						" / Geography/Suriname250mGrid/ProjFactor"
+						",Geography/Suriname250mGrid"
+					")'"
+			,	DisableStorage = "True";
+		}
+		
+			unit<uint32> materials
+			:	expr       = "union_unit(materials_lutchman, materials_planatlas)"
+			,	DialogData = "location"
+			,	DialogType = "Map"
+			{
+				attribute<Geography/SurinameCoord>  location:   expr = "union_data(.,materials_lutchman/location,  materials_planatlas/location)";
+				attribute<Classifications/materialtype> type:   expr = "union_data(.,materials_lutchman/type,      materials_planatlas/type)";
+				attribute<String> Grondstof:                    expr = "union_data(.,materials_lutchman/Grondstof, materials_planatlas/Grondstof)";
+				attribute<Geography/Suriname250mGrid>   gridnr: expr =
+					"=GeoDMSVersion() > 7.015"
+						"? 'fpoint(location)[Geography/Suriname250mGrid]'"
+						": 'value("
+							" (fpoint(location) - Geography/Suriname250mGrid/ProjOffset) "
+							" / Geography/Suriname250mGrid/ProjFactor"
+							",Geography/Suriname250mGrid"
+						")'";
+		}
+		
+		container river: IsHidden= "True"
+		{
+			unit<uint32> all
+			:	DialogData      = "geometry"
+			,	DialogType      = "Map"
+			,	StorageName     = "%ProjDir%/data/factor/hydro.dbf"
+			,	StorageReadOnly = "True"
+			{
+				attribute<geography/SurinameCoord> geometry (arc)
+				:	label       = "river minor"
+				,	StorageName = "%ProjDir%/data/factor/hydro.shp";
+				attribute<uint32> Class;
+			}
+			unit<uint32> minor
+			:	DialogData      = "geometry"
+			,	DialogType      = "Map"
+			,	Expr            = "Subset(all/Class == 2)"
+			{
+				attribute<geography/SurinameCoord> geometry (arc)
+				:	label = "river minor"
+				,	Expr  = "all/geometry[nr_OrgEntity]"
+				{
+					parameter<uint32> PenColor
+					:	DialogType     = "PenColor"
+					,	expr           = "rgb(  0,  0,200)"
+					,	DisableStorage = "True";
+					parameter<int16>  PenWidth
+					:	DialogType     = "PenWidth"
+					,	expr           = "int16(1)"
+					,	DisableStorage = "True";
+				}
+			}
+			unit<uint32> major
+			:	DialogData      = "geometry"
+			,	DialogType      = "Map"
+			,	Expr            = "Subset(all/Class == 1)"
+			{
+				attribute<geography/SurinameCoord> geometry (arc)
+				:	label = "river minor"
+				,	Expr  = "all/geometry[nr_OrgEntity]"
+				{
+					parameter<uint32> PenColor
+					:	DialogType     = "PenColor"
+					,	expr           = "rgb(  0,  0,200)"
+					,	DisableStorage = "True";
+					parameter<int16>  PenWidth
+					:	DialogType     = "PenWidth"
+					,	expr           = "int16(2)"
+					,	DisableStorage = "True";
+				}
+			}
+		}
+		container road: IsHidden = "True"
+		{
+			unit<uint32> unpaved
+			:	DialogData      = "line"
+			,	DialogType      = "Map"
+			,	StorageName     = "%ProjDir%/data/factor/road_unpaved.dbf"
+			,	StorageReadOnly = "True"
+			,	Source          = "Gedigitaliseerd door Christiaan, per hotmail ontvangen op 16 juni 2011"
+			{
+				attribute<geography/SurinameCoord> line (arc)
+				:	label       = "road OSM"
+				,	StorageName = "%ProjDir%/data/factor/road_unpaved.shp"
+				{
+					parameter<uint32> PenColor
+					:	DialogType     = "PenColor"
+					,	expr           = "rgb(100,100,100)"
+					,	DisableStorage = "True";
+					parameter<int16>  PenWidth
+					:	DialogType     = "PenWidth"
+					,	expr           = "int16(2)"
+					,	DisableStorage = "True";
+				}
+				attribute<Classifications/roadtype>    OSMtype:    Expr  = "const(13,.,Classifications/roadtype)", label = "road type unpaved";
+			}
+	
+			unit<uint32> paved
+			:	DialogData      = "line"
+			,	DialogType      = "Map"
+			,	StorageName     = "%ProjDir%/data/factor/road_pav.dbf"
+			,	StorageReadOnly = "True"
+			{
+				attribute<geography/SurinameCoord> line (arc)
+				:	label       = "road paved source"
+				,	StorageName = "%ProjDir%/data/factor/road_pav.shp";
+			}
+	
+			unit<uint32> OSM
+			:	DialogData      = "line"
+			,	DialogType      = "Map"
+			,	StorageName     = "%ProjDir%/data/OSM/osm_suriname_utm.shp"
+			,	StorageType     = "gdal.vect"
+			,	StorageReadOnly = "True"
+			{
+				attribute<geography/SurinameCoord> line (arc);
+				attribute<string>                  highway;
+				unit<uint32> highwaytypes: expr = "unique(highway)";
+			}
+
+			unit<uint32> proposed_base
+			:	DialogData      = "line"
+			,	DialogType      = "Map"
+			,	StorageName     = "%ProjDir%/data/RoadNew/Road_proposed_VierGebr_single.dbf"
+			,	StorageReadOnly = "True"
+			,	Source          = "Gedigitaliseerd door Christiaan"
+			{
+				attribute<geography/SurinameCoord> line (arc)
+				:	label       = "proposed road to Brazil"
+				,	StorageName = "%ProjDir%/data/RoadNew/Road_proposed_VierGebr_single.shp";
+
+				attribute<Classifications/roadtype> OSMtype
+				:	[6   ,13  ,6   ,13  ,13  ,13  ,13  ,6   ,6   ,6   ,13  ,13  ,13  ,13  ,13  ,13  ,13  ,13  ,13  ,6   ,6]
+				,	label = "proposed road to Brazil";
+
+				attribute<bool> MajorRoadToBrazil
+				:	[True,False,True,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,False,True,True]
+				,	label = "proposed road to Brazil";
+			}
+
+			unit<uint32> proposed_crossway
+			:	DialogData      = "line"
+			,	DialogType      = "Map"
+			,	StorageName     = "%ProjDir%/data/RoadNew/Wegvertakkingen_single.dbf"
+			,	StorageReadOnly = "True"
+			{
+				attribute<geography/SurinameCoord> line (arc)
+				:	label       = "proposed crossways"
+				,	StorageName = "%ProjDir%/data/RoadNew/Wegvertakkingen_single.shp";
+
+				attribute<Classifications/roadtype> OSMtype
+				:	Expr  = "const(13,.,Classifications/roadtype)"
+				,	label = "proposed crossways";
+
+				attribute<string> label: expr = "'C' + String(vertakking)",DialogType = "LabelText";
+			}
+		}
+		unit<uint32> village_wikipedia
+		: 	nrofrows = 27
+		,	IsHidden = "True"
+		{
+			attribute<string> naam:
+			['Albina','Brokopondo','Groningen','Lelydorp','Nieuw Amsterdam','Nieuw Nickerie',
+			 'Onverwacht','Totness','Alkmaar','Berg en Dal','Berlijn','Bigi Poika','Brownsweg','Cabendadorp',
+			 'Katwijk','Meerzorg','Mungo','Nieuw Rotterdam','Palemeu','Peperpot','Pokigron','Post Utrecht',
+			 'Spilawini','Thorarica','Vier Kinderen','Wageningen','Zanderij'
+			 ];
+		}
+		unit<uint32> village
+		:	DialogData      = "location"
+		,	DialogType      = "Map"
+		,	StorageName     = "%ProjDir%/data/factor/dorpen.dbf"
+		,	StorageReadOnly = "True"
+		,	IsHidden        = "True"
+		{
+			attribute<geography/SurinameCoord> location
+			:	label       = "village"
+			,	StorageName = "%ProjDir%/data/factor/dorpen.shp"
+			{
+				parameter<uint32> SymbolColor
+				:	DialogType     = "SymbolColor"
+				,	expr           = "rgb(0,  0,  0)"
+				,	DisableStorage = "True";
+				parameter<float32> SymbolSize
+				:	DialogType     = "SymbolSize"
+				,	expr           = "float32(14)"
+				,	DisableStorage = "True";
+				parameter<int16>  SymbolIndex
+				:	DialogType     = "SymbolIndex"
+				,	expr           = "int16(169)"
+				,	DisableStorage = "True";
+			}
+			attribute<String> naam:   DialogType = "LabelText";
+			attribute<uint8>  omvang: expr =
+				"isDefined("
+					"rlookup("
+						" naam"
+						",village_wikipedia/naam"
+					")"
+				")"
+					"? uint8(2)"
+					": uint8(1)";
+		}
+		unit<uint32> airport
+		:	DialogData      = "geometry"
+		,	DialogType      = "Map"
+		,	StorageName     = "%ProjDir%/data/factor/airports.dbf"
+		,	StorageReadOnly = "True"
+		,	SyncMode        = "None"
+		,	IsHidden        = "True"
+		{
+			attribute<geography/SurinameCoord> location
+			:	StorageName = "%ProjDir%/data/factor/airports.shp"
+			,	label       = "airport"
+			{
+				parameter<uint32> SymbolColor:
+					DialogType     = "SymbolColor",
+					expr           = "rgb(0,  0,  0)",
+					DisableStorage = "True";
+				parameter<float32> SymbolSize:
+					DialogType     = "SymbolSize",
+					expr           = "float32(42)",
+					DisableStorage = "True";
+				parameter<m>       SymbolWorldSize:
+					DialogType     = "SymbolWorldSize",
+					expr           = "value(80, m)",
+					DisableStorage = "True";
+				parameter<int16>  SymbolIndex:
+					DialogType     = "SymbolIndex",
+					expr           = "int16(236)",
+					DisableStorage = "True";
+			}
+			attribute<Geography/Suriname250mGrid> gridnr: expr =
+				"=GeoDMSVersion() > 7.015"
+					"? 'fpoint(location)[Geography/Suriname250mGrid]'"
+					": 'value("
+						" (fpoint(location) - Geography/Suriname250mGrid/ProjOffset) "
+						" / Geography/Suriname250mGrid/ProjFactor"
+						", Geography/Suriname250mGrid"
+					" )'"
+			,	DisableStorage = "True";
+		}
+		unit<uint32> dam
+		:	DialogData      = "geometry"
+		,	DialogType      = "Map"
+		,	StorageName     = "%ProjDir%/data/factor/dammen.dbf"
+		,	StorageReadOnly = "True"
+		,	IsHidden        = "True"
+		{
+			attribute<geography/SurinameCoord> geometry (arc): StorageName = "%ProjDir%/data/factor/dammen.shp"
+			{
+				parameter<uint32> PenColor
+				:	DialogType     = "PenColor"
+				,	expr           = "rgb(  0,200,200)"
+				,	DisableStorage = "True";
+				parameter<int16>  PenWidth
+				:	DialogType     = "PenWidth"
+				,	expr           = "int16(2)"
+				,	DisableStorage = "True";
+			}
+			attribute<geography/SurinameCoord> location: Expr = 
+				"point("
+					"  ("
+						"PointCol("
+						"first_node(geometry)"
+						")"
+						"  + PointCol("
+							"last_node(geometry)"
+							")"
+					"  ) / float32(2)"
+					", ("
+							"PointRow("
+							"first_node(geometry)"
+						")"
+						"  + PointRow("
+							"last_node(geometry)"
+						")"
+					"  ) / float32(2)"
+					", geography/SurinameCoord"
+				")";
+		}
+		unit<uint32> harbour
+		:	nrofrows = 1
+		, 	IsHidden = "True"
+		{
+			attribute<Geography/SurinameCoord> location:[{702829.935,643073.419}]
+			{
+				parameter<uint32> SymbolColor:
+					DialogType     = "SymbolColor",
+					expr           = "rgb(0,0,0)",
+					DisableStorage = "True";
+				parameter<float32> SymbolSize:
+					DialogType     = "SymbolSize",
+					expr           = "float32(60)",
+					DisableStorage = "True";
+				parameter<m>       SymbolWorldSize:
+					DialogType     = "SymbolWorldSize",
+					expr           = "value(30, m)",
+					DisableStorage = "True";
+				parameter<int16>  SymbolIndex:
+					DialogType     = "SymbolIndex",
+					expr           = "int16(237)",
+					DisableStorage = "True";
+			}
+			attribute<string>  name:   expr = "const('Haven Paramaribo',.,string)", DialogType = "LabelText";
+			attribute<Geography/Suriname250mGrid> gridnr: expr = 
+				"=GeoDMSVersion() > 7.015"
+					"? 'fpoint(location)[Geography/Suriname250mGrid]'"
+					": 'value("
+						" (fpoint(location) - Geography/Suriname250mGrid/ProjOffset) "
+						" / Geography/Suriname250mGrid/ProjFactor"
+						", Geography/Suriname250mGrid"
+					" )'";
+		}
+	}
+	container preperation: IsHidden = "True"
+	{
+		container road
+		{
+			unit<uint32> paved
+			:	DialogData      = "line"
+			,	DialogType      = "Map"
+			,	Expr            = "Subset(id(sources/road/paved) == 9274 || id(sources/road/paved) == 9276)"
+			,	StorageReadOnly = "True"
+			{
+				attribute<geography/SurinameCoord> line (arc)
+				:	label = "road paved"
+				,	Expr  = "sources/road/paved/line[nr_OrgEntity]";
+		
+				attribute<Classifications/roadtype>    OSMtype
+				:	Expr  = "const(9,.,Classifications/roadtype)"
+				,	label = "extra road paved";		
+			}
+	
+			unit<uint32> OSM
+			:	DialogData = "line"
+			,	DialogType = "Map"
+			,	Expr       = 
+					"Subset("
+						"   sources/road/OSM/highway = 'bridleway'"
+						"|| sources/road/OSM/highway = 'cycleway'"
+						"|| sources/road/OSM/highway = 'footway'"
+						"|| sources/road/OSM/highway = 'living_street'"
+						"|| sources/road/OSM/highway = 'pedestrian'"
+						"|| sources/road/OSM/highway = 'primary'"
+						"|| sources/road/OSM/highway = 'primary_link'"
+						"|| sources/road/OSM/highway = 'residential'"
+						"|| sources/road/OSM/highway = 'road'"
+						"|| sources/road/OSM/highway = 'secondary'"
+						"|| sources/road/OSM/highway = 'secondary_link'"
+						"|| sources/road/OSM/highway = 'service'"
+						"|| sources/road/OSM/highway = 'steps'"
+						"|| sources/road/OSM/highway = 'tertiary'"
+						"|| sources/road/OSM/highway = 'tertiary_link'"
+						"|| sources/road/OSM/highway = 'unclassified'"
+					")"
+			{
+				attribute<geography/SurinameCoord>  line (arc): expr = "sources/road/OSM/line[nr_OrgEntity]";
+				attribute<string>                   type_txt  : expr = "sources/road/OSM/highway[nr_OrgEntity]";
+				attribute<Classifications/roadtype> OSMtype   : expr = "rlookup(type_txt, Classifications/roadtype/name)";
+			}
+			unit<uint32> all
+			:	expr       = "union_unit(OSM, sources/road/unpaved, paved)"
+			,	DialogData = "line"
+			,	DialogType = "Map"
+			{
+				attribute<Geography/SurinameCoord>  line (arc): expr = "union_data(.,OSM/line,    sources/road/unpaved/line,    paved/line)";
+				attribute<Classifications/roadtype> OSMtype:    expr = "union_data(.,OSM/OSMtype, sources/road/unpaved/OSMtype, paved/OSMtype)";
+				attribute<bool>                     isMajor:    expr = "OSMtype = value(3, Classifications/roadtype) || OSMtype = value(6, Classifications/roadtype)";
+			}
+
+			unit<uint32> major
+			:	expr       = "Subset(all/isMajor)"
+			,	DialogData = "line"
+			,	DialogType = "Map"
+			{
+				attribute<Geography/SurinameCoord>  line (arc): expr = "all/line[nr_OrgEntity]";
+				attribute<Classifications/roadtype> OSMtype:    expr = "all/OSMtype[nr_OrgEntity]";
+			}
+
+			unit<uint32> minor
+			:	expr       = "Subset(!all/isMajor)"
+			,	DialogData = "line"
+			,	DialogType = "Map"
+			{
+				attribute<Geography/SurinameCoord>  line (arc): expr = "all/line[nr_OrgEntity]";
+				attribute<Classifications/roadtype> OSMtype:    expr = "all/OSMtype[nr_OrgEntity]";
+			}
+			
+			unit<uint32> proposed
+			:	expr       = "union_unit(sources/road/proposed_base, sources/road/proposed_crossway)"
+			,	DialogData = "line"
+			,	DialogType = "Map"
+			{
+				attribute<Geography/SurinameCoord>  line (arc): expr = "union_data(.,sources/road/proposed_base/line,    sources/road/proposed_crossway/line)";
+				attribute<Classifications/roadtype> OSMtype:    expr = "union_data(.,sources/road/proposed_base/OSMtype, sources/road/proposed_crossway/OSMtype)";
+			}
+		}
+
+		unit<uint32> village_ul
+		:	expr        = "unique(sources/village/location)"
+		,	DialogData  = "location"
+		,	DialogType  = "Map"
+		{
+			attribute<village_ul>              village_ul_nr (sources/village): expr = "rlookup(sources/village/location, values)";
+			attribute<uint8>                   omvang:                          expr = "sum(sources/village/omvang, village_ul_nr)";
+			attribute<Geography/SurinameCoord> location:                        expr = "values"
+			{
+				
+				parameter<uint32>  SymbolColor
+				:	DialogType = "SymbolColor"
+				,	expr       = "rgb(200,  0,  0)";
+				parameter<float32> SymbolSize
+				:	DialogType = "SymbolSize"
+				,	expr       = "float32(14)";
+				parameter<m>       SymbolWorldSize
+				:	DialogType = "SymbolWorldSize"
+				,	expr       = "value(40, m)";
+				parameter<int16>   SymbolIndex
+				:	DialogType = "SymbolIndex"
+				,	expr       = "int16(169)";
+			}
+			attribute<Geography/Suriname250mGrid> gridnr: expr =
+				"=GeoDMSVersion() > 7.015"
+					"? 'fpoint(location)[Geography/Suriname250mGrid]'"
+					": 'value("
+						"  (fpoint(location) - Geography/Suriname250mGrid/ProjOffset) "
+						" / Geography/Suriname250mGrid/ProjFactor"
+						" , Geography/Suriname250mGrid"
+					" )'";
+			attribute<bool> isDorp (Geography/Suriname250mGrid): expr = 
+				"isDefined("
+					"rlookup("
+						" id(Geography/Suriname250mGrid)"
+						",gridnr"
+					")"
+				")";
+		}
+
+		unit<uint32> village_large
+		:	DialogData = "location"
+		,	DialogType = "Map"
+		,	Expr       = "Subset(village_ul/omvang > uint8(1))"
+		{
+			attribute<geography/SurinameCoord> location: expr = "village_ul/location[nr_OrgEntity]"
+			{
+				parameter<uint32> SymbolColor
+				:	DialogType     = "SymbolColor"
+				,	expr           = "rgb(100,  0,  0)";
+				parameter<float32> SymbolSize
+				:	DialogType     = "SymbolSize"
+				,	expr           = "float32(18)";
+				parameter<int16>  SymbolIndex
+				:	DialogType     = "SymbolIndex"
+				,	expr           = "int16(169)";
+			}
+			attribute<Geography/Suriname250mGrid> gridnr                                   : expr = "village_ul/gridnr[nr_OrgEntity]";
+			attribute<bool>                       isDorpCenter (Geography/Suriname250mGrid): expr = "isDefined(rlookup(id(Geography/Suriname250mGrid), gridnr))";
+			attribute<ratio>                      potential    (Geography/Suriname250mGrid): expr = "potential(float32(IsDorpCenter), /Geography/DistMatrices/p1000m/potRange/RelWeightSqrt)";
+			attribute<bool>                       isDorp       (Geography/Suriname250mGrid): expr = "isDorpCenter || potential > value(0.034, ratio)";
+		}
+
+		unit<uint32> town: expr =
+			"Subset("
+				"   sources/village/naam = 'Nieuw Nickerie'"
+				"|| sources/village/naam = 'Paramaribo'"
+				"|| sources/village/naam = 'Albina'"
+				"|| sources/village/naam = 'Brownsweg'"
+			")"
+		,	DialogData  = "location"
+		,	DialogType  = "Map"
+		{
+			attribute<Geography/SurinameCoord> location
+			:	expr  = "sources/village/location[nr_OrgEntity]"
+			,	label = "town"
+			{
+				parameter<uint32> SymbolColor
+				:	DialogType     = "SymbolColor"
+				,	expr           = "rgb(0,  0,  0)";
+				parameter<float32> SymbolSize
+				:	DialogType     = "SymbolSize"
+				,	expr           = "float32(40)";
+				parameter<m>       SymbolWorldSize
+				:	DialogType     = "SymbolWorldSize"
+				,	expr           = "value(60, m)";
+				parameter<int16>  SymbolIndex
+				:	DialogType     = "SymbolIndex"
+				,	expr           = "int16(202)";
+			}
+			attribute<string>                     name: expr = "sources/village/naam[nr_OrgEntity]", DialogType = "LabelText";
+			attribute<Geography/Suriname250mGrid> gridnr: expr = 
+				"=GeoDMSVersion() > 7.015"
+					"? 'fpoint(location)[Geography/Suriname250mGrid]'"
+					": 'value("
+						" (fpoint(location) - Geography/Suriname250mGrid/ProjOffset)"
+						" / Geography/Suriname250mGrid/ProjFactor"
+						",Geography/Suriname250mGrid"
+					" )'";
+		}
+
+		unit<uint32> town_labels
+		:	expr        = "town"
+		,	DialogData  = "location"
+		,	DialogType  = "Map"
+		{
+			attribute<Geography/SurinameCoord> location: expr =
+				"town/location + point("
+					" float32(0)"
+					",float32(-10000)"
+					",Geography/SurinameCoord"
+				")";
+			attribute<string> name: expr = "town/name", DialogType = "LabelText"
+			{
+				parameter<string> LabelFont
+				:	DialogType = "LabelFont"
+				,	expr       = "'Tahoma'";
+				parameter<float32> LabelSize
+				:	DialogType = "LabelSize"
+				,	expr       = "float32(18)";
+			}
+		}
+		container DistGridLocationTo
+		{
+			container template_pointset: isTemplate = "True"
+			{
+				// begin case parameters
+				unit<uint32>                       domain;
+				attribute<geography/SurinameCoord> sequence (domain, arc);
+				// einde case parameters
+	
+				unit<uint32> segments: expr = "arc2segm(sequence)";
+				unit<uint32> pointset
+				:	expr       = "dyna_point(segments/point, segments/nextpoint, value(250, m))"
+				,	DialogType = "Map"
+				,	DialogData = "point"
+				{
+					attribute<Geography/Suriname250mGrid> gridnr: expr = 
+						"=GeoDMSVersion() > 7.015"
+							"? 'fpoint(point)[Geography/Suriname250mGrid]'"
+							": 'value((fpoint(point) - Geography/Suriname250mGrid/ProjOffset) / Geography/Suriname250mGrid/ProjFactor, Geography/Suriname250mGrid)'", FreeData = "False";
+				}
+			}
+			container river_minor:   expr = "template_pointset(sources/river/minor,       sources/river/minor/geometry)";
+			container river_major:   expr = "template_pointset(sources/river/major,       sources/river/major/geometry)";
+			container road_major:    expr = "template_pointset(preperation/road/major,    preperation/road/major/line)";
+			container road_minor:    expr = "template_pointset(preperation/road/minor,    preperation/road/minor/line)";
+			container road_proposed: expr = "template_pointset(preperation/road/proposed, preperation/road/proposed/line)";
+			container dam:           expr = "template_pointset(sources/dam,               sources/dam/geometry)";
+		}
+		container DistTo: FreeData = "False" // de + 0 is een tijdelijke oplossing om te zorgen dat het item in de CalcCache kan worden opgeslagen
+		{
+			container resistance
+			{
+				attribute<impedance> landuse      (Geography/Suriname250mGrid): expr = "Classifications/LU/luModel/TravelCost[Present/LandUse/model]";
+				attribute<float32>   slope_factor (Geography/Suriname250mGrid): expr = "sqr(float32(1) + float32(2) * value(physical/slope, float32))";
+				attribute<impedance> grid         (Geography/Suriname250mGrid): expr = "MakeDefined((landuse * slope_factor), 9999999[impedance])";
+			}
+
+			attribute<impedance> river_major (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",DistGridLocationTo/river_major/PointSet/gridnr"
+					",const(0, DistGridLocationTo/river_major/PointSet, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> river_minor (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",DistGridLocationTo/river_minor/pointset/gridnr"
+					",const(0, DistGridLocationTo/river_minor/pointset, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> road_major (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",DistGridLocationTo/road_major/PointSet/gridnr"
+					",const(0, DistGridLocationTo/road_major/PointSet, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> road_minor (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",DistGridLocationTo/road_minor/PointSet/gridnr"
+					",const(0, DistGridLocationTo/road_minor/PointSet, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> road_proposed (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",DistGridLocationTo/road_proposed/PointSet/gridnr"
+					",const(0, DistGridLocationTo/road_proposed/PointSet, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> dam (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",DistGridLocationTo/dam/pointset/gridnr"
+					",const(0, DistGridLocationTo/dam/pointset, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> town (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",preperation/town/gridnr"
+					",const(0, preperation/town, impedance)"
+				") + 0[impedance]";
+				
+			attribute<impedance> village (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",preperation/village_ul/gridnr"
+					",const(0, preperation/village_ul, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> airport (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",sources/airport/gridnr"
+					",const(0, sources/airport, impedance)"
+				") + 0[impedance]";
+
+			attribute<impedance> materials (Geography/Suriname250mGrid): expr =
+				"GridDist("
+					" resistance/grid"
+					",sources/materials/gridnr"
+					",const(0, sources/materials, impedance)"
+				") + 0[impedance]";
+			
+		}
+	}
+}

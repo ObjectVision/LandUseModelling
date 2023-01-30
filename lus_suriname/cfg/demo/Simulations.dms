@@ -1,0 +1,43 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                           configuration file with the configuration of the simulation results, in which scenario components are combined                                 **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container Simulations: Using = "Units"
+{
+	container high_population                    := Templates/AllocatePeriod_ggModel(ScenarioComponents/Suitability/high_population, ScenarioComponents/ClaimSets/high_population);
+	container high_population_new_infrastructure := Templates/AllocatePeriod_ggModel(ScenarioComponents/Suitability/high_population_new_infrastructure, ScenarioComponents/ClaimSets/high_population_new_infrastructure);
+	
+	container Verschilkaarten :=
+			for_each_nedv(
+				 Classifications/LU/luEndogenous/label
+				,'switch(
+					 case(
+						   IsDefined(high_population_new_infrastructure/CaseData/allocate_discrete/d_alloc/landuse_grid) 
+						&&  high_population/results/evaluation/ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + ' 
+						&& !high_population_new_infrastructure/results/evaluation/ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + '
+						,3[Classifications/AfBijScenarios]
+					)
+					,case(
+						   IsDefined(high_population_new_infrastructure/CaseData/allocate_discrete/d_alloc/landuse_grid)
+						&& !high_population/results/evaluation/ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + ' 
+						&& high_population_new_infrastructure/results/evaluation/ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + '
+						,2[Classifications/AfBijScenarios]
+					)
+					,case(
+						   IsDefined(high_population_new_infrastructure/CaseData/allocate_discrete/d_alloc/landuse_grid) 
+						&& high_population/results/evaluation/ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + ' 
+						&& high_population_new_infrastructure/results/evaluation/ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + '
+						,1[Classifications/AfBijScenarios]
+					)
+					,0[Classifications/AfBijScenarios]
+				 )'
+				,Geography/Suriname250mGrid
+				,Classifications/AfBijScenarios
+			),	Descr = "Kaarten die de verschillen aangeven tussen de twee scenarios";
+}

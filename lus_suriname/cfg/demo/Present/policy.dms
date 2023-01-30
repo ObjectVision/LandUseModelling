@@ -1,0 +1,35 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                           configuration file with configuration of policy data used as suitability factor                                                                **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container policy
+{
+	unit<uint32> protected_areas
+	:	DialogData      = "geometry"
+	,	DialogType      = "Map"
+	,	StorageName     = "%ProjDir%/data/factor/protect.shp"
+	,	StorageReadOnly = "True"
+	,	IsHidden        = "True"
+	{
+		attribute<geography/SurinameCoord> geometry (poly);
+	}
+	
+	attribute<Classifications/YesNo> protected (Geography/Suriname250mGrid)	:	expr     = "IsDefined(poly2grid(protected_areas/geometry,Geography/Suriname250mGrid,1))";
+	
+	unit<uint32> dam_impact_areas
+	:	DialogData      = "geometry"
+	,	DialogType      = "Map"
+	,	StorageName     = "%ProjDir%/data/factor/dam_impact_area.shp"
+	,	StorageReadOnly = "True"
+	,	IsHidden        = "True"
+	{
+		attribute<geography/SurinameCoord> geometry (polygon);
+	}
+	attribute<Classifications/YesNo> dam_impact_area (Geography/Suriname250mGrid)	:	expr     = "IsDefined(poly2grid(dam_impact_areas/geometry,Geography/Suriname250mGrid,1))";
+}

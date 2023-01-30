@@ -1,0 +1,109 @@
+// //////////////////////////////////////////////////////////////////////////////////////
+//                              Configuration Land Use Scanner 4.56                    //
+//                                                                                     //
+//                                         RPB / VU                                    //
+//                             (with help of Object Vision)                            //
+//                          (adapted by VU / Object Vision)                            //
+//                                                                                     //
+//                                      December 2003                                  //
+//                                                                                     //
+// //////////////////////////////////////////////////////////////////////////////////////
+//                                                                                     // 
+// This configurationfile contains several evaluation indicators for simulation results//
+//                                                                                     //
+// //////////////////////////////////////////////////////////////////////////////////////
+
+container evaluation
+{
+	container CurrentLanduseTotaal
+	:	Descr = "Total current landuse"
+	,	isHidden = "True"
+	,	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'sum(Present/LandUse/model == value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)"
+					"? value(6.25, luHa)"
+					": value(0, luHa)"
+				")'"
+				",void"
+				",luHa"
+			")";
+
+	container AllocatedLandUseTotaal
+	:	Descr = "Total allocated landuse"
+	,	isHidden = "True"
+	,	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'sum(LandUse/model == value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)"
+					"? value(6.25, luHa) "
+					": value(0, luHa)"
+				")'"
+				",void, luHa"
+			")";
+
+	container HuidigGrondgebruik
+	:	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'Present/LandUse/per_type/' + Classifications/LU/luEndogenous/label"
+				",Geography/Suriname250mGrid "
+				",Classifications/YesNo"
+			")";
+
+	container ToekomstigGrondgebruik
+	:	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'results/LandUse/per_type/' + Classifications/LU/luEndogenous/label"
+				",Geography/Suriname250mGrid "
+				",Classifications/YesNo"
+			")";
+
+	container HuidigEnToekomstigGrondgebruik
+	:	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",  'HuidigGrondgebruik/' + Classifications/LU/luEndogenous/label + '"
+				" && ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label"
+				",Geography/Suriname250mGrid "
+				",Classifications/YesNo"
+			")";
+
+	container BijKaarten
+	:	Descr = "Kaarten die aangeven welke LandUse klassen zijn verschenen"
+	,	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'Present/LandUse/endogenous <> value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)"
+				" && LandUse/endogenous == value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)'"
+				",Geography/Suriname250mGrid "
+				",Classifications/YesNoGreen"
+			")";
+
+	container AfKaarten
+	:	Descr = "Kaarten die aangeven welke LandUse klassen zijn verdwenen"
+	,	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'Present/LandUse/endogenous == value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)"
+				" && LandUse/endogenous <> value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)'"
+				",Geography/Suriname250mGrid"
+				",Classifications/YesNoRed"
+			")";
+
+	container CombiKaarten
+	:	Descr = "Kaarten die aangeven welke LandUse klassen zijn verschenen of verdwenen"
+	,	Expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'switch("
+					" case(IsDefined(CaseData/allocate_discrete/d_alloc/landuse_grid) &&  HuidigGrondgebruik/' + Classifications/LU/luEndogenous/label + ' && !ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + ',3[Classifications/AfBij])"
+					",case(IsDefined(CaseData/allocate_discrete/d_alloc/landuse_grid) && !HuidigGrondgebruik/' + Classifications/LU/luEndogenous/label + ' &&  ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + ',2[Classifications/AfBij])"
+					",case(IsDefined(CaseData/allocate_discrete/d_alloc/landuse_grid) &&  HuidigGrondgebruik/' + Classifications/LU/luEndogenous/label + ' &&  ToekomstigGrondgebruik/' + Classifications/LU/luEndogenous/label + ',1[Classifications/AfBij])"
+					",0[Classifications/AfBij]"
+				" )'"
+				",Geography/Suriname250mGrid "
+				",Classifications/AfBij"
+			")";
+}

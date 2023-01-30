@@ -1,0 +1,225 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                  Landuse configuration file with configuration of base land use map                                                                      **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container LandUse
+{
+	parameter<YearRange> RefJaar := value(2012, YearRange), isHidden = "True";
+
+	attribute<Classifications/LU/luModel>      model        (Geography/Suriname250mGrid): expr = "preperation/agr_veg_sea/LandUse";
+	attribute<Classifications/LU/HoofdKlassen> hoofdklassen (Geography/Suriname250mGrid): expr = "Classifications/LU/luModel/Hoofdklassennr[model]";
+	attribute<Classifications/LU/luEndogenous> endogenous   (Geography/Suriname250mGrid): expr = "rlookup(Model, Classifications/LU/luEndogenous/nr_OrgEntity)";
+
+	container sources: isHidden = "True"
+	{
+		unit<uint32> agroland
+		:	StorageName     = "%ProjDir%/data/LandUse/agro_landuse.shp"
+		,	StorageType     = "gdal.vect"
+		,	StorageReadOnly = "True"
+		{
+			attribute<geography/SurinameCoord>           geometry (poly);
+			attribute<uint32>                            class;
+			attribute<Classifications/LU/AgrLanduseCode> type: expr = "rlookup(class, Classifications/LU/AgrLanduseCode/code_Source)", DisableStorage = "True";
+		}
+
+		unit<uint32> vegland
+		:	StorageName     = "%ProjDir%/data/LandUse/vegetatie_utm.shp"
+		,	StorageType     = "gdal.vect"
+		,	StorageReadOnly = "True"
+		{
+			attribute<geography/SurinameCoord>           geometry (poly);
+			attribute<uint32>                            class;
+			attribute<Classifications/LU/VegLanduseCode> type: expr = "rlookup(class, Classifications/LU/VegLanduseCode/code_Source)", DisableStorage = "True";
+		}
+
+		unit<uint32> deforestation_gold_2000
+		:	StorageName     = "%ProjDir%/data/LandUse/deforestation_gold_2000_suriname.shp"
+		,	StorageType     = "gdal.vect"
+		,	StorageReadOnly = "True"
+		,	SyncMode        = "none"
+		{
+			attribute<geography/SurinameCoord>           geometry (poly);
+		}
+
+		unit<uint32> deforestation_gold_2008
+		:	StorageName     = "%ProjDir%/data/LandUse/deforestation_gold_2008_suriname.shp"
+		,	StorageType     = "gdal.vect"
+		,	StorageReadOnly = "True"
+		,	SyncMode        = "none"
+		{
+			attribute<geography/SurinameCoord>           geometry (poly);
+		}
+	}
+	container preperation: isHidden = "True"
+	{
+		Container Grids // De vector data wordt hier vergrid
+		{
+			attribute<sources/agroland>                  agrolandnr (Geography/Suriname250mGrid): expr = "poly2grid(sources/agroland/geometry, Geography/Suriname250mGrid, 5)";
+			attribute<Classifications/LU/AgrLanduseCode> agroland   (Geography/Suriname250mGrid): expr = "sources/agroland/type[agrolandnr]";
+			attribute<sources/vegland>                   veglandnr  (Geography/Suriname250mGrid): expr = "poly2grid(sources/vegland/geometry, Geography/Suriname250mGrid, 5)";
+			attribute<Classifications/LU/VegLanduseCode> vegland    (Geography/Suriname250mGrid): expr = "sources/vegland/type[veglandnr]";
+		}
+		Container refills // in de gedigitaliseerde grids worden bepaalde patronen heringevuld
+		{
+			// twee klassen worden ingesteld op undefined
+			attribute<Classifications/LU/AgrLanduseCode> agroland (Geography/Suriname250mGrid): expr =
+				"Potentials/OutlinesRemoved == 1[Classifications/LU/AgrLanduseCode] || Potentials/OutlinesRemoved == 5[Classifications/LU/AgrLanduseCode]" 
+					"? (0 /0)[Classifications/LU/AgrLanduseCode]"
+					": Potentials/OutlinesRemoved";
+
+			Container NaarGemechaniseerdeRijstCultuur
+			{
+				attribute<float32> resistance (Geography/Suriname250mGrid): expr =
+					"Grids/agroland == 9[classifications/LU/AgrLanduseCode]"
+						"? float32(1)"
+						": Grids/agroland == 3[classifications/LU/AgrLanduseCode]"
+							"? float32(0)"
+							": float32(1000000)";
+				unit<uint32> DestDomain: expr = "Subset(grids/agroland == 3[classifications/LU/AgrLanduseCode])";
+				attribute<float32> DistTo (Geography/Suriname250mGrid): expr = 
+					"griddist(resistance, DestDomain/nr_OrgEntity, const(0, DestDomain, float32)) + value(0, float32)", FreeData = "False"; // de + 0 is een tijdelijke oplossing om te zorgen dat het item in de CalcCache kan worden opgeslagen
+				attribute<Classifications/LU/AgrLanduseCode> agroland (Geography/Suriname250mGrid): expr = 
+					"DistTo < float32(6.33) && grids/agroland == 9[Classifications/LU/AgrLanduseCode]"
+						"? 3[Classifications/LU/AgrLanduseCode]"
+						": grids/agroland";
+			}
+			
+			Container NaarAquaCultuur
+			{
+				unit<uint32>               districts:                                     expr = "district(NaarGemechaniseerdeRijstCultuur/agroland)";
+				attribute<districts>       districtnr       (Geography/Suriname250mGrid): expr = "districts/districts[id(Geography/Suriname250mGrid)]";
+				attribute<uniquedistricts> uniquedistrictnr (Geography/Suriname250mGrid): expr = "rlookup(districtnr, uniquedistricts/values)";
+				
+				unit<uint32> uniquedistricts: expr = "unique(districtnr)"
+				{
+					attribute<uint32> count: expr = "pcount(uniquedistrictnr)";
+				}
+
+				attribute<Classifications/LU/AgrLanduseCode> agroland (Geography/Suriname250mGrid): expr =
+					"districtnr = 148 "
+						"? 6[Classifications/LU/AgrLanduseCode]"
+						": NaarGemechaniseerdeRijstCultuur/agroland"
+				,	IntegrityCheck = "uniquedistricts/count[148] == 352"; // Om te checken dat de data niet veranderd is
+			}
+			Container Potentials: expr =
+				"for_each_nedv("
+					"  Classifications/LU/AgrLanduseCode/Name"
+					", 'potential(float32(NaarAquaCultuur/agroland == ' + string(id(Classifications/LU/AgrLanduseCode)) + '[Classifications/LU/AgrLanduseCode]), Geography/DistMatrices/p1000m/PotRange/RelWeightSqrt)'"
+					", Geography/Suriname250mGrid"
+					", float32"
+				")"
+			{
+				attribute<uint32> ArgMax (Geography/Suriname250mGrid): expr = "='argmax(' + AsItemList('Potentials/'+Classifications/LU/AgrLanduseCode/Name) + ')'";
+
+				attribute<Classifications/LU/AgrLanduseCode> OutlinesRemoved (Geography/Suriname250mGrid): expr =
+					"='NaarAquaCultuur/agroland == 0[Classifications/LU/AgrLanduseCode]"
+						"? ArgMax[Classifications/LU/AgrLanduseCode]"
+						": NaarAquaCultuur/agroland'";
+			}
+		}
+		container agro_ingevuld_met_vegland // de undefined cellen van agroland worden ingevuld met de vegland kaart
+		{
+			attribute<Classifications/LU/luModel> vegland  (Geography/Suriname250mGrid): expr = "Classifications/LU/VegLanduseCode/LuModelnr[Grids/vegland]";
+			attribute<Classifications/LU/luModel> agroland (Geography/Suriname250mGrid): expr = "Classifications/LU/AgrLanduseCode/LuModelnr[refills/agroland]";
+
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"IsDefined(agroland) "
+					"? agroland "
+					": MakeDefined(vegland, classifications/LU/luModel/overig)";
+		}
+		container agr_veg_met_open_gebied // de cellen uit de deforestation_gold_2000 en deforestation_gold_2008 kaart worden open gebied
+		{
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"   IsDefined(poly2grid(sources/deforestation_gold_2000/geometry,Geography/Suriname250mGrid,1))"
+				"|| IsDefined(poly2grid(sources/deforestation_gold_2008/geometry,Geography/Suriname250mGrid,1))"
+					"? Classifications/LU/luModel/open_gebied"
+					": agro_ingevuld_met_vegland/landuse";
+		}
+
+		container agr_veg_met_buitenland // de cellen buiten Suriname worden ingesteld op buitenland
+		{
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"IsDefined(poly2grid(Present/Reference/admin_regions/geometry,Geography/Suriname250mGrid,1))"
+					"? agr_veg_met_open_gebied/landuse"
+					": Classifications/LU/luModel/buitenland";
+		}
+		#include<bebouwd.dms>
+		container agr_veg_met_bebouwd_gebied // bebouwd gebied wordt ingevuld op basis van OSM data
+		{
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"bebouwd/IsBebouwd500m"
+					"? Classifications/LU/LuModel/Bebouwd "
+					": agr_veg_met_buitenland/LandUse";
+		}
+		container agr_veg_river // gebieden die geklassificeerd zijn als overig waarin tenminste 1 cel rivier voorkomt worden ingevuld als rivier
+		{
+			attribute<bool> isRiverMajorGridCel (Geography/Suriname250mGrid): expr =
+				"isDefined("
+					"rlookup("
+						" id(Geography/Suriname250mGrid)"
+						",accessibility/preperation/DistGridLocationTo/river_major/pointset/gridnr"
+					")"
+				")";
+
+			unit<uint32> DistrictLandUse: expr = "district(agr_veg_met_bebouwd_gebied/LandUse)"
+			{
+				attribute<Classifications/LU/luModel> LandUse:      expr = "modus(agr_veg_met_bebouwd_gebied/LandUse,   districts)";
+				attribute<bool>                       isRiverMajor: expr = "any(isRiverMajorGridCel, districts)";
+			}
+			attribute<bool> isRiverMajorDistrict (Geography/Suriname250mGrid): expr =
+				"DistrictLandUse/LandUse[DistrictLandUse/districts] = value(0,Classifications/LU/luModel) && DistrictLandUse/isRiverMajor[DistrictLandUse/districts]";
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"isRiverMajorDistrict ? Classifications/LU/luModel/Water : agr_veg_met_bebouwd_gebied/LandUse ";
+		}
+		container agr_veg_river_village // normale en grote dorpen worden ingevuld met tenminste 1 cel bebouwd
+		{
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"(accessibility/preperation/village_ul/isDorp || accessibility/preperation/village_large/isDorp)"
+					"? Classifications/LU/luModel/bebouwd"
+					": agr_veg_river/LandUse";
+			attribute<Classifications/LU/luEndogenous> Endogenous (Geography/Suriname250mGrid): expr = "rlookup(LandUse, Classifications/LU/luEndogenous/nr_OrgEntity)";
+		}
+		container pot_km5: expr  =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'potential(float32(agr_veg_river_village/Endogenous == value('+ string(id(Classifications/LU/luEndogenous)) + ',Classifications/LU/luEndogenous)), Geography/DistMatrices/p5000m/PotRange/RelWeightSqrt)'"
+				",Geography/Suriname250mGrid"
+				",Units/ratio"
+			")"
+		{
+			attribute<Classifications/LU/luEndogenous> MaxPotential        (Geography/Suriname250mGrid): expr = "='argmax(' + AsItemList(Classifications/LU/luEndogenous/label) +')[Classifications/LU/luEndogenous]'";
+			attribute<Classifications/LU/luModel>      MaxPotentialLuModel (Geography/Suriname250mGrid): expr = "classifications/LU/luEndogenous/nr_OrgEntity[MaxPotential]";
+		}
+		container agr_veg_river_vil_no_other // de cellen die nu nog op overig staan worden ingevuld op basis van de maximale potentiaal
+		{
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"agr_veg_river_village/LandUse == Classifications/LU/luModel/overig"
+					"? pot_km5/MaxPotentialLuModel"
+					": agr_veg_river_village/LandUse";
+		}
+		container agr_veg_sea // het buitenland voorzover dit zee betreft wordt ingevuld met zee
+		{
+			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
+				"!Geography/Suriname250mGrid/isSuriname && !isDefined(poly2grid(Reference/kustlijn/geometry,Geography/Suriname250mGrid,1))"
+					"? classifications/LU/luModel/water "
+					": agr_veg_river_vil_no_other/LandUse"
+				, FreeData = "False";
+//			,	StorageName = "%LocalDataProjDir%/landuse_result.tif";
+		}
+	}
+
+	container per_type: expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				", 'Present/LandUse/endogenous == value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)'"
+				",Geography/Suriname250mGrid , Classifications/YesNo"
+			")";
+}
+
+

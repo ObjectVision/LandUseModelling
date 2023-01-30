@@ -1,0 +1,163 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**               In this configurationfile the suitability maps of the endogenous land use classes for the high population with new infrastrucre variant is defined                         **
+//**                                                                                                                                                                                          **
+//**  Basislogic                                                                                                                                                                              **
+//**   * first attractive (+), then unattractive (-)                                                                                                                                          **
+//**   * start with including current landuse (whenever relevant                                                                                                                              **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container high_population_new_infrastructure
+{
+
+	//LANDBOUW ZWERF
+	container landbouw_zwerf
+	{
+		attribute<dollar_ha> total_high_population (Geography/Suriname250mGrid) : expr = "high_population/landbouw_zwerf/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr = 
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(25,dollar_ha) "
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr = 
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  50, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+	}
+	// BEBOUWD
+	container bebouwd
+	{
+		attribute<dollar_ha> total_high_population (Geography/Suriname250mGrid): expr = "high_population/bebouwd/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr = 
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(10,dollar_ha) " 
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr = 
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  50, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+	}
+	// LANDBOUW GROOTSCHALIG
+	container landbouw_grootschalig
+	{
+		attribute<dollar_ha> total_high_population(Geography/Suriname250mGrid) : expr = "high_population/landbouw_grootschalig/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr = 
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(50,dollar_ha) "
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr = 
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+	}
+
+	// LANDBOUW KLEINSCHALIG
+	container landbouw_kleinschalig
+	{
+		attribute<dollar_ha> total_high_population (Geography/Suriname250mGrid) : expr = "high_population/landbouw_kleinschalig/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr = 
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(50,dollar_ha) "
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value( 2.5, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr =
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+	}
+
+	//LANDBOUW NAT
+	container landbouw_nat
+	{
+		attribute<dollar_ha> total_high_population (Geography/Suriname250mGrid) : expr = "high_population/landbouw_nat/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr =
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(25,dollar_ha) "
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr =
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+	}
+
+	//BOS
+	container bos
+	{
+		attribute<dollar_ha> total_high_population(Geography/Suriname250mGrid) : expr = "high_population/bos/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr = 
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(25,dollar_ha) "
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value(  50, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr = 
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  50, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+
+	}
+
+	//MOERA SAVANNE BOS
+	container moeras_savanne_bos
+	{
+		attribute<dollar_ha> total_high_population (Geography/Suriname250mGrid) : expr = "high_population/moeras_savanne_bos/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr = 
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(25,dollar_ha) " 
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value(  50, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr = 
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  50, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+
+	}
+	// OPEN GEBIED
+	container open_gebied
+	{
+		attribute<dollar_ha> total_high_population (Geography/Suriname250mGrid): expr = "high_population/open_gebied/total";
+
+		attribute<dollar_ha> proposed_road(Geography/Suriname250mGrid) : expr = 
+			"   float32(0.0) * (Present/accessibility/Road_proposed[dollar_ha] < value(50,dollar_ha) " 
+				" ? value(500, dollar_ha) "
+				" : (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Road_proposed, value(0,dollar_ha))))";
+
+		attribute<dollar_ha> proposed_dam(Geography/Suriname250mGrid) : expr = 
+			"  float32(0.0) * (max_elem(value( 500, dollar_ha) - value(  10, dollar_ha) * Present/accessibility/Dam, value(0,dollar_ha)))"
+			"+ float32(0.0) * (value( 500, dollar_ha) * float32(Present/policy/dam_impact_area == TRUE))";
+
+		attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "total_high_population + proposed_road + proposed_dam";
+	}
+
+	// MAXIMALE GESCHIKTHEID
+	attribute<Classifications/LU/luEndogenous> lu_max_suit(Geography/Suriname250mGrid): expr = 
+		"='value("
+			" argmax("
+				"' + AsItemList(Classifications/LU/luEndogenous/name +'/total') +'"
+			" )"
+			",Classifications/LU/luEndogenous"
+		")'";
+
+	//attribute<dollar_ha> total (Geography/Suriname250mGrid): expr = "CurrentLandUse + neighbourhood + physical + other";
+}

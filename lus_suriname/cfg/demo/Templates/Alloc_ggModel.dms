@@ -1,0 +1,115 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                        configuration file with configuration of the allocation model                                                                     **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container AllocatePeriod_ggModel: IsTemplate = "True"
+{
+	// Begin CaseParameters
+	container SuitabilitySet;
+	container ClaimSet
+	{
+		parameter<YearDiffRange> ClaimPeriod;
+	}
+	// End CaseParameters
+
+	container orgLanduse: Expr = "Present/landuse";
+
+	container CaseData : IsHidden = "True"
+	{
+		container Land: Descr = "These attributes are used to describe the freeLand for allocation"
+		{
+			attribute<gsz> FreeLand (Geography/Suriname250mGrid): Expr =
+				"IsDefined(Present/LandUse/endogenous) && Geography/Suriname250mGrid/isSuriname"
+					"? value(1, gsz)"
+					": value(0, gsz)";
+		}
+
+		container Compact
+		{
+			attribute<bool> HasFreeLand (Geography/Suriname250mGrid): Expr = "Land/FreeLand == value(1,gsz)";
+
+			unit<uint32> FreeLandCells: expr = "Subset(HasFreeLand)"
+			{
+				attribute<ratio>                      rnd_array:                                  expr = "rnd_uniform(0, FreeLandCells, range(Ratio, float32(0.0), float32(1.0)))";
+				attribute<FreeLandCells>              permutation:                                expr = "index(rnd_array)";
+				attribute<Geography/Suriname250mGrid> nr_OrgEntity2 (FreeLandCells):              expr = "nr_OrgEntity[permutation]";
+				attribute<FreeLandCells>              BaseGrid      (Geography/Suriname250mGrid): expr = "invert(nr_OrgEntity2)";
+			}
+			attribute<Geography/Regions/ClaimUnit> Region       (FreeLandCells):   expr = "Geography/Regions/Grids/data[FreeLandCells/nr_OrgEntity2]";
+			attribute<Geography/Regions/Atomair>   RegionAtomair(FreeLandCells):   expr = "Geography/Regions/Atomair/UnionData[FreeLandCells/nr_OrgEntity2]";
+
+			container Suitabilities: expr =
+				"for_each_nedv("
+					"   Classifications/LU/luEndogenous/Name"
+					",'lookup(FreeLandCells/nr_OrgEntity2, SuitabilitySet/'+Classifications/LU/luEndogenous/Name+'/total)'"
+					",FreeLandCells"
+					",dollar_ha "
+				")";
+		}
+
+		container allocate_discrete
+		{
+			container Suitabilities: expr =
+				"for_each_nedv("
+					" Classifications/LU/luEndogenous/Name"
+					",'value(Compact/Suitabilities/' + Classifications/LU/luEndogenous/Name + ',dollar_ha_int32)'"
+					",Compact/FreeLandCells"
+					",dollar_ha_int32"
+				")";
+
+			attribute<String>  RegioRefs       (Classifications/LU/luEndogenous):expr = "Geography/Regions/Refs";
+			attribute<String>  UniqueRefValues (Geography/Regions/UniqueRefs):  expr = "Geography/Regions/UniqueRefs/Values";
+
+			container Claims: expr = "Templates/ClaimTemplate(ClaimSet)";
+			container FeasibleSolution;
+
+			container d_alloc: expr =
+				"discrete_alloc("
+					" Classifications/LU/luEndogenous/Name"
+					",Compact/FreeLandCells"
+					",Suitabilities"
+					",rlookup(RegioRefs, UniqueRefValues)"
+					",UniqueRefValues"
+					",Geography/Regions/Atomair"
+					",Compact/RegionAtomair"
+					",Claims/MinClaims"
+					",Claims/MaxClaims"
+					",int32(value(-1, dollar_m2))"
+					",FeasibleSolution"
+				")"
+			{
+				attribute<Classifications/LU/luEndogenous> LandUse      (Compact/FreeLandCells);
+				attribute<Classifications/LU/luEndogenous> landuse_grid (Geography/Suriname250mGrid): expr = "landuse[Compact/FreeLandCells/BaseGrid]";
+			}
+		}
+	}
+	container results
+	{
+		container landuse
+		{
+			attribute <Classifications/LU/luModel> Model (Geography/Suriname250mGrid): Expr =
+				"IsDefined(Endogenous)"
+					"? Classifications/LU/luEndogenous/nr_OrgEntity[Endogenous]"
+					": Present/LandUse/model";
+			attribute<Classifications/LU/HoofdKlassen> hoofdklassen (Geography/Suriname250mGrid): expr = "Classifications/LU/luModel/Hoofdklassennr[model]";
+			attribute<Classifications/LU/luEndogenous> Endogenous (Geography/Suriname250mGrid): Expr =
+				"CaseData/allocate_discrete/d_alloc/landuse_grid";
+			container per_type: expr =
+					"for_each_nedv("
+						" Classifications/LU/luEndogenous/label"
+						", 'Endogenous == value(' + Classifications/LU/luEndogenous/id_str + ',Classifications/LU/luEndogenous)'"
+						",Geography/Suriname250mGrid , Classifications/YesNo"
+					")";
+
+		}
+	#include <evaluation.dms>
+	}
+}
+
+

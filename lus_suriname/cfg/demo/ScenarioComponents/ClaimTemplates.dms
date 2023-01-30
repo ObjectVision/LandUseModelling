@@ -1,0 +1,123 @@
+// ///////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//                        Configuration Land Use Scanner 4.56                           //
+//                                                                                      //
+//                                     VU                                               //
+//                                 July 2004                                            //
+//                                                                                      //
+// ///////////////////////////////////////////////////////////////////////////////////////
+
+container ClaimTemplates:
+	DialogType = "hidden"
+{
+	// REMOVE
+// 	container ClaimTempl: IsTemplate = "True"
+// 	{
+// 		unit<UInt8> RegioUnit: DisableStorage = "True";
+// 		attribute<RegioUnit>   Regios(rdc_500lu): DisableStorage = "True";
+// 			
+// 		attribute<claimHa>      Claim(RegioUnit);
+// 		attribute<OperatorType> Operator(RegioUnit);
+// 		
+// 		attribute<EUR_M2> logAj(RegioUnit): Expr = "const(0, RegioUnit, Eur_m2)";
+// 			
+// 	}
+
+	// REMOVE
+// 	container CoropClaimTempl: IsTemplate = "True"
+// 	{
+// 		unit<UInt8>            RegioUnit: Expr = "RegionalUnit/Corop/VAT";
+// 		attribute<RegioUnit>   Regios(rdc_500lu): Expr = "RegioGrids/corop2000_500";
+// 			
+// 		attribute<claimHa>      Claim(RegioUnit);
+// 		attribute<OperatorType> Operator(RegioUnit);
+// 		
+// 		attribute<EUR_M2> logAj(RegioUnit): Expr = "const(0, RegioUnit, Eur_m2)";
+// 	}
+	
+	container AggrClaim: IsTemplate = "True"
+	{
+		parameter<String> From;
+		parameter<String> Aggr;
+		unit<UInt8> RegioUnit;
+			
+		attribute<RegioUnit>    Regios(rdc_500lu);
+		
+		attribute<claimHa>      Claim(RegioUnit):    Expr = "='sum('+From+'/Claim,'+Aggr+')'";
+		attribute<OperatorType> Operator(RegioUnit): Expr = "='mean('+From+'/Operator,'+Aggr+')'";
+			
+		attribute<EUR_M2> logAj(RegioUnit):
+			Expr = "='MakeDefined(sum('+From+'/Claim * '+From+'/logAj,'+Aggr+') / Claim, const(0, RegioUnit, Eur_m2))'";
+	}
+	container ClaimSetAggrWoonRecrCorop2Prov: IsTemplate = "True"
+	{
+		parameter<String> From(Void);
+
+		attribute<String> ClaimRegios(ggEndogenous): Expr = "lookup(ggEndogenous/nr_OrgEntity, ggModel/ProvLei14)";
+
+		parameter<YearDiffRange> ClaimPeriod(Void): Expr = "=From+'/ClaimPeriod'";
+
+		// aggr van Corop naar Prov
+		container residential:          Expr = "AggrClaim(From+'/residential',          'RegionalUnit/Corop/VAT/Provincienr', RegionalUnit/Provincie/VAT, RegioGrids/Prov2000_500)";
+		container recreation:           Expr = "AggrClaim(From+'/recreation',           'RegionalUnit/Corop/VAT/Provincienr', RegionalUnit/Provincie/VAT, RegioGrids/Prov2000_500)";
+		
+		// blijft zelfde indeling
+		container industrial:           Expr = "=From+'/industrial'";    // is al per Prov in From
+		container nature_forest:        Expr = "=From+'/nature_forest'"; // is al per Nl in From		
+		container agriculture:          Expr = "=From+'/agriculture'";   // Blijft Lei14
+	}
+	
+	container ClaimSetAggrAgrLei142Nl: IsTemplate = "True"
+	{
+		parameter<String> From(Void);
+
+		parameter<YearDiffRange> ClaimPeriod(Void): Expr = "=From+'/ClaimPeriod'";
+
+		attribute<String> ClaimRegios(ggEndogenous): Expr = "lookup(ggEndogenous/nr_OrgEntity, ggModel/ProvNl)";
+
+		// is al per Prov in From
+		container residential:          Expr = "=From+'/residential'";
+		container recreation:           Expr = "=From+'/recreation'";
+		container industrial:          	Expr = "=From+'/industrial'";
+		container nature_forest:        Expr = "=From+'/nature_forest'"; // is al per Nl in From		
+		
+		// blijft zelfde indeling
+		container agriculture:          Expr = "AggrClaim(From+'/agriculture', 'RegionalUnit/Leu14/VAT/nlnr', RegionalUnit/Nl/VAT, RegioGrids/Nl2000_500)";	
+	}
+	container ClaimSetAggrWoonWerkRecrProv2NlDeel: IsTemplate = "True"
+	{
+		parameter<String> From(Void);
+
+		attribute<String> ClaimRegios(ggEndogenous): Expr = "lookup(ggEndogenous/nr_OrgEntity, ggModel/NlDeelNl)";
+
+		parameter<YearDiffRange> ClaimPeriod(Void): Expr = "=From+'/ClaimPeriod'";
+
+		container residential: Expr = "AggrClaim(From+'/residential', 'RegionalUnit/Provincie/VAT/NlDeelNr', RegionalUnit/NlDeel/VAT, RegioGrids/NlDeel2000_500)";
+		container recreation:  Expr = "AggrClaim(From+'/recreation',  'RegionalUnit/Provincie/VAT/NlDeelNr', RegionalUnit/NlDeel/VAT, RegioGrids/NlDeel2000_500)";
+		container industrial:  Expr = "AggrClaim(From+'/industrial',  'RegionalUnit/Provincie/VAT/NlDeelNr', RegionalUnit/NlDeel/VAT, RegioGrids/NlDeel2000_500)";
+
+		// is al per Nl
+		container nature_forest:        Expr = "=From+'/nature_forest'"; // is al per Nl in From		
+		container agriculture:          Expr = "=From+'/agriculture'";   // Blijft Lei14
+		
+	}
+	
+	container ClaimSetAggrWoonWerkRecrProv2Nl: IsTemplate = "True"
+	{
+		parameter<String> From(Void);
+
+		attribute<String> ClaimRegios(ggEndogenous): Expr = "lookup(ggEndogenous/nr_OrgEntity, ggModel/NlNl)";
+
+		parameter<YearDiffRange> ClaimPeriod(Void):
+			DisableStorage = "True",
+			Expr = "=From+'/ClaimPeriod'";
+
+		container residential:   Expr = "AggrClaim(From+'/residential', 'RegionalUnit/Provincie/VAT/NlNr', RegionalUnit/Nl/VAT, RegioGrids/Nl2000_500)";
+		container recreation:    Expr = "AggrClaim(From+'/recreation',  'RegionalUnit/Provincie/VAT/NlNr', RegionalUnit/Nl/VAT, RegioGrids/Nl2000_500)";
+		container industrial:    Expr = "AggrClaim(From+'/industrial',  'RegionalUnit/Provincie/VAT/NlNr', RegionalUnit/Nl/VAT, RegioGrids/Nl2000_500)";
+
+		// is al per Nl
+		container nature_forest: Expr = "=From+'/nature_forest'"; // is al per Nl in From		
+		container agriculture:   Expr = "=From+'/agriculture'";   // Blijft Lei14
+	}
+}

@@ -40,7 +40,7 @@ container demo: IntegrityCheck = "GeoDmsVersion() >= 7.130"
 		{
 			parameter<Year>      StartYear       := 2017[year];
 			parameter<Year>      ModelYear       := 2040[year];
-			parameter<IterRange> NrOfIterations  := 23[IterRange];
+			parameter<IterRange> NrOfIterations  := 30[IterRange];
 			parameter<m2_Eur>    BetaFactor      := 1[m2_Eur];
 		}
 	}
