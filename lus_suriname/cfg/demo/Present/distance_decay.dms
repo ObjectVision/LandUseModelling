@@ -1,0 +1,39 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                  The configuration of the distance decay to model the neighboorhoud suitability factors                                                  **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container DistanceDecay: IsHidden = "False"
+{
+	container LandUse
+	{
+		container pot_km1: expr =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'Geography/Suriname250mGrid/isSuriname"
+					"? potential(float32(Present/LandUse/per_type/'+ Classifications/LU/luEndogenous/label + '), Geography/DistMatrices/p1000m/PotRange/RelWeightSqrt)"
+					": value( 0 / 0, Units/ratio)'"
+				",Geography/Suriname250mGrid"
+				",Units/ratio"
+			")"
+		,	FreeData = "False";
+	
+		container pot_km5: expr  =
+			"for_each_nedv("
+				" Classifications/LU/luEndogenous/label"
+				",'Geography/Suriname250mGrid/isSuriname"
+					"? potential(float32(Present/LandUse/per_type/'+ Classifications/LU/luEndogenous/label + '), Geography/DistMatrices/p5000m/PotRange/RelWeightSqrt)"
+					": value( 0 / 0, Units/ratio)'"
+				",Geography/Suriname250mGrid"
+				",Units/ratio)"
+		,	FreeData = "False"
+		{
+			attribute<Classifications/LU/luEndogenous> MaxPotential (Geography/Suriname250mGrid): expr = "='argmax(' + AsItemList(Classifications/LU/luEndogenous/label) +')[Classifications/LU/luEndogenous]'";
+		}
+	}
+}

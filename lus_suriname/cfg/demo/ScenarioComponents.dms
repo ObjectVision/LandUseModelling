@@ -1,0 +1,101 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                           configuration file with configuration of components used to define scenario's                                                                  **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container ScenarioComponents: Using = "Units;Geography;Classifications"
+{
+	container Suitability: using = "Units;Geography;Classifications;Present"
+	{
+		#include <high_population.dms>
+		#include <high_population_new_infrastructure.dms>
+	}
+	container ClaimSets
+	{
+		container ParamSets
+		{
+			container high_population
+			{
+				parameter<YearRange>      PeriodLength:                       expr = "value(15, YearRange)";
+
+				parameter<nr_inhabitants> Inwoners2010:                       expr = "value(547298.8,nr_inhabitants)", Source = "Bevolkingsprognose: Algemeen Bureau voor de Statistiek (ABS), Suriname";
+				parameter<nr_inhabitants> Inwoners2025:                       expr = "value(719067,  nr_inhabitants)", Source = "Bevolkingsprognose: Algemeen Bureau voor de Statistiek (ABS), Suriname";
+
+				parameter<ratio>          ToenameFootPrintPerjaar:            expr = "value(0.04, ratio)",  Source = "Expert Knowledge"; // Geeft aan hoeveel meer hectare per jaar een inwoner gaat gebruiken
+
+				parameter<ratio>          IntensiveringLandbouw_grootschalig: expr = "value(0.12, ratio)",  Source = "Expert Knowledge"; // Geeft aan hoeveel de landbouw gaat intensiveren in de jaren tot   2020
+
+				parameter<luHa>           AfnameLandbouw_zwerf:               expr = "value(100000, luHa)", Source = "Expert Knowledge"; // Geeft aan hoeveel hectare zwerf landbouw zal gaan verdwijnen
+				parameter<luHa>           AfnameMoeras_savanne_bos:           expr = "value(100000, luHa)", Source = "Expert Knowledge"; // Geeft aan hoeveel hectare moeras zal gaan verdwijnen
+
+				parameter<m>              HoutkapPerMeterWeg:                 expr = "value(0,    m)", Source = "Expert Knowledge"; // Geeft aan hoeveel hectare gekapt gaat worden voor de nieuwe weg, niet in dit scenario 
+				parameter<luHa>           HoutkapVoorMining:                  expr = "value(0, luHa)", Source = "Expert Knowledge"; // Geeft aan hoeveel hectare gekapt gaat worden voor mining, niet in dit scenario 
+			
+			}
+			container high_population_new_infrastructure: expr = "high_population"
+			{
+				parameter<m>              HoutkapPerMeterWeg: expr = "value(1500,    m)", Source = "Expert Knowledge"; // Geeft aan hoeveel hectare gekapt gaat worden voor de nieuwe weg 
+				parameter<luHa>           HoutkapVoorMining:  expr = "value(2000, luHa)", Source = "Expert Knowledge"; // Geeft aan hoeveel hectare gekapt gaat worden voor de nieuwe weg 
+				parameter<nr_inhabitants> Inwoners2025: expr = "high_population/Inwoners2025  + value(23000,  nr_inhabitants)"; //Extra inwoners aangetrokken door nieuwe infrastructurele ontwikkelingen
+			}
+		}
+		container CalcClaimsetTemplate: isTemplate = "True", IsHidden = "True"
+		{
+			// begin case parameters
+			container ParamSet;
+			// end caseparameters
+
+			container CaseData
+			{
+				container Present: expr =
+					"for_each_nedv("
+						" Classifications/LU/luEndogenous/name"
+						",'landuse[value(' + string(id(Classifications/LU/luEndogenous)) +',Classifications/LU/luEndogenous)]'"
+						",void"
+						",luHa"
+					")"
+				{
+					attribute<luHa> landuse (Classifications/LU/luEndogenous): expr = "float32(pcount(/Present/landuse/endogenous)) * value(2.5 * 2.5, luHa)";
+					
+					parameter<luHa_per_inh> ha_bebouwd_per_inhabitant:               expr = "bebouwd               / ParamSet/Inwoners2010";
+					parameter<luHa_per_inh> ha_landbouw_grootschalig_per_inhabitant: expr = "landbouw_grootschalig / ParamSet/Inwoners2010";
+					parameter<luHa_per_inh> ha_landbouw_kleinschalig_per_inhabitant: expr = "landbouw_kleinschalig / ParamSet/Inwoners2010";
+					parameter<luHa_per_inh> ha_landbouw_nat_per_inhabitant:          expr = "landbouw_nat          / ParamSet/Inwoners2010";
+				}
+				Container GrowthRates
+				{
+					parameter<ratio> bebouwd:               expr = "(float32(1) + ParamSet/ToenameFootPrintPerjaar) ^ float32(ParamSet/PeriodLength)";
+					parameter<ratio> landbouw_grootschalig: expr = "(float32(1) + ParamSet/IntensiveringLandbouw_grootschalig) ^ float32(ParamSet/PeriodLength)";
+				}
+				Container ProposedRoad // Voor het modelleren van de kap van wegen voor de nieuwe infrastructuur
+				{
+					parameter<m>    length:   expr = "sum(arc_length(/Present/accessibility/preperation/road/proposed/line, m))";
+					parameter<luHa> openarea: expr = "(ParamSet/HoutkapPerMeterWeg * length) / value(10000, m2 / luHa)";
+					
+				}
+				parameter<luHa> landbouw_zwerf:        expr = " Present/landbouw_zwerf - ParamSet/AfnameLandbouw_zwerf";
+				parameter<luHa> bebouwd:               expr = "(ParamSet/Inwoners2025 * Present/ha_bebouwd_per_inhabitant)  * GrowthRates/bebouwd";
+				parameter<luHa> landbouw_grootschalig: expr = "(ParamSet/Inwoners2025 * Present/ha_landbouw_grootschalig_per_inhabitant)  * GrowthRates/landbouw_grootschalig";
+				parameter<luHa> landbouw_kleinschalig: expr = " ParamSet/Inwoners2025 * Present/ha_landbouw_kleinschalig_per_inhabitant";
+				parameter<luHa> landbouw_nat:          expr = " ParamSet/Inwoners2025 * Present/ha_landbouw_nat_per_inhabitant";
+				parameter<luHa> bos:                   expr = 
+					"sum(Present/LandUse) - (landbouw_zwerf + bebouwd + landbouw_grootschalig + landbouw_kleinschalig + landbouw_nat + moeras_savanne_bos  + open_gebied)";
+					// De claim voor bos is een restcategorie, wat er over is aan landuse dat niet geclaimd wordt door de andere typen blijft bos
+				parameter<luHa> moeras_savanne_bos:    expr = " Present/moeras_savanne_bos - ParamSet/AfnameMoeras_savanne_bos";
+				parameter<luHa> open_gebied:           expr = " Present/open_gebied + ProposedRoad/openarea +  ParamSet/HoutkapVoorMining";
+			}
+			attribute<luHa> ClaimHa (Classifications/LU/luEndogenous):
+				expr = "='union_data(Classifications/LU/luEndogenous,' + AsList('CaseData/' + Classifications/LU/luEndogenous/name,',') +')'";
+			attribute<gsz> Claim (Classifications/LU/luEndogenous):
+				expr = "claimHa / value(2.5 * 2.5, luHa / gsz) ";
+		}
+
+		container high_population:                 expr = "CalcClaimsetTemplate(ParamSets/high_population)";
+		container high_population_new_infrastructure: expr = "CalcClaimsetTemplate(ParamSets/high_population_new_infrastructure)";
+	}
+}

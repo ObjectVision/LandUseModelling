@@ -1,0 +1,56 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                       This is the configuration file with the values units                                                                               **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container Units: isHidden = "True"
+{
+	unit<float32> s:                expr = "baseunit('s', float32)",       label = "second", cdf =  "Classifications/second_12K/ClassBreaks";
+	unit<float32> min:              expr = "60 * s",                       label = "minute";
+	unit<float32> hr:               expr = "60 * min",                     label = "hour";
+
+	unit<float32> m:                expr = "BaseUnit('m', float32)",       cdf =  "Classifications/m_dist/ClassBreaks";
+	unit<float32> m2:               expr = "m * m";
+	unit<float32> mm:               expr = "0.001 * m";
+	unit<float32> km:               expr = "1000.0  * m";
+	unit<float32> km2:              expr = "100.0 * luHa";
+	unit<float32> luHa:             expr = "10000.0 * m * m",              cdf = "Classifications/LandUseHa9K/ClassBreaks";
+
+	unit<float32> gsz:              expr = "250.0 * 250.0 * m * m";
+	unit<Float32> gsz2:             expr = "gsz * gsz";
+
+	unit<float32> per_ha:           expr = "1 / luHa";
+
+	unit<float32> nr_inhabitants:   label = "number of inhabitants";
+	unit<float32> luHa_per_inh:     expr = "luHa / nr_inhabitants",        label = "lu hectares of inhabitants";
+	unit<float32> m_s:              expr = "m /s",                         label = "meter per seconde";
+	unit<float32> km_hr:            expr = "km / hr",                      label = "kilometer per hour";
+
+	unit<float32> ratio:            expr = "1.0 * luHa / luHa",            cdf = "Classifications/ratio_10K/ClassBreaks";
+
+	unit<float32> rad:              expr = "BaseUnit('Rad', float32)";
+	unit<float32> degrees:          expr = "float32( pi() / 180.0) * rad", cdf = "Classifications/degrees_slope/ClassBreaks";
+
+	unit<float32> dollar:           expr = "BaseUnit('Dollar', float32)",  cdf = "Classifications/dollar_10K/ClassBreaks";
+	unit<float32> impedance:                                               cdf = "Classifications/impedance_10K/ClassBreaks";
+	unit<float32> dollar_m2:        expr = "dollar / m2";
+	unit<float32> m2_dollar:        expr = "m2 / dollar";
+	unit<float32> dollar_ha:        expr = "dollar / luHa",                cdf = "Classifications/dollar_ha_14K/ClassBreaks";
+	unit<float32> dollar_ha_m:      expr = "dollar_ha / m";
+	unit<float32> dollar_ha_degree: expr = "dollar_ha / degrees";
+	unit<int32>   dollar_ha_int32:  expr = "int32(dollar_ha)";
+	unit<float32> dollar_m:         expr = "dollar / m";
+	unit<float32> dollar_s:         expr = "dollar / s";
+
+	unit<float32> year:             expr = "BaseUnit('Yr', float32)";
+	unit<float32> YearRange:        Range = "[1900, 2100) ";
+	unit<float32> YearDiffRange:    Range = "[-100, 100) ";
+
+	unit<uint32>  Vertex:           nrofrows = 2; // nodig voor de outlines van de country
+}
+

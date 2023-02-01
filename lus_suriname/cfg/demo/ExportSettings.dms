@@ -1,0 +1,39 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2010                                                                       ** 
+//**                                                                                                                                                                                          **
+//**                                                  Major adaptations made for project modelling the road to Brazil                                                                         **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                   Export Settings are used to define at what scale and resolution maps are exported to bitmaps                                           **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container ExportSettings: isHidden = "True"
+{
+	parameter<string> DocData: expr ="expand(.,'%projdir%/html')";
+
+	parameter<float64> width:  [51.04];
+	parameter<float64> height: [38.28];
+	
+	parameter<DPoint>  PaperSize: expr = "Point(width / 100.0, height / 100.0)", url ="about:papersize is <B>defined</B> as height * width";
+
+	parameter<float64> dwsc:        [null];
+	parameter<DPoint>  DotWorldSize: expr = "Point(dwsc,dwsc)";
+
+	parameter<UInt32 > NrSubDotsPerDot: [1];                            // alternative spec for nrSubDotsPerDot, default = 2
+
+	parameter<Float64> dpi:        [200.0];                             // alternative spec for dotSize in dots per inch (default: 600 pdi)
+	parameter<DPoint>  DotSize: expr = " Point(0.0254/dpi,0.0254/dpi)"; // size of dot on paper in m (default 600 dpi)
+	parameter<Float64> ViewFactor: [1.0];                               // paper view distance relative to screen view distance
+
+	parameter<IPoint>  MaxNrSubDotsPerTile: [(4096, 4096)]; 
+	
+	parameter<String> FileNameBase: expr = "'results/Suriname'";
+
+//	parameter<float64> ScaleDenom:  [2700000];
+	parameter<float64> ScaleDenom:  [1350000];
+	
+	parameter<Float64> Scale:       expr = "1.0 / ScaleDenom";
+}

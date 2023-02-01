@@ -1,0 +1,58 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                  The configuration of the bebouwd land use class based on the OSM data                                                                   **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container Bebouwd
+{
+	unit<uint32> segments: expr = "arc2segm(Accessibility/preperation/road/OSM/line)"
+	{
+		attribute<bool> isResidential: expr = "(Accessibility/preperation/road/OSM/type_txt == 'residential')[SequenceNr]";
+
+		unit<uint32> Residential: expr = "Subset(isResidential)"
+		{
+			attribute<Geography/SurinameCoord>     point: expr = "segments/point[nr_OrgEntity]";
+			attribute<Geography/SurinameCoord> nextpoint: expr = "segments/nextpoint[nr_OrgEntity]";
+			unit<uint32> DynaPoint: expr = "dyna_point(point, nextpoint, value(3,m))";
+		}
+		unit<uint32> NonResidential: expr = "Subset(!isResidential)"
+		{
+			attribute<Geography/SurinameCoord>     point: expr = "segments/point[nr_OrgEntity]";
+			attribute<Geography/SurinameCoord> nextpoint: expr = "segments/nextpoint[nr_OrgEntity]";
+			unit<uint32> DynaPoint: expr = "dyna_point(point, nextpoint, value(15,m))";
+		}
+		unit<uint32> DynaPoint_non_unique: expr = "union_unit(Residential/DynaPoint, NonResidential/DynaPoint)"
+		{
+			attribute<Geography/SurinameCoord> point:      expr = "union_data(.,Residential/DynaPoint/Point,      NonResidential/DynaPoint/Point)";
+			attribute<segments>                SequenceNr: expr = "union_data(.,Residential/DynaPoint/SequenceNr, NonResidential/DynaPoint/SequenceNr)";
+			attribute<uint32>                  Ordinal:    expr = "union_data(.,Residential/DynaPoint/Ordinal,    NonResidential/DynaPoint/Ordinal)";
+		}
+		unit<uint32> DynaPoint: expr = "unique(DynaPoint_non_unique/point)"
+		{
+			attribute<.>                          id:             expr = "id(.)";
+			attribute<Geography/SurinameCoord>    point:          expr = "values";
+			attribute<segments>                   SequenceNr:     expr = "rjoin(values, DynaPoint_non_unique/point, DynaPoint_non_unique/SequenceNr)";
+			attribute<uint32>                     Ordinal:        expr = "rjoin(values, DynaPoint_non_unique/point, DynaPoint_non_unique/Ordinal)";
+
+			attribute<Geography/SurinameCoord>    point_relative: expr = "fpoint(point) - Geography/Suriname250mGrid/ProjOffset";
+			attribute<Geography/Suriname250mGrid> gridnr:         expr = 
+				"=GeoDMSVersion() > 7.015"
+					"? 'fpoint(point)[Geography/Suriname250mGrid]'"
+					": 'value((fpoint(point) - Geography/Suriname250mGrid/ProjOffset) / Geography/Suriname250mGrid/ProjFactor, Geography/Suriname250mGrid)'";
+		}
+	}
+	attribute<uint32>  NrRoadPoints      (Geography/Suriname250mGrid): expr = "Pcount(segments/DynaPoint/gridnr)";
+	attribute<float32> PotRoadPoints250m (Geography/Suriname250mGrid): expr = "potential(float32(NrRoadPoints), Geography/DistMatrices/p250m/potRange/Const1)";
+	attribute<float32> PotRoadPoints500m (Geography/Suriname250mGrid): expr = "potential(float32(NrRoadPoints), Geography/DistMatrices/p500m/potRange/Const1)";
+
+	attribute<bool>    IsBebouwd250m     (Geography/Suriname250mGrid): expr = "PotRoadPoints250m >= float32( 750) || NrRoadPoints >= 300";
+	attribute<bool>    IsBebouwd500m     (Geography/Suriname250mGrid): expr = "PotRoadPoints500m >= float32(1800) || NrRoadPoints >= 300";
+
+	attribute<bool>    IsLintBebouwd250m (Geography/Suriname250mGrid): expr = "!IsBebouwd250m && (PotRoadPoints250m >= float32( 500) || NrRoadPoints >= 150)";
+	attribute<bool>    IsLintBebouwd500m (Geography/Suriname250mGrid): expr = "!IsBebouwd500m && (PotRoadPoints500m >= float32(1300) || NrRoadPoints >= 150)";
+}

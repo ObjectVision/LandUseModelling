@@ -1,0 +1,43 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                             Reference configuration file with configuration of data used as reference in the maps                                                        **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container reference
+{
+	unit<uint32> admin_regions
+	:	StorageName     = "%ProjDir%/data/Reference/Bestuursressorten.shp"
+	,	StorageReadOnly = "True"
+	{
+		attribute<geography/SurinameCoord> geometry (poly);
+		attribute<units/m2>   opp_m2   := area(geometry, units/m2);
+		attribute<units/luHa> opp_ha   := opp_m2 / value(10000, units/m2 / units/luHa);
+		attribute<.>          grid (Geography/Suriname250mGrid):= poly2grid(geometry,Geography/Suriname250mGrid,1);
+		
+		unit<uint32> pointset := sequence2points(geometry);
+	}
+	
+	unit<uint32> admin_regions_detail 
+	:	StorageName     = "%ProjDir%/data/Reference/adm.shp"
+	,	StorageReadOnly = "True"
+	{
+		attribute<geography/SurinameCoord> geometry (poly);
+		attribute<units/m2>   opp_m2:  = area(geometry, units/m2);
+		attribute<units/luHa> opp_ha:  = opp_m2 / value(10000, units/m2 / units/luHa);
+	}
+
+	unit<uint32> kustlijn
+	:	StorageName     = "%ProjDir%/data/Reference/waterland.shp"
+	,	StorageReadOnly = "True"
+	{
+		attribute<geography/SurinameCoord> geometry (poly);
+		unit<uint32> pointset := sequence2points(geometry);
+	}
+	
+	#include<CountryBoundary.dms>
+}

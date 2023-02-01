@@ -1,0 +1,53 @@
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+//**                                                                                                                                                                                          **
+//**                                           configuration file with configuration of templates used for the iteration of the continous model                                               **
+//**                                                                                                                                                                                          **
+//**********************************************************************************************************************************************************************************************
+
+container Templates : isHidden = "True", Using = "Geography;Classifications"
+{
+	container ClaimTemplate: IsTemplate = "True"
+	{
+		// begin case parameters
+		container ClaimSet;
+		// end case parameters
+
+		attribute<ratio> MinAllocFactor (LU/luEndogenous): expr =
+			"(LU/luEndogenous/Name == 'bos' || LU/luEndogenous/Name == 'moeras_savanne_bos')"
+				"? value(0.95, ratio)"
+				": value(1.00, ratio)";
+
+		attribute<ratio> MaxAllocFactor (LU/luEndogenous): expr =
+			"(LU/luEndogenous/Name == 'bos' || LU/luEndogenous/Name == 'moeras_savanne_bos')"
+				"? value(1.05, ratio)"
+				": value(1.00, ratio)";
+
+		parameter<gsz> TotalDemand: expr = "sum(ClaimSet/Claim)";
+		unit<uint8>    ClaimUnit:   expr = "Geography/Regions/ClaimUnit";
+		container MinClaims: expr =
+			"for_each_nedv("
+				" LU/luEndogenous/Name"
+				",'uint32("
+					"(ClaimSet/Claim*MinAllocFactor)[const('+String(ID(LU/luEndogenous))+', ClaimUnit, LU/luEndogenous)]"
+				" )'"
+				",ClaimUnit"
+				",uint32"
+			")";
+
+		container MaxClaims: expr =
+			"for_each_nedv("
+				" LU/luEndogenous/Name"
+				",'uint32("
+					"(ClaimSet/Claim*MaxAllocFactor)[const('+String(ID(LU/luEndogenous))+', ClaimUnit, LU/luEndogenous)]"
+				" )'"
+				",ClaimUnit"
+				",uint32"
+			")";
+	}
+	
+	#include <Alloc_ggModel.dms>
+}
