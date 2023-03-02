@@ -76,7 +76,7 @@ container physical
 				": value( 0 / 0, ratio)";
 
 		attribute<soiltypes> soil (Geography/Suriname250mGrid): expr = 
-			"sources/soil/type[poly2grid(sources/soil/geometry,Geography/Suriname250mGrid,1)]";
+			"sources/soil/type[poly2grid(sources/soil/geometry,Geography/Suriname250mGrid)]";
 	}
 	attribute<m> elevation (Geography/Suriname250mGrid)
 	:	expr     = "preperation/elevation"

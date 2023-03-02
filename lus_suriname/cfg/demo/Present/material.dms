@@ -36,7 +36,7 @@ container material
 	{
 		container mining: FreeData = "True"
 		{
-			attribute<mining_classes> type          (Geography/Suriname250mGrid): expr = "sources/mining/type[poly2grid(sources/mining/geometry,Geography/Suriname250mGrid,1)]";
+			attribute<mining_classes> type          (Geography/Suriname250mGrid): expr = "sources/mining/type[poly2grid(sources/mining/geometry,Geography/Suriname250mGrid)]";
 
 			attribute<bool> bauxiet_zonder_outlines (Geography/Suriname250mGrid): expr = "Geography/Suriname250mGrid/isSuriname && type == value(0, mining_classes)";
 			attribute<bool> goud_zonder_outlines    (Geography/Suriname250mGrid): expr = "Geography/Suriname250mGrid/isSuriname && (type == value(1, mining_classes) || type == value(2, mining_classes))";
@@ -49,7 +49,7 @@ container material
 			attribute<bool>    goud                 (Geography/Suriname250mGrid): expr = "goud_zonder_outlines    || (type == value(3, mining_classes) && !wordtBauxiet)";
 
 		}
-		attribute<bool> Timber (Geography/Suriname250mGrid): expr = "Geography/Suriname250mGrid/isSuriname && IsDefined(Poly2Grid(sources/timber/geometry,Geography/Suriname250mGrid,1))";
+		attribute<bool> Timber (Geography/Suriname250mGrid): expr = "Geography/Suriname250mGrid/isSuriname && IsDefined(Poly2Grid(sources/timber/geometry,Geography/Suriname250mGrid))";
 	}
 	attribute<Classifications/YesNo> bauxiet (Geography/Suriname250mGrid): expr = "preperation/mining/bauxiet";
 	attribute<Classifications/YesNo> goud    (Geography/Suriname250mGrid): expr = "preperation/mining/goud";

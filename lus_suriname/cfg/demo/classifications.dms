@@ -1,6 +1,6 @@
 //**********************************************************************************************************************************************************************************************
 //**                                                                                                                                                                                          **
-//**                                                Configuration written for Suriname Land Use Modelling project, 2012                                                                       **
+//**                                                Configuration written for Suriname Land Use Modelling project, 2023                                                                       **
 //**                                                                                                                                                                                          **
 //**********************************************************************************************************************************************************************************************
 //**                                                                                                                                                                                          **
@@ -8,7 +8,7 @@
 //**                                                                                                                                                                                          **
 //**********************************************************************************************************************************************************************************************
 
-container Classifications: Using = "Units", KeepData = "True"
+container Classifications: Using = "Units"
 {
 	unit<uint8> m_elevation: nrofrows = 10
 	{
@@ -18,7 +18,7 @@ container Classifications: Using = "Units", KeepData = "True"
 		attribute<uint32> BrushColor:  DialogType = "BrushColor",
 			[rgb(  0,192,  0),rgb( 51,205,  0),rgb(102,217,  0),rgb(153,230,  0),rgb(204,242,  0),
 			 rgb(255,255,  0),rgb(255,191,  0),rgb(255,128,  0),rgb(255,064,  0),rgb(255,  0,  0)];
-		attribute<string> Label: DialogType = "LabelText",
+		attribute<string> Label :
 			['    0 ..   20 m','  20 ..   50 m','  50 .. 100 m','100 .. 150 m','150 .. 200 m',
 			 '200 .. 250 m'   ,'250 .. 300 m'  ,'300 .. 400 m' ,'400 .. 500 m','>= 500 m '];
 	}
@@ -220,16 +220,15 @@ container Classifications: Using = "Units", KeepData = "True"
 			attribute<ratio> open_gebied           (soiltypes): [0     ,0     ,0     ,0     ,0     ,0     ,0     ,0     ,0    ];
 		}
 		
-		container total: expr=
-			"for_each_nedv("
-				"  /Classifications/LU/luEndogenous/name"
-				", 'orgLU/' + /Classifications/LU/luEndogenous/name + ' + theory/' + /Classifications/LU/luEndogenous/name"
-				", soiltypes"
-				", ratio"
-			")";	
+		container total :=
+			for_each_nedv(
+				  /Classifications/LU/luEndogenous/name
+				, 'orgLU/' + /Classifications/LU/luEndogenous/name + ' + theory/' + /Classifications/LU/luEndogenous/name
+				, soiltypes
+				, ratio
+			);	
 		
-		attribute<uint32> BrushColor:DialogType = "BrushColor",
-			[rgb(254,172,0),rgb(248,180,130),rgb(218,9,5),rgb(218,198,0),rgb(1,129,252),rgb(155,156,219),rgb(210,210,211),rgb(147,174,46),rgb(  0,  0,255)];
+		attribute<uint32> BrushColor : DialogType = "BrushColor", [rgb(254,172,0),rgb(248,180,130),rgb(218,9,5),rgb(218,198,0),rgb(1,129,252),rgb(155,156,219),rgb(210,210,211),rgb(147,174,46),rgb(  0,  0,255)];
 		attribute<uint32> PenColor:expr = "BrushColor", DialogType = "PenColor";
 	}
 	container LU

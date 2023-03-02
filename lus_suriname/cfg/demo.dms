@@ -10,6 +10,11 @@
 
 container demo
 {
+	container System: IsHidden = "True"
+	{
+		parameter<uint32> TransparantColor: expr = "4294967295";
+	}
+
 	#include <Units.dms>
 	#include <Geography.dms>
 	#include <Classifications.dms>

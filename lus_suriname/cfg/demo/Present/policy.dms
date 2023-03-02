@@ -20,7 +20,7 @@ container policy
 		attribute<geography/SurinameCoord> geometry (poly);
 	}
 	
-	attribute<Classifications/YesNo> protected (Geography/Suriname250mGrid)	:	expr     = "IsDefined(poly2grid(protected_areas/geometry,Geography/Suriname250mGrid,1))";
+	attribute<Classifications/YesNo> protected (Geography/Suriname250mGrid)	:	expr     = "IsDefined(poly2grid(protected_areas/geometry,Geography/Suriname250mGrid))";
 	
 	unit<uint32> dam_impact_areas
 	:	DialogData      = "geometry"
@@ -31,5 +31,5 @@ container policy
 	{
 		attribute<geography/SurinameCoord> geometry (polygon);
 	}
-	attribute<Classifications/YesNo> dam_impact_area (Geography/Suriname250mGrid)	:	expr     = "IsDefined(poly2grid(dam_impact_areas/geometry,Geography/Suriname250mGrid,1))";
+	attribute<Classifications/YesNo> dam_impact_area (Geography/Suriname250mGrid)	:	expr     = "IsDefined(poly2grid(dam_impact_areas/geometry,Geography/Suriname250mGrid))";
 }

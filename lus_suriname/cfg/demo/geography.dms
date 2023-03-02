@@ -80,7 +80,7 @@ container Geography: Using = "Units", IsHidden = "True"
 		attribute<fpoint>        id:         expr = "fpoint(id(.)) * ProjFactor + ProjOffset";
 
 		attribute<SurinameCoord> P:          expr = "(fpoint(id(.)) + point(Float32(0.5), Float32(0.5))) * ProjFactor + ProjOffset";
-		attribute<bool>          isSuriname: expr = "isDefined(poly2grid(Present/Reference/admin_regions_detail/geometry,.,1))";
+		attribute<bool>          isSuriname: expr = "isDefined(poly2grid(Present/Reference/admin_regions_detail/geometry,.))";
 
 		attribute<int16>         Row:        expr = "PointRow(id(.))";
 		attribute<int16>         Col:        expr = "PointCol(id(.))";
@@ -88,7 +88,7 @@ container Geography: Using = "Units", IsHidden = "True"
 		attribute<uint32>        NrCells:    expr = "const(1, ., uint32)";
 		attribute<spoint>        GridSrcNr:  expr = "rlookup(id, Suriname250mGridSrc/id)";
 
-		attribute<Present/Reference/admin_regions> regionnr: expr = "poly2grid(Present/Reference/admin_regions/geometry,.,1)";
+		attribute<Present/Reference/admin_regions> regionnr: expr = "poly2grid(Present/Reference/admin_regions/geometry,.)";
 	}
 
 	unit<uint32> Suriname250mPointSet: 

@@ -17,7 +17,7 @@ container reference
 		attribute<geography/SurinameCoord> geometry (poly);
 		attribute<units/m2>   opp_m2   := area(geometry, units/m2);
 		attribute<units/luHa> opp_ha   := opp_m2 / value(10000, units/m2 / units/luHa);
-		attribute<.>          grid (Geography/Suriname250mGrid):= poly2grid(geometry,Geography/Suriname250mGrid,1);
+		attribute<.>          grid (Geography/Suriname250mGrid):= poly2grid(geometry,Geography/Suriname250mGrid);
 		
 		unit<uint32> pointset := sequence2points(geometry);
 	}

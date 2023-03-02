@@ -60,9 +60,9 @@ container LandUse
 	{
 		Container Grids // De vector data wordt hier vergrid
 		{
-			attribute<sources/agroland>                  agrolandnr (Geography/Suriname250mGrid): expr = "poly2grid(sources/agroland/geometry, Geography/Suriname250mGrid, 5)";
+			attribute<sources/agroland>                  agrolandnr (Geography/Suriname250mGrid): expr = "poly2grid(sources/agroland/geometry, Geography/Suriname250mGrid)";
 			attribute<Classifications/LU/AgrLanduseCode> agroland   (Geography/Suriname250mGrid): expr = "sources/agroland/type[agrolandnr]";
-			attribute<sources/vegland>                   veglandnr  (Geography/Suriname250mGrid): expr = "poly2grid(sources/vegland/geometry, Geography/Suriname250mGrid, 5)";
+			attribute<sources/vegland>                   veglandnr  (Geography/Suriname250mGrid): expr = "poly2grid(sources/vegland/geometry, Geography/Suriname250mGrid)";
 			attribute<Classifications/LU/VegLanduseCode> vegland    (Geography/Suriname250mGrid): expr = "sources/vegland/type[veglandnr]";
 		}
 		Container refills // in de gedigitaliseerde grids worden bepaalde patronen heringevuld
@@ -136,8 +136,8 @@ container LandUse
 		container agr_veg_met_open_gebied // de cellen uit de deforestation_gold_2000 en deforestation_gold_2008 kaart worden open gebied
 		{
 			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
-				"   IsDefined(poly2grid(sources/deforestation_gold_2000/geometry,Geography/Suriname250mGrid,1))"
-				"|| IsDefined(poly2grid(sources/deforestation_gold_2008/geometry,Geography/Suriname250mGrid,1))"
+				"   IsDefined(poly2grid(sources/deforestation_gold_2000/geometry,Geography/Suriname250mGrid))"
+				"|| IsDefined(poly2grid(sources/deforestation_gold_2008/geometry,Geography/Suriname250mGrid))"
 					"? Classifications/LU/luModel/open_gebied"
 					": agro_ingevuld_met_vegland/landuse";
 		}
@@ -145,7 +145,7 @@ container LandUse
 		container agr_veg_met_buitenland // de cellen buiten Suriname worden ingesteld op buitenland
 		{
 			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
-				"IsDefined(poly2grid(Present/Reference/admin_regions/geometry,Geography/Suriname250mGrid,1))"
+				"IsDefined(poly2grid(Present/Reference/admin_regions/geometry,Geography/Suriname250mGrid))"
 					"? agr_veg_met_open_gebied/landuse"
 					": Classifications/LU/luModel/buitenland";
 		}
@@ -206,7 +206,7 @@ container LandUse
 		container agr_veg_sea // het buitenland voorzover dit zee betreft wordt ingevuld met zee
 		{
 			attribute<Classifications/LU/luModel> LandUse (Geography/Suriname250mGrid): expr =
-				"!Geography/Suriname250mGrid/isSuriname && !isDefined(poly2grid(Reference/kustlijn/geometry,Geography/Suriname250mGrid,1))"
+				"!Geography/Suriname250mGrid/isSuriname && !isDefined(poly2grid(Reference/kustlijn/geometry,Geography/Suriname250mGrid))"
 					"? classifications/LU/luModel/water "
 					": agr_veg_river_vil_no_other/LandUse"
 				, FreeData = "False";
