@@ -95,9 +95,9 @@ container Evaluation : Descr = "This container contains several evaluation indic
 
 		container Urbanisation : Descr = "Built-up surface per gridcel"
 		{
-			attribute<Ha>          Builtup_Surface            (domain) := ='add_list('+asItemList(ggUrban/IsExogenous ? 'landuse/Exogenous/' : 'landuse/Endogenous/'+ ggUrban/Name)+')';
+			attribute<Ha>          Builtup_Surface            (domain) := ='add('+asItemList(ggUrban/IsExogenous ? 'landuse/Exogenous/' : 'landuse/Endogenous/'+ ggUrban/Name)+')';
 			attribute<YesorNo>     Builtup_Area               (domain) := value(Builtup_Surface > value(15.0, Ha), YesorNo);
-			attribute<Ha>          Builtup_Surface_current    (domain) := ='add_list('+asItemList('orglanduse/' + ggUrban/Name)+')',	IsHidden = "True";
+			attribute<Ha>          Builtup_Surface_current    (domain) := ='add('+asItemList('orglanduse/' + ggUrban/Name)+')',	IsHidden = "True";
 			attribute<YesorNo>     Builtup_Area_current       (domain) := Builtup_Surface_current > value(15.0, Ha);
 			attribute<HaDiff>      Difference_Builtup_Surface (domain) := Urbanisation/Builtup_Surface - Urbanisation/Builtup_Surface_current, cdf      = "Classifications/HaChange11KFlipped/Classes", IsHidden = "True";
 			attribute<LossOrGain>  Difference_Builtup_Area    (domain) := value(Urbanisation/Builtup_Area, LossOrGain)- value(Urbanisation/Builtup_Area_current, LossOrGain);

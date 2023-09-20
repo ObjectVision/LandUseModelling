@@ -55,7 +55,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				, float32
 			), Descr = "Tcj = Aj * exp(beta*Scj): new demands based on given Aj (currValue)";
 
-		attribute<DemandUnit> total_demand  (ADomain) := ='add_list('+asItemList('adjusted_demands/'+ggEndogenous/Name)+')', Descr = "Tc = sum(j, Tcj): total demand on input"; // for unused land category, add "+'value(1.0, DemandUnit)'"		
+		attribute<DemandUnit> total_demand  (ADomain) := ='add('+asItemList('adjusted_demands/'+ggEndogenous/Name)+')', Descr = "Tc = sum(j, Tcj): total demand on input"; // for unused land category, add "+'value(1.0, DemandUnit)'"		
 		attribute<BcUnit>     demand_factor (ADomain) := CaseData/Land/FreeLand[ADomain/nr_orgEntity] / total_demand, Descr = "Bc = Lc / Tc: see formula 6a";
 		container allocated_land := 
 			for_each_ne(
@@ -63,8 +63,8 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				, '_Iter_AllocatedLand('+String(id(ggEndogenous))+ '[uint8], Adomain)' 
 			);
 
-		parameter<claimHa>  TotalDeviation := ='sqrt(add_list('+asItemList('sum(allocated_land/'+ggEndogenous/Name+'/SqrDev)')+'))', Descr = "Sum of distances between claimed and allocated sums of ha per region";
-		parameter <claimHa> AllocatedAggr  := ='add_list('+asItemList('allocated_land/'+ggEndogenous/Name+'/nrHaAggr')+')';
+		parameter<claimHa>  TotalDeviation := ='sqrt(add('+asItemList('sum(allocated_land/'+ggEndogenous/Name+'/SqrDev)')+'))', Descr = "Sum of distances between claimed and allocated sums of ha per region";
+		parameter <claimHa> AllocatedAggr  := ='add('+asItemList('allocated_land/'+ggEndogenous/Name+'/nrHaAggr')+')';
 
 		parameter<Bool> stop := TotalDeviation < value(12000.0, Ha), Descr = "Stop iteration if the average deviation of the claims is less than 10 square km";
 

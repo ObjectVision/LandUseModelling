@@ -36,7 +36,7 @@ are explained in this article and the description of the calculation rules refer
 		container Land: Descr = "These attributes are used to describe the freeLand for allocation"
 		{
 			attribute<Ha> TotalLand          (domain) := const(domain/NrHaPerCell, domain);
-			attribute<Ha> TotalExogenousLand (domain) := ='add_list('+asItemList('ExogenousLand/' + ggExogenous/Name)+')';
+			attribute<Ha> TotalExogenousLand (domain) := ='add('+asItemList('ExogenousLand/' + ggExogenous/Name)+')';
 			attribute<Ha> UsedLand           (domain) := min_elem(TotalLand, TotalExogenousLand);
 			attribute<Ha> ExogenousOverflow  (domain) := TotalExogenousLand - UsedLand;
 			attribute<Ha> FreeLand           (domain) := TotalLand - UsedLand, Descr    = "Lc = TotalLand - exogenousLand: free allocatable land";
@@ -174,7 +174,7 @@ are explained in this article and the description of the calculation rules refer
 			,	Using    = "Geography/RegionalUnits"
 			,	Descr    = "These parameters indicate of the sum of claims fits the sum of availaible freeLand; which is a neccesary (but not sufficient) condition"
 			{
-				parameter<claimHa> sumClaims     := ='add_list('+asItemList('sum(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+')')+')';
+				parameter<claimHa> sumClaims     := ='add('+asItemList('sum(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+')')+')';
 				parameter<claimHa> totalLand     := sum(CaseData/Land/TotalLand);
 				parameter<claimHa> usedLand      := sum(CaseData/Land/UsedLand );
 				parameter<claimHa> freeLand      := sum(CaseData/Land/FreeLand);
@@ -191,7 +191,7 @@ are explained in this article and the description of the calculation rules refer
 						, domain
 						, Ha)
 				{
-					attribute<Ha> Total(domain):= ='add_list('+asItemList(ggEndogenous/Name)+')', isHidden = "True";
+					attribute<Ha> Total(domain):= ='add('+asItemList(ggEndogenous/Name)+')', isHidden = "True";
 				}
 
 				container Exogenous :=
@@ -201,7 +201,7 @@ are explained in this article and the description of the calculation rules refer
 							, domain
 							, Ha)
 				{
-					attribute<Ha> Total(domain):= ='add_list('+asItemList(ggExogenous/Name)+')', isHidden = "True";
+					attribute<Ha> Total(domain):= ='add('+asItemList(ggExogenous/Name)+')', isHidden = "True";
 				}
 				attribute <LUclasses> Predominant (domain) := ='argmax('+asItemList('MakeDefined('+(ggModel/IsExogenous ? 'Exogenous/' : 'Endogenous/') +ggModel/Name+',0[Ha])')+')[LUclasses]';
 				attribute <Ha>        Total       (domain) := Endogenous/Total + Exogenous/Total,  isHidden = "True";
