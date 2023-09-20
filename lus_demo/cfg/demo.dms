@@ -34,7 +34,7 @@ container demo: IntegrityCheck = "GeoDmsVersion() >= 7.130"
 	container ModelParameters : using = "Units"
 	{
 		parameter<string>    ModelResolution     := '100m'; // '100m' '500m'
-		parameter<bool>      EnableBackgroundMap := TRUE; // TRUE FALSE
+		parameter<bool>      EnableBackgroundMap := FALSE; // TRUE FALSE
 		
 		container Advanced : IsHidden = "true"
 		{
