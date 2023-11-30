@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Current_Situation/Policy_maps/NatureLandscape/Impl/wbirdHabitat
+	</FullName>
+	<GeoDmsVersion>GeoDms 14.6.0 [Nov  7 2023 10:46:05]
+	</GeoDmsVersion>
+	<SessionStartTime>2023-11-30 16:26:47
+	</SessionStartTime>
+	<CurrentTime>2023-11-30 16:27:24
+	</CurrentTime>
+	<StatusFlags>0x6e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>14.06
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Current_Situation/Policy_maps/NatureLandscape/Impl/wbirdHabitat
+	</FullName>
+	<Expr>birdHabitat
+	</Expr>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD
+	</Processor>
+	<User>Jip Claassens
+	</User>
+	<ComputerName>OVSRV06
+	</ComputerName>
+	<Date>env:DATE
+	</Date>
+	<Time>env:TIME
+	</Time>
+</Environment>
+</DocType>

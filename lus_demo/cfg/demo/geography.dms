@@ -20,6 +20,7 @@
 container Geography: Using = "Units", isHidden = "True"
 { 
 	parameter<float64> GeoDMSVersion := GeoDMSVersion();
+	
 	unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "= GeoDMSVersion >= float64(7.165) && Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/Province_name'"; // wms achtergrondlaag voor kaarten met rd coordinaten
 	// unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "/Geography/RegionalUnits/Province/prvnm"; // wms achtergrondlaag voor kaarten met rd coordinaten
 	
@@ -208,7 +209,7 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<DijkringImp/shp> Shape_rel      := rlookup(Dijkringnr, DijkringImp/shp/DijkringNr);
 			attribute<rdc_meter>       Geometry(poly) := DijkringImp/shp/Geometry[Shape_rel];
 
-			attribute<DijkringImp/EK> AsciiGridCode := DijkRingImp/csv/AsciiGridCode [DijkringImp/EK];
+			attribute<DijkringImp/EK> AsciiGridCode := DijkRingImp/csv/AsciiGridCode[DijkringImp/EK];
 			attribute<mEur>           MinDamage     := DijkRingImp/csv/MinSchade [mEur];
 			attribute<mEur>           ExpDamage     := DijkRingImp/csv/ExpSchade [mEur];
 			attribute<mEur>           MaxDamage     := DijkRingImp/csv/MaxSchade [mEur];

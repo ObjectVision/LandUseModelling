@@ -29,12 +29,12 @@ container Thematic_maps
 		{
 			attribute<Percent> urban_attractiveness (rdc_500lu)
 			:	Source      = "Residential Attractiveness: MNP/RIVM"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/UrbanAttractivity.asc"
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/UrbanAttractivity.tif"
 			, cdf = "Classifications/Percentage10k/Classes";
 			
-			attribute<Percent> attractive_surroundings (rdc_500lu)
+			attribute<Percent> attractive_surroundings (rdc_500lu) 
 			:	Source      = "Landscape attractiveness: MNP/RIVM"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/AttractivitySurroundings.asc"
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/AttractivitySurroundings.tif"
 			, cdf = "Classifications/Percentage10k/Classes";
 		}
 		
@@ -50,31 +50,31 @@ container Thematic_maps
 			:	Label       = "Distance to mainports"
 			,	Descr       = "Average distance tp Mainports (Schiphol + Rotterdam harbour)"
 			,	Source      = "Accessibility Factors: RPB"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/rsmainp.asc";
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/rsmainp.tif";
 
 			attribute<Meter> dist_train_station (rdc_500lu)
 			:	Label       = "Distance to nearest train station (2010)"
 			,	Descr       = "Euclidean distance to nearest regular train station (i.e. Spoorwegmuseum-station and stations that are only open for events are excluded). Including Randstadrail-stations"
 			,	Source      = "Railway stations point dataset from VU-Geoplaza; adapted by SPINlab-Vu University Amsterdam"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_train_stations_2010.asc";
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_train_stations_2010.tif";
 
 			attribute<Meter> dist_highway_entry (rdc_500lu)
 			:	Label       = "Distance to nearest highway entry (2012)"
 			,	Descr       = "Euclidean distance to highway entries"
 			,	Source      = "National Road Database (NWB); adapted by SPINlab - VU University Amsterdam"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_highway_entries_2012.asc";
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_highway_entries_2012.tif";
 
 			attribute<Meter> dist_100kinh (rdc_500lu)
 			:	Label       = "Distance to 100.000 inhabitants"
 			,	Descr       = "Distance to 100.000 inhabitants (PC4, 2009); Calculations: Jan Möhlmann & Jasper Dekkers (VU University Amsterdam-Spatial Economics)"
 			,	Source      = "Euclidean distance calculations on PC4 gravity points including number of inhabitants per PC4 area"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_100kinhabitants_pc4_2009.asc";
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_100kinhabitants_pc4_2009.tif";
 
 			attribute<Meter> dist_100kjobs (rdc_500lu)
 			:	Label       = "Distance to 100.000 Jobs"
 			,	Source      = "Employment: ABR Regiobase (CBS, 2009); PC4 & Municipalities: CBS (2009); Calculations: Jan Möhlmann & Jasper Dekkers (VU University Amsterdam-Spatial Economics)"
 			,	Descr       = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2009. Expressed as an average per municipality. Euclidean-distances between PC4-areas have been used, averages have been weighted using number of inhabitants per PC4-area."
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_100kjobs_pc4_2009.asc";
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_100kjobs_pc4_2009.tif";
 		}
 
 		attribute<km> dist_mainports    (domain) := Makedefined(impl/rsmainp            * value(0.001 ,km / Meter ), value (999, km) )[domain/rdc_500lu_rel];
@@ -90,7 +90,7 @@ container Thematic_maps
 			attribute<Percent> perc_opp_gt_50dba(rdc_500lu)
 			:	Label       = "% opp > 50 db(A)"
 			,	Source      = "Noise: Empara/RIVM"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/noise/perc_opp_gt_50dba.asc"
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/noise/perc_opp_gt_50dba.tif"
 			, cdf = "Classifications/Percentage10k/Classes";
 		}
 		
@@ -103,16 +103,16 @@ container Thematic_maps
 		{
 			attribute<Int8> experience_ls(rdc_500lu)
 			:	Source      = "Kwaliteit landschap: Alterra"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/experience_ls.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/experience_ls.tif";
 
 			attribute<Int32> altitude (rdc_500lu)
 			:	Descr       = "Hoogtekaart in dm"
 			,	Source      = "Hoogtekaart: RIVM"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/altitude.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/altitude.tif";
 			
 			attribute<Ls_Qual4k> landscape_quality4K (rdc_500lu)
 			:	Source      = "Kwaliteit landschap: Alterra"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/landscape_quality4k.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/landscape_quality4k.tif";
 		}
 
 		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500lu_rel];
@@ -127,31 +127,31 @@ container Thematic_maps
 			attribute<Meter> waterdepth (rdc_500lu)
 			:	Label      = "Water depth following worst possible flood"
 			,	Source     = "Risicokaart.nl; Association of Dutch Provinces (IPO)"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/waterdepth.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/waterdepth.tif";
 
 			attribute<uint8> earthquakes (rdc_500lu)
 			:	Label       = "Earthquake zone (intensity on Mercalli scale)"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/earthquakes.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/earthquakes.tif";
 
 			attribute<YesorNo> riskcontour_10_6 (rdc_500lu)
 			:	Label       = "Dangerous sites with a risk contour of 10-6"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/risicocontour.html"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/rgs_irg_ctr.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/rgs_irg_ctr.tif";
 
 			attribute<YesorNo> borssele_evac (rdc_500lu)
 			:	Label       = "Evacuation zone around Borssele nuclear power plant"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/kernenergie.html"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/borssele_evac_zone.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/borssele_evac_zone.tif";
 
 			attribute<ratio> dangerous_transport (rdc_500lu)
 			:	Label       = "Dangerous goods transport in undergound pipelines"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html"
 			,	Descr       = "Line density function with a 100m radius applied to buisleidingen. The resulting map is rescaled between 0 and (approx.) 100 percent"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/DangerousGoodsTransport.asc";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/DangerousGoodsTransport.tif";
 		}
 		
 		attribute<Meter>      floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[domain/rdc_500lu_rel], cdf = "Classifications/Diepte8k/Classes";
