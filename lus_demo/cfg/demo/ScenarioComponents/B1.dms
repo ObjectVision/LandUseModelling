@@ -72,7 +72,8 @@ container B1_SE
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
+ 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
@@ -118,7 +119,8 @@ container B1_SE
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
+ 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
@@ -165,7 +167,8 @@ container B1_SE
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
+ 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
@@ -211,7 +214,8 @@ container B1_SE
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
+ 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
@@ -258,7 +262,8 @@ container B1_SE
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
+ 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
@@ -304,7 +309,8 @@ container B1_SE
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
+ 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]

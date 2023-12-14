@@ -113,12 +113,17 @@ container Thematic_maps
 			attribute<Ls_Qual4k> landscape_quality4K (rdc_500lu)
 			:	Source      = "Kwaliteit landschap: Alterra"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/landscape_quality4k.tif";
+			
+			attribute<YesorNo> peat (domain)
+			:	Source      = "ABCD kaart Martha Bakker: PBL"
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/Peat_100m.tif";
 		}
 
 		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500lu_rel];
 		attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
 		attribute<ValuationRange> landscape_experience(domain) := MakeDefined(impl/Experience_ls > Int8(10) ? 0[ValuationRange] : impl/Experience_ls[ValuationRange], 0[ValuationRange])[domain/rdc_500lu_rel];
 		attribute<Meter>          altitude            (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[domain/rdc_500lu_rel];
+		attribute<YesOrNo>        peat                (domain) := MakeDefined(impl/peat , 0[YesOrNo]);
 	}
 	container Safety: Descr = "Maps related to various safety issues"
 	{
