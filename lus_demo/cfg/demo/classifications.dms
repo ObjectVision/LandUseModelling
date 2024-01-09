@@ -4,7 +4,7 @@
 //                          using GeoDMS version 7.130 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2023                               //
+//                               July 2004 - January 2024                               //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -39,7 +39,7 @@ container Classifications: Using = "Units", isHidden = "True"
 		}
 		attribute<string>     Lnr:          = string(ID(.)+1b);
 		attribute<String>     Name:         = Elements/Text[value(UInt32(ID(.))* nrAttr +  0, Elements)];
-		attribute<String>     Label:        = Elements/Text[value(UInt32(ID(.))* nrAttr +  1, Elements)], DialogType = "LabelText";
+		attribute<String>     Label:        = Elements/Text[value(UInt32(ID(.))* nrAttr +  1, Elements)];
 		attribute<String>     Descr:        = Elements/Text[value(UInt32(ID(.))* nrAttr +  2, Elements)];
 		attribute<Bool>       IsExogenous:  = bool(Elements/Text[value(UInt32(ID(.))* nrAttr +  3, Elements)]);
 
@@ -57,24 +57,13 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<Eur_m2>       LandPrice_B1:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 12, Elements)]), Eur_m2);
 		attribute<Eur_m2>       LandPrice_B2:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 13, Elements)]), Eur_m2);
 		attribute<mEur_ha>      MaxDamagePerha:   = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 15, Elements)]), mEUR_ha);
-
-		// enumeration, mainly to be used in suitability definitions
-		// parameter<.> residential    := value( 0, .);
-		// parameter<.> industrial     := value( 1, .);
-		// parameter<.> recreation     := value( 2, .);
-		// parameter<.> agriculture    := value( 3, .);
-		// parameter<.> nature         := value( 4, .);
-		// parameter<.> buildinglot    := value( 5, .);
-		// parameter<.> infrastructure := value( 6, .);
-		// parameter<.> water          := value( 7, .);
-		// parameter<.> exterior       := value( 8, .);
 	}
 
 	unit<uint8> LUclasses := Range(ggModel,uint8(0),uint8(nrofrows(ggModel)))
 	{
 		attribute<ggModel>      NrOrg          := convert(ID(LUclasses), ggModel);
 		attribute<UInt32>       BrushColor     := lookup(NrOrg, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String>       Label          := lookup(NrOrg, ggModel/Label), DialogType = "LabelText";
+		attribute<String>       Label          := lookup(NrOrg, ggModel/Label);
 		attribute<String>       Name           := lookup(NrOrg, ggModel/Name);
 		attribute<mEUR_ha>      MaxDamagePerHa := lookup(NrOrg, ggModel/MaxDamagePerHa);
 		
@@ -293,7 +282,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<UInt32> attribute: DialogType = "BrushColor",
 		[
-			rgb(  0  ,0,255),rgb(128,128,255),rgb(204,225,236),rgb(192,192,192),rgb(128,128,128) // blauw -> grijs
+			rgb(  0  ,0,255),rgb(128,128,255),rgb(204,225,236),rgb(255,255,255),rgb(128,128,128) // blauw -> grijs
 		,	rgb(  0,128,  0),rgb(  0,192,  0),rgb(  0,255,  0),rgb(232,232,  0),rgb(255,255,  0) // donker -> licht groen
 		,	rgb(255,255,155),rgb(255,192,62),rgb(255,128,128),rgb(255,  0,  0), rgb(192,  0,  0)
 		];

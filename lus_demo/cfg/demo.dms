@@ -3,7 +3,7 @@
 //                 Configuration Land Use Scanner - Student Edition                               //
 //                          using GeoDMS version 7.130 or newer                                   //
 //                                                                                                //
-//                                July 2004 - January 2023                                        //
+//                                July 2004 - January 2024                                        //
 //                                                                                                //
 //                            Vrije Universiteit Amsterdam                                        //
 //                            Spatial Information Laboratory                                      //
@@ -24,7 +24,7 @@
 //                                                                                                //
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 
-container demo
+container LUS_Demo
 {
 	unit<SPoint> domain := =ModelParameters/ModelResolution == '100m' ? 'Geography/rdc_100lu' : 'Geography/rdc_500lu', IsHidden = "true"
 	{
@@ -34,7 +34,7 @@ container demo
 	container ModelParameters : using = "Units"
 	{
 		parameter<string>    ModelResolution     := '100m'; // '100m' '500m'
-		parameter<bool>      EnableBackgroundMap := FALSE; // TRUE FALSE
+		parameter<bool>      EnableBackgroundMap := TRUE; // TRUE FALSE
 		
 		container Advanced : IsHidden = "true"
 		{
@@ -65,7 +65,7 @@ container demo
 		attribute <Classifications/LUclasses> B2_RC_Cont      (domain) := Simulations/B2_RC/Results/Continuous/LandUse/predominant;
 	}
 	
-	container ExportSettings
+	container ExportSettings : IsHidden = "true"
 	{
 		container MetaInfo 
 		{
@@ -76,7 +76,7 @@ container demo
 			{
 				container Software
 				{
-					parameter<string> GeoDmsVersion: [ '=string(GeoDmsVersion())' ];
+					parameter<string> GeoDmsVersion := string(GeoDmsVersion());
 				}
 				container Config
 				{

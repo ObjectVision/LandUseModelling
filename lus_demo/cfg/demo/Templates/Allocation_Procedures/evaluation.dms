@@ -122,12 +122,12 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			,	cdf   = "Classifications/HaChange11KFlipped/Classes";
 			
 			attribute<Ls_QualPress2k> Pressure_LandscapeQuality (domain) := 
-				   Urbanisation/Pressure_new_Builtup > value(0, Ls_QualPress2k)
-				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_QualPress2k]
+				   Urbanisation/Pressure_new_Builtup > 0[Ls_QualPress2k]
+				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_Qual2k]
 					? 1[Ls_QualPress2k]
 					: 0[Ls_QualPress2k]
-				+  Urbanisation/Pressure_new_Builtup < value(1, Ls_QualPress2k)
-				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_QualPress2k]
+				+  Urbanisation/Pressure_new_Builtup < 1[Ls_QualPress2k]
+				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_Qual2k]
 					? 0[Ls_QualPress2k]
 					: 0[Ls_QualPress2k]
 			,	Label = "New built-up area in (very) high quality landscapes";
