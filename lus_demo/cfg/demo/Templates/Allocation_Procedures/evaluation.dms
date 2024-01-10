@@ -131,21 +131,6 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					? 0[Ls_QualPress2k]
 					: 0[Ls_QualPress2k]
 			,	Label = "New built-up area in (very) high quality landscapes";
-
-			// unit<uint32> DenseAreas := district(uint8(Builtup_Area))
-			// {
-				// attribute<DenseAreas> Districts (domain);
-				// attribute<Ha>         Size      (DenseAreas) := float32(pcount(Districts)) * 25[Ha];
-				// attribute<YesorNo>    IsBuiltup (DenseAreas) := modus(Urbanisation/Builtup_Area, Districts);
-			// }
-			
-			// unit<uint32> BuiltupAreas:= subset(DenseAreas/IsBuiltup)
-			// {
-				// attribute<Ha> Size(BuiltupAreas) := DenseAreas/Size[nr_OrgEntity];
-			// }
-			
-			// attribute<Ha> DenseAreasSizePerCel (domain) := DenseAreas/Size[DenseAreas/Districts] , cdf = "Classifications/Districts4K/Classes" , Label = "Size Dense Area";
-			// attribute<Ha> BuiltupAreasSizePerCel (domain) := Builtup_Area ? DenseAreasSizePerCel : value (0, Ha), cdf   = "Classifications/Districts4K/Classes" , Label = "Size Built-up Area";
 		}
 	}
 	
@@ -161,7 +146,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 																						)
 																					* LUclasses/MaxDamagePerHa[LandUse]
 																					* domain/NrHaPerCell', Label    = "Potential damage based on dominant land use";
-			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage,RegioGrids/DijkRing_2009), Label = "Potential damage aggregated to dike rings";
+			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage,RegioGrids/DijkRing), Label = "Potential damage aggregated to dike rings";
 			attribute<mEur>      ExpertDamage         (RegionalUnits/DijkRing) := RegionalUnits/DijkRing/ExpDamage, Label = "Expert-based damage assessments current situation";
 		}
 		
@@ -176,7 +161,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 																						)
 																					* LUclasses/MaxDamagePerHa[LandUse]
 																					* domain/NrHaPerCell', Label    = "Potential damage based on dominant land use";
-			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage, RegioGrids/DijkRing_2009), Label = "Potential damage aggregated to dike rings";
+			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage, RegioGrids/DijkRing), Label = "Potential damage aggregated to dike rings";
 			attribute<float32>   LU_DamageChange      (RegionalUnits/DijkRing) := MakeDefined(LU_DamagePerDikeRing  / Current/LU_DamagePerDikeRing,  sum(LU_DamagePerDikeRing ) / sum(Current/LU_DamagePerDikeRing )), Label = "Change ratio of land-use based damage";
 
 			// The expert-based damage assessments for the current situation are multiplied with the damage change ratio to obtain more realistic damage assessments

@@ -116,12 +116,12 @@ are explained in this article and the description of the calculation rules refer
 			}
 			container regionSets
 			{
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> residential (domain):= Geography/RegioGrids/claimregions_2011;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> industrial  (domain):= Geography/RegioGrids/claimregions_2011;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> recreation  (domain):= Geography/RegioGrids/claimregions_2011;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> agriculture (domain):= Geography/RegioGrids/claimregions_2011;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> nature      (domain):= Geography/RegioGrids/claimregions_2011;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> buildinglot (domain):= Geography/RegioGrids/claimregions_2011;
+				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> residential (domain):= Geography/RegioGrids/ClaimRegions;
+				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> industrial  (domain):= Geography/RegioGrids/ClaimRegions;
+				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> recreation  (domain):= Geography/RegioGrids/ClaimRegions;
+				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> agriculture (domain):= Geography/RegioGrids/ClaimRegions;
+				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> nature      (domain):= Geography/RegioGrids/ClaimRegions;
+				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> buildinglot (domain):= Geography/RegioGrids/ClaimRegions;
 			}
 			container minclaims := //in aantal cellen
 				for_each_nedv(
