@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/peat
+	</FullName>
+	<GeoDmsVersion>GeoDms 14.8.1 [Debug] [Jan  9 2024 11:42:12]
+	</GeoDmsVersion>
+	<SessionStartTime>2024-01-09 15:17:51
+	</SessionStartTime>
+	<CurrentTime>2024-01-09 15:20:08
+	</CurrentTime>
+	<StatusFlags>0x16e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>14.0801
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/peat
+	</FullName>
+	<Expr>/Current_Situation/Thematic_maps/NatureLandscape/peat
+	</Expr>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD
+	</Processor>
+	<User>Jip Claassens
+	</User>
+	<ComputerName>OVSRV06
+	</ComputerName>
+	<Date>env:DATE
+	</Date>
+	<Time>env:TIME
+	</Time>
+</Environment>
+</DocType>
