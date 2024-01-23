@@ -43,7 +43,7 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<String>     Descr:        = Elements/Text[value(UInt32(ID(.))* nrAttr +  2, Elements)];
 		attribute<Bool>       IsExogenous:  = bool(Elements/Text[value(UInt32(ID(.))* nrAttr +  3, Elements)]);
 
-		attribute<uint32>     BrushColor:   = rgb(R,G / 256,B / 256 / 256), DialogType = "BrushColor";
+		attribute<uint32>     BrushColor   := rgb(R,G / 256,B / 256 / 256), DialogType = "BrushColor";
 
 		unit<uint32>            ColorCoord;
 		attribute<ColorCoord>   r:                = value(Elements/Text[value(UInt32(ID(.))* nrAttr +  4, Elements)], ColorCoord);
