@@ -80,11 +80,11 @@ container B1_SE
 
 	container Additional_Claims // this container provides an overview of the claims for demo users that do not use administrator mode
 	{
-		attribute<claimHa>      residential_claim (RegioUnit) := residential/Claim;
-		attribute<claimHa>      industrial_claim  (RegioUnit) := industrial/Claim;
-		attribute<claimHa>      recreation_claim  (RegioUnit) := recreation/Claim;
-		attribute<claimHa>      nature_claim      (RegioUnit) := nature/Claim;
-		attribute<claimHa>      agriculture_claim (RegioUnit) := agriculture/Claim;
-		attribute<claimHa>      buildinglot_claim (RegioUnit) := buildinglot/Claim;
+		attribute<claimHa>      residential (RegioUnit) := ../residential/Claim;
+		attribute<claimHa>      industrial  (RegioUnit) := ../industrial/Claim;
+		attribute<claimHa>      recreation  (RegioUnit) := ../recreation/Claim;
+		attribute<claimHa>      nature      (RegioUnit) := ../nature/Claim;
+		attribute<claimHa>      agriculture (RegioUnit) := ../agriculture/Claim;
+		attribute<claimHa>      buildinglot (RegioUnit) := ../buildinglot/Claim;
 	}	
 }

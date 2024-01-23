@@ -76,7 +76,7 @@ container LUS_Demo
 			{
 				container Software
 				{
-					parameter<string> GeoDmsVersion := string(GeoDmsVersion());
+					parameter<string> GeoDMSVersion := string(GeoDmsMajorVersionNumber()) + '.' +  string(GeoDmsMinorVersionNumber())  +'.'  +  string(GeoDmsPatchNumber());
 				}
 				container Config
 				{
