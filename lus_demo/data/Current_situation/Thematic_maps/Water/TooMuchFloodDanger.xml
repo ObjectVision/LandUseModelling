@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/Totaal
+	</FullName>
+	<GeoDmsVersion>GeoDms 14.10.0 [Jan 18 2024 13:51:55]
+	</GeoDmsVersion>
+	<SessionStartTime>2024-01-23 08:44:01
+	</SessionStartTime>
+	<CurrentTime>2024-01-23 08:51:50
+	</CurrentTime>
+	<StatusFlags>0x16e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>14.10.0
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/Totaal
+	</FullName>
+	<Expr>/Analysis/NietBouwen/Overstromingsgevaarzones/Totaal
+	</Expr>
+	<RunFile>c:/geodms/projdir/_archief/lus_ftm/cfg/main.dms
+	</RunFile>
+</Config>
+<Environment>
+	<Processor>Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
+	</Processor>
+	<User>jipcl
+	</User>
+	<ComputerName>JIP-LAPTOP
+	</ComputerName>
+</Environment>
+<Svn>
+	<RevisionInfo>SubWCRev: &apos;c:\GeoDMS\ProjDir\_Archief\LUS_FTM&apos;<BR/>
+		Last committed at revision 29<BR/>
+		Updated to revision 29<BR/>
+		Local modifications found<BR/>
+		Unversioned items found<BR/>
+		
+	</RevisionInfo>
+</Svn>
+<Parameters>
+</Parameters>
+</DocType>
