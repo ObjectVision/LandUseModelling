@@ -28,8 +28,8 @@ container LUS_Demo
 {
 	unit<SPoint> domain := =ModelParameters/ModelResolution == '100m' ? 'Geography/rdc_100lu' : 'Geography/rdc_500lu', IsHidden = "true"
 	{
-		attribute<Geography/rdc_100lu> rdc_100lu_rel := id(.)[Geography/rdc_100lu];
-		attribute<Geography/rdc_500lu> rdc_500lu_rel := id(.)[Geography/rdc_500lu];
+		// attribute<Geography/rdc_100lu> rdc_100lu_rel := id(.)[Geography/rdc_100lu];
+		// attribute<Geography/rdc_500lu> rdc_500lu_rel := id(.)[Geography/rdc_500lu];
 	}
 	container ModelParameters : using = "Units"
 	{

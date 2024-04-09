@@ -19,7 +19,8 @@
 
 container Geography: Using = "Units", isHidden = "True"
 { 
-	unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "=Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/Province_name'", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
+	// unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "=Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/Province_name'", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
+	unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "ngr_layer", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
 	unit<FPoint> rdc_meter := range(rdc_base, point(300000f,0f), point(625000f,280000f));
 
 	parameter<meter> gridsize_100m := 100[meter];
@@ -48,7 +49,7 @@ container Geography: Using = "Units", isHidden = "True"
 			, DialogData = "rdc_meter"
 	{
 		parameter<ha>     NrHaPerCell := gridsize_500m*gridsize_500m / 10000[meter2] * 1[ha];
-		attribute<domain> domain_rel  := id(.)[domain];
+		attribute<.>      domain_rel (domain) := id(domain)[.];
 	}
 
 	unit<SPoint> rdc_100lu :=
@@ -65,6 +66,8 @@ container Geography: Using = "Units", isHidden = "True"
 			, DialogData = "rdc_meter"
 	{
 		attribute<rdc_500lu>    rdc_500lu_rel := id(.)[rdc_500lu];
+		attribute<domain>       domain_rel := id(.)[domain];
+		
 		parameter<ha>           NrHaPerCell := gridsize_100m*gridsize_100m / 10000[meter2] * 1[ha];
 	}
 

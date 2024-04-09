@@ -99,7 +99,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			attribute<YesorNo>     Builtup_Area               (domain) := value(Builtup_Surface > value(15.0, Ha), YesorNo);
 			attribute<Ha>          Builtup_Surface_current    (domain) := ='add('+asItemList('orglanduse/' + ggUrban/Name)+')',	IsHidden = "True";
 			attribute<YesorNo>     Builtup_Area_current       (domain) := Builtup_Surface_current > value(15.0, Ha);
-			attribute<HaDiff>      Difference_Builtup_Surface (domain) := Urbanisation/Builtup_Surface - Urbanisation/Builtup_Surface_current, cdf      = "Classifications/HaChange11KFlipped/Classes", IsHidden = "True";
+			attribute<HaDiff>      Difference_Builtup_Surface (domain) := Urbanisation/Builtup_Surface - Urbanisation/Builtup_Surface_current, IsHidden = "True";
 			attribute<LossOrGain>  Difference_Builtup_Area    (domain) := value(Urbanisation/Builtup_Area, LossOrGain)- value(Urbanisation/Builtup_Area_current, LossOrGain);
 
 			attribute<Ls_QualPress2k> Pressure_new_builtup (domain) :=
@@ -108,18 +108,16 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					: value(0, Ls_QualPress2k);
 					
 			attribute<HaDiff>  Pressure_netEHS (domain) :=
-				Current_situation/policy_maps/NatureLandscape/net_EHS03
+				Current_situation/policy_maps/NatureLandscape/NatureNetwork
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
-			,	Label = "Difference Built-up areas in Netto EHS"
-			,	cdf   = "Classifications/HaChange11KFlipped/Classes";
+			,	Label = "Difference Built-up areas in Netto EHS";
 			
 			attribute<HaDiff>  Pressure_Habitatareas (domain) :=
 				Current_situation/policy_maps/NatureLandscape/birdHabitat
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
-			,	Label = "Difference Built-up in Habitatareas"
-			,	cdf   = "Classifications/HaChange11KFlipped/Classes";
+			,	Label = "Difference Built-up in Habitatareas";
 			
 			attribute<Ls_QualPress2k> Pressure_LandscapeQuality (domain) := 
 				   Urbanisation/Pressure_new_Builtup > 0[Ls_QualPress2k]

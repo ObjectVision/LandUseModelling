@@ -446,6 +446,25 @@ container Classifications: Using = "Units", isHidden = "True"
 			'0 to 5'  ,'5 to 10' ,'10 to 15' ,'15 to 30'
 		,	'30 to 50','50 to 75','75 to 100','None'];
 	}
+	unit<uint8> min_7k: nrofrows = 8
+	{
+		attribute<min> Classes: DialogType = "Classification",
+		[
+			  0,  5, 10, 15
+			,30, 50, 75,120
+		];
+
+		attribute<UInt32> BrushColor: DialogType = "BrushColor",
+		[
+			rgb(  0,  0,255),rgb( 85, 85,170),rgb(170,170, 85),rgb(255,255,  0)
+		,	rgb(255,204,  0),rgb(255,153,  0),rgb(255,102,  0),rgb(192,192,192)
+		];
+
+		attribute<String> Label: DialogType = "LabelText",
+		[
+			'0 to 5'  ,'5 to 10' ,'10 to 15' ,'15 to 30'
+		,	'30 to 50','50 to 75','75 to 100','None'];
+	}
 	
 	// =========  Classification for heights in m
 	unit<uint8> Altitude8K: nrofrows = 8

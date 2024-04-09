@@ -52,7 +52,7 @@ container B1_SE
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -65,7 +65,7 @@ container B1_SE
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
@@ -85,7 +85,7 @@ container B1_SE
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/residential
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/residential
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/birdhabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
  		; 
 
 // ========================= INDUSTRIAL
@@ -99,7 +99,7 @@ container B1_SE
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -112,7 +112,7 @@ container B1_SE
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
@@ -132,7 +132,7 @@ container B1_SE
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/industrial
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/industrial
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
  		; 
 
 // ========================= RECREATION
@@ -147,7 +147,7 @@ container B1_SE
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -160,7 +160,7 @@ container B1_SE
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
@@ -180,7 +180,7 @@ container B1_SE
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/recreation
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/recreation
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
  		; 
 
 // ========================= NATURE
@@ -194,7 +194,7 @@ container B1_SE
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -207,7 +207,7 @@ container B1_SE
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
@@ -227,7 +227,7 @@ container B1_SE
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/nature
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/nature
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
  		; 
 
 // ========================= AGRICULTURE
@@ -242,7 +242,7 @@ container B1_SE
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -255,7 +255,7 @@ container B1_SE
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
@@ -275,7 +275,7 @@ container B1_SE
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/agriculture
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/agriculture
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
  		; 
 	
 // ========================= BUILDINGLOT
@@ -289,7 +289,7 @@ container B1_SE
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/net_EHS03 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -302,7 +302,7 @@ container B1_SE
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000inh    , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
@@ -322,6 +322,6 @@ container B1_SE
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/buildinglot
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/buildinglot
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/net_EHS03
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
  		; 
 }
