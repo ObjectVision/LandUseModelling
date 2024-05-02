@@ -13,8 +13,8 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 // In this configurationfile the dms-trees for current landuse are worked out:          //
-//  * The LUMOS demo-landusesmap 2010 in 9 classes                                      //
-//    based on CBS Soil Statistics 2010, edited by VU-SPINlab                           //
+//  * The LUS demo-landusesmap 2017 in 9 classes                                        //
+//    based on CBS Soil Statistics 2017, edited by Object Vision                        //
 //  * Predominant landuse in 9 classes                                                  //
 //                                                                                      //
 // /////////////////////////////////////////////////////////////////////////////////////// 
