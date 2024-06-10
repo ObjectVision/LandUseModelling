@@ -1,9 +1,9 @@
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                //
 //                 Configuration Land Use Scanner - Student Edition                               //
-//                          using GeoDMS version 7.130 or newer                                   //
+//                          using GeoDMS version 14.14 or newer                                   //
 //                                                                                                //
-//                                July 2004 - January 2024                                        //
+//                                July 2004 - June 2024                                           //
 //                                                                                                //
 //                            Vrije Universiteit Amsterdam                                        //
 //                            Spatial Information Laboratory                                      //
@@ -26,11 +26,8 @@
 
 container LUS_Demo
 {
-	unit<SPoint> domain := =ModelParameters/ModelResolution == '100m' ? 'Geography/rdc_100lu' : 'Geography/rdc_500lu', IsHidden = "true"
-	{
-		// attribute<Geography/rdc_100lu> rdc_100lu_rel := id(.)[Geography/rdc_100lu];
-		// attribute<Geography/rdc_500lu> rdc_500lu_rel := id(.)[Geography/rdc_500lu];
-	}
+	unit<SPoint> domain := =ModelParameters/ModelResolution == '100m' ? 'Geography/rdc_100m' : 'Geography/rdc_500m', IsHidden = "true";
+
 	container ModelParameters : using = "Units"
 	{
 		parameter<string>    ModelResolution     := '100m'; // '100m' '500m'
