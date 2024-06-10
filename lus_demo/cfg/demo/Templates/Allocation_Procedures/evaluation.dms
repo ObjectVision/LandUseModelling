@@ -108,7 +108,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					: value(0, Ls_QualPress2k);
 					
 			attribute<HaDiff>  Pressure_netEHS (domain) :=
-				Current_situation/policy_maps/NatureLandscape/net_EHS03
+				Current_situation/policy_maps/NatureLandscape/NatureNetwork
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
 			,	Label = "Difference Built-up areas in Netto EHS"

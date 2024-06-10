@@ -56,14 +56,21 @@ container Policy_maps
 			,	Source      = "Bird and Habitat Directive: SGR2(LNV);  Vogel- en Habitatrichtlijngebieden (LNV)"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/bird_and_habitat.tif";
 
-			attribute<YesorNo> net_EHS03 (rdc_500lu)
-			:	Label       = "Ecological Main Structure (Net)"
-			,	Source      = "Ecological Main Structure: Nota Ruimte (VROM, LNV, VenW en EZ)"
-			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/EHS_n03_500_NotaRuimte.tif";
+			// attribute<YesorNo> NatureNetwork (rdc_500lu)
+			// :	Label       = "Ecological Main Structure (Net)"
+			// ,	Source      = "Ecological Main Structure: Nota Ruimte (VROM, LNV, VenW en EZ)"
+			// ,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/EHS_n03_500_NotaRuimte.tif";
+			
+			attribute<YesorNo> NatureNetwork (rdc_100lu)
+			:	Label       = "Nature Network Nedetherlands"
+			,	Source      = "Natuur Netwerk Nederland (NNNN)"
+			,	URL         = "https://www.pdok.nl/downloads/-/article/natuurnetwerk-nederland-nnn-"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/Natuur_Netwerk_Nederland_20230818.tif";
 		}
 		
 		attribute<YesorNo> birdHabitat (domain) := Impl/birdHabitat[domain/rdc_500lu_rel];
-		attribute<YesorNo> net_EHS03   (domain) := Impl/net_EHS03[domain/rdc_500lu_rel];
+		attribute<YesorNo> NatureNetwork   (domain) := Impl/NatureNetwork[domain/rdc_100lu_rel];
+		// attribute<YesorNo> NatureNetwork   (domain) := Impl/NatureNetwork[domain/rdc_500lu_rel];
 	}
 
 	container Water
