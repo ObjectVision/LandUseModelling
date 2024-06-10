@@ -20,7 +20,7 @@
 container Geography: Using = "Units", isHidden = "True"
 { 
 	unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "=Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/Province_name'", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
-	unit<FPoint> rdc_meter := range(rdc_base, point(300000f,0f), point(625000f,280000f));
+	unit<FPoint> rdc_meter := range(rdc_base, point_yx(300000f,0f), point_yx(625000f,280000f));
 
 	parameter<meter> gridsize_100m := 100[meter];
 	parameter<meter> gridsize_500m := 500[meter];
@@ -38,12 +38,12 @@ container Geography: Using = "Units", isHidden = "True"
 			range(
 				gridset(
 					  rdc_meter
-					, point(-gridsize_500m, gridsize_500m, rdc_meter)
-					, point(y_max, x_min, rdc_meter)
+					, point_yx(-gridsize_500m, gridsize_500m, rdc_meter)
+					, point_yx(y_max, x_min, rdc_meter)
 					, spoint
 				)
-				,point(0s, 0s)
-				, point(nr_rows_500m, nr_cols_500m)
+				,point_yx(0s, 0s)
+				, point_yx(nr_rows_500m, nr_cols_500m)
 			)
 			, DialogData = "rdc_meter"
 	{
@@ -55,12 +55,12 @@ container Geography: Using = "Units", isHidden = "True"
 			range(
 				gridset(
 					  rdc_meter
-					, point(-gridsize_100m, gridsize_100m, rdc_meter)
-					, point(y_max, x_min, rdc_meter)
+					, point_yx(-gridsize_100m, gridsize_100m, rdc_meter)
+					, point_yx(y_max, x_min, rdc_meter)
 					, spoint
 				)
-				,point(0s, 0s)
-				, point(nr_rows_100m, nr_cols_100m)
+				,point_yx(0s, 0s)
+				, point_yx(nr_rows_100m, nr_cols_100m)
 			)
 			, DialogData = "rdc_meter"
 	{
