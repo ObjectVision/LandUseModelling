@@ -42,12 +42,12 @@ are explained in this article and the description of the calculation rules refer
 			attribute<Ha> FreeLand           (domain) := TotalLand - UsedLand, Descr    = "Lc = TotalLand - exogenousLand: free allocatable land";
 		}
 
-		parameter<Potentiaal> claimFactor := PeriodDuration[float32] / Additional_Claims/ClaimPeriod[float32], Descr = "Indication of how much of the additional claims must be consumed in this allocation";
+		parameter<Potentiaal> claimFactor := PeriodDuration[float32] / ModelParameters/Advanced/ClaimPeriod[float32], Descr = "Indication of how much of the additional claims must be consumed in this allocation";
 
 		container TotalPeriodClaims := 
 				for_each_nedv(
 					ggEndogenous/Name
-					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/Claim * claimFactor + sum(orgLandUse/'+ggEndogenous/Name+', Additional_Claims/Regios), 0[claimHa])'
+					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/claim * claimFactor + sum(orgLandUse/'+ggEndogenous/Name+', Geography/RegioGrids/ClaimRegions), 0[claimHa])'
 					, RegioUnit
 					, claimHa
 				), Descr    = "Dj: Total Claims";
@@ -56,7 +56,7 @@ are explained in this article and the description of the calculation rules refer
 		{ 
 			attribute<bool> HasFreeLand (domain):= Land/TotalExogenousLand < domain/NrHaPerCell;
 
-			unit <uint32> ADomain := Subset(HasFreeLand)
+			unit <uint32> ADomain := select_with_org_rel(HasFreeLand)
 			,	label      = "allocation domain"
 			,	DialogType = "Map"
 			,	DialogData = "BaseGrid";
@@ -64,12 +64,12 @@ are explained in this article and the description of the calculation rules refer
 			container SuitabilityMaps :=
 				for_each_nedv(
 					  classifications/ggEndogenous/label
-					, 'Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/nr_orgEntity]'
+					, 'Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel]'
 					, ADomain
 					, EUR_M2
 				);
 				
-			attribute<ADomain> BaseGrid (domain):= invert(ADomain/nr_OrgEntity);
+			attribute<ADomain> BaseGrid (domain):= invert(ADomain/org_rel);
 
 			container Demands :=
 				for_each_nedv(
@@ -82,7 +82,7 @@ are explained in this article and the description of the calculation rules refer
 			container RegioGrids :=
 				for_each_nedv(
 					  Classifications/ggEndogenous/Name
-					, 'Additional_Claims/Regios[ADomain/nr_orgEntity]'
+					, 'Geography/RegioGrids/ClaimRegions[ADomain/org_rel]'
 					, ADomain
 					, RegioUnit
 				);
@@ -96,7 +96,7 @@ are explained in this article and the description of the calculation rules refer
 			attribute<bool> HasFreeLand (domain) := Land/TotalExogenousLand <= 0.5f * domain/NrHaPerCell;
 			container Compacted
 			{
-				unit <uint32> ADomain := subset(HasFreeLand)
+				unit <uint32> ADomain := select_with_org_rel(HasFreeLand)
 				,	label      = "allocation domain"
 				,	DialogType = "Map"
 				,	DialogData = "BaseGrid";
@@ -104,15 +104,15 @@ are explained in this article and the description of the calculation rules refer
 				container SuitabilityMaps := 
 					for_each_nedv(
 						  classifications/ggEndogenous/label
-						, 'MakeDefined(Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/nr_orgEntity] * 100f, 0f)[int32]'
+						, 'MakeDefined(Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel] * 100f, 0f)[int32]'
 						, ADomain
 						, Int32
 					)
 				;
 	
-				attribute<AtomicRegions> AtomicRegionMap (ADomain):= AtomicRegions/UnionData[ADomain/nr_orgEntity];
+				attribute<AtomicRegions> AtomicRegionMap (ADomain):= AtomicRegions/UnionData[ADomain/org_rel];
 	
-				attribute<ADomain> BaseGrid (domain):= invert(ADomain/nr_OrgEntity);
+				attribute<ADomain> BaseGrid (domain):= invert(ADomain/org_rel);
 			}
 			container regionSets
 			{
@@ -126,10 +126,10 @@ are explained in this article and the description of the calculation rules refer
 			container minclaims := //in aantal cellen
 				for_each_nedv(
 					  classifications/ggEndogenous/Label
-					, 'id(Additional_Claims/RegioUnit) <> 0[Additional_Claims/RegioUnit]
+					, 'id(RegioUnit) <> 0[RegioUnit]
 						? uint32(0.9f * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)
 						: 0'
-					, Additional_Claims/RegioUnit
+					, RegioUnit
 					, uint32
 				);
 				
@@ -137,7 +137,7 @@ are explained in this article and the description of the calculation rules refer
 				for_each_nedv(
 					  classifications/ggEndogenous/Label
 					, 'uint32(1.1f * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)'
-					, Additional_Claims/RegioUnit
+					, RegioUnit
 					, uint32
 				);
 	

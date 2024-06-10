@@ -29,7 +29,7 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 
 container Scenario_Components
-:	Using  = "Units;Geography;Classifications"
+:	Using  = "Units;Geography;Classifications;ModelParameters"
 ,	url    = "http://www.welvaartenleefomgeving.nl/context_UK.html"
 {
 	container Local_Suitability: Using = "Current_situation/current_landuse;Current_situation/policy_maps;Current_situation/Distance_decay"
@@ -39,51 +39,25 @@ container Scenario_Components
 		#include <B1.dms>
 		#include <B2.dms>
 	}
-	container Regional_Demand 
-	:	Using           = "geography/RegionalUnits"
-	,	Source          = "Future land use demand: Adapted from WLO(2006), Netherlands Environmental Assessment Agency (PBL)"
+	
+
+	
+	container Regional_Demand := 
+			for_each_ne(
+				ModelParameters/Advanced/Scenarios/name
+				, 'Templates/Claims_per_Scenario_T('+quote(ModelParameters/Advanced/Scenarios/name_short)+')'
+			),	Source          = "Future land use demand: Adapted from WLO(2006), Netherlands Environmental Assessment Agency (PBL)"
 	{
-		unit<uint32> residential_src
-		:	StorageName = "%ProjDir%/data/Scenarioclaims/Residential_rstintper.csv"
-		,	StorageType = "gdal.vect"
-		,	SyncMode    = "all"
-		,	isHidden = "True";
-		
-		unit<uint32> industrial_src
-		:	StorageName = "%ProjDir%/data/Scenarioclaims/Industrial_rstintper.csv"
-		,	StorageType = "gdal.vect"
-		,	SyncMode    = "all"
-		,	isHidden = "True";
-
-		unit<uint32> recreation_src
-		:	StorageName = "%ProjDir%/data/Scenarioclaims/Recreation_rstintper.csv"
-		,	StorageType = "gdal.vect"
-		,	SyncMode    = "all"
-		,	isHidden = "True";
-
-		unit<uint32> nature_src
-		:	StorageName = "%ProjDir%/data/Scenarioclaims/Nature_rstintper.csv"
-		,	StorageType = "gdal.vect"
-		,	SyncMode    = "all"
-		,	isHidden = "True";
-
-		unit<uint32> agriculture_src
-		:	StorageName = "%ProjDir%/data/Scenarioclaims/Agriculture_rstintper.csv"
-		,	StorageType = "gdal.vect"
-		,	SyncMode    = "all"
-		,	isHidden = "True";
-
-		unit<uint32> buildinglot_src
-		:	StorageName = "%ProjDir%/data/Scenarioclaims/Buildinglot_rstintper.csv"
-		,	StorageType = "gdal.vect"
-		,	SyncMode    = "all"
-		,	isHidden = "True";
-
-		#include <RstIntPer_A1.dms>
-		#include <RstIntPer_A2.dms>
-		#include <RstIntPer_B1.dms>
-		#include <RstIntPer_B2.dms>
+		container Read_CSVs := 
+			for_each_nxat(
+				Classifications/ggEndogenous/name
+				, uint32
+				, '%ProjDir%/data/Scenarioclaims/'+Classifications/ggEndogenous/name+'_rstintper.csv'
+				, 'gdal.vect'
+			);
 	}
+	
+	
 	container Exogenous_Landuse : Descr = "Reference to exogenous developments (e.g. proposed roads or railway lines) can be included here. Spatial representations of such developments are, however, not included in this demo"
 	{
 		container Exogenous_developments: DialogType= "hidden"

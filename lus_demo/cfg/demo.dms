@@ -32,13 +32,22 @@ container LUS_Demo
 	{
 		parameter<string>    ModelResolution     := '100m'; // '100m' '500m'
 		parameter<bool>      EnableBackgroundMap := TRUE; // TRUE FALSE
+		unit<UInt32>         RegioUnit           := Geography/RegionalUnits/RandstadIntermediatePeripheral;
 		
 		container Advanced : IsHidden = "true"
 		{
-			parameter<Year>      StartYear       := 2017[year];
-			parameter<Year>      ModelYear       := 2040[year];
-			parameter<IterRange> NrOfIterations  := 30[IterRange];
-			parameter<m2_Eur>    BetaFactor      := 1[m2_Eur];
+			parameter<Year>          StartYear       := 2017[year];
+			parameter<Year>          ModelYear       := 2040[year];
+			parameter<YearDiffRange> ClaimPeriod     := (ModelYear - StartYear)[YearDiffRange];
+			parameter<IterRange>     NrOfIterations  := 30[IterRange];
+			parameter<m2_Eur>        BetaFactor      := 1[m2_Eur];
+			
+			unit<uint8> Scenarios : nrofrows = 4
+			{
+				attribute<string> name       : ['A1_GE','A2_TM','B1_SE','B2_RC'];
+				attribute<string> name_short : ['A1','A2','B1','B2'];
+			}
+			
 		}
 	}
 	

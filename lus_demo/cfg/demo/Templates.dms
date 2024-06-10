@@ -19,7 +19,6 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		///
 		parameter<String>       ggName                   := lookup(ggEndogenousID, ggEndogenous/Name);
 		attribute<Ha>           nrHaPerCell (ADomain)    := ='demand_factor * adjusted_demands/'+ggName, Descr = "Mcj = Bc * Aj * exp(betaFactor*Scj): see formula (3'''')";
-		unit<uint32>            RegioUnit                := Additional_Claims/RegioUnit;
 		attribute<claimHa>      nrHaPerRegio (RegioUnit) := ='sum (nrHaPerCell, CaseData/Compacted/RegioGrids/'+ggName+')', Descr = "Tj= sum ( Mcj (* intensity))";
 		parameter<claimHa>      nrHaAggr                 := sum(nrHaPerRegio);
 		attribute<OperatorType> Operator  (RegioUnit)    := ='Additional_Claims/'+ggName+'/Operator';
@@ -55,7 +54,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 			), Descr = "Tcj = Aj * exp(beta*Scj): new demands based on given Aj (currValue)";
 
 		attribute<DemandUnit> total_demand  (ADomain) := ='add('+asItemList('adjusted_demands/'+ggEndogenous/Name)+')', Descr = "Tc = sum(j, Tcj): total demand on input"; // for unused land category, add "+'value(1.0, DemandUnit)'"		
-		attribute<BcUnit>     demand_factor (ADomain) := CaseData/Land/FreeLand[ADomain/nr_orgEntity] / total_demand, Descr = "Bc = Lc / Tc: see formula 6a";
+		attribute<BcUnit>     demand_factor (ADomain) := CaseData/Land/FreeLand[ADomain/org_rel] / total_demand, Descr = "Bc = Lc / Tc: see formula 6a";
 		
 		container allocated_land := 
 			for_each_ne(
@@ -71,8 +70,45 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 			for_each_nedv(
 				  ggEndogenous/Name
 				, 'claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+' * currValue/'+ ggEndogenous/Name+', allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio, Additional_Claims/'+ggEndogenous/Name+'/Operator)'
-				, Additional_Claims/RegioUnit
+				, RegioUnit
 				, float32
 			), Descr    = "Aj' = Aj * Dj/Tj: see formula (6b')";
+	}
+	
+	Template Claims_per_Scenario_T
+	{
+		parameter<string> scenario_name_short;
+		///
+
+		container per_LU_type := 
+			for_each_ne(
+				/Classifications/ggEndogenous/name
+				, 'Templates/Claims_Per_LU_T('+quote(/Classifications/ggEndogenous/name)+', RegioGrids/ClaimRegions)'
+			)
+		{
+			container Additional_Claims // this container provides an overview of the claims for demo users that do not use administrator mode
+			{
+				attribute<claimHa>      residential (RegioUnit) := ../residential/Claim;
+				attribute<claimHa>      industrial  (RegioUnit) := ../industrial/Claim;
+				attribute<claimHa>      recreation  (RegioUnit) := ../recreation/Claim;
+				attribute<claimHa>      nature      (RegioUnit) := ../nature/Claim;
+				attribute<claimHa>      agriculture (RegioUnit) := ../agriculture/Claim;
+				attribute<claimHa>      buildinglot (RegioUnit) := ../buildinglot/Claim;
+			}
+		}
+	}
+	
+	Template Claims_per_LU_T
+	{
+		parameter<string>    lu_name;
+		attribute<RegioUnit> Regios (domain);
+		///
+		
+		attribute<OperatorType> Operator (RegioUnit) := const(1, RegioUnit, OperatorType);
+		attribute<EUR_M2>       logAj    (RegioUnit) := const(0, RegioUnit, Eur_m2);
+
+		attribute<claimHa>      Current  (RegioUnit) := ='sum(Current_situation/current_landuse/'+lu_name+', RegioGrids/ClaimRegions)';
+		attribute<claimHa>      Claim    (RegioUnit) := ='rjoin(id(RegioUnit),Read_CSVs/'+lu_name+'/RstIntPer[uint32], Read_CSVs/'+lu_name+'/'+scenario_name_short+'[claimHa])';
+		attribute<claimHa>      Total    (RegioUnit) := Current + Claim;
 	}
 }

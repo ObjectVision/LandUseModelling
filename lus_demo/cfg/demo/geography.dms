@@ -98,6 +98,7 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<.>         claimregio                 : Descr = "This is the entity of shapes of claimregions (0=Exterior)";
 			attribute<Meter2>    area                       := area(geometry, meter2);
 			attribute<String>    Label                      : ['none','Randstad','Intermediate zone','Peripheral zone'], DialogType = "LabelText";
+			attribute<.>         domain_rel        (domain) := poly2grid(geometry, domain);
 		}
 		
 		unit<UInt32> Province
