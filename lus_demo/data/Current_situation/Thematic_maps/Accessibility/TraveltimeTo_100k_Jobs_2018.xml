@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/dist_100kjobsh_clip
+	</FullName>
+	<GeoDmsVersion>GeoDms 15.2.1 [Jun 10 2024 16:03:03]
+	</GeoDmsVersion>
+	<SessionStartTime>2024-06-11 10:18:40
+	</SessionStartTime>
+	<CurrentTime>2024-06-11 10:20:41
+	</CurrentTime>
+	<StatusFlags>0x6e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>15.2.1
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/dist_100kjobsh_clip
+	</FullName>
+	<Expr>/Current_Situation/Thematic_maps/Accessibility/Impl/dist_100kjobsh_clip
+	</Expr>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD
+	</Processor>
+	<User>Jip Claassens
+	</User>
+	<ComputerName>OVSRV06
+	</ComputerName>
+	<Date>env:DATE
+	</Date>
+	<Time>env:TIME
+	</Time>
+</Environment>
+</DocType>

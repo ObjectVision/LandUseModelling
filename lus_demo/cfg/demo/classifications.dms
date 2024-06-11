@@ -431,8 +431,8 @@ container Classifications: Using = "Units", isHidden = "True"
 	{
 		attribute<km> Classes: DialogType = "Classification",
 		[
-			  0,  5, 10, 15
-			,30, 50, 75,100
+			  0,  2.5, 5, 10
+			,15, 25, 50,100
 		];
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
@@ -443,8 +443,8 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<String> Label: DialogType = "LabelText",
 		[
-			'0 to 5'  ,'5 to 10' ,'10 to 15' ,'15 to 30'
-		,	'30 to 50','50 to 75','75 to 100','None'];
+			'0 to 2.5'  ,'2.5 to 5' ,'5 to 10' ,'10 to 15'
+		,	'15 to 25','25 to 50','50 to 100','None'];
 	}
 	unit<uint8> min_7k: nrofrows = 8
 	{

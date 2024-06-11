@@ -27,10 +27,9 @@ container Thematic_maps
 	{
 		container Impl : isHidden = "True"
 		{
-			attribute<float32> urban_attractiveness (rdc_100m)
+			attribute<uint16> urban_attractiveness (rdc_100m)
 			:	Source      = "Urban attractiveness index 2024: describes the presence of three types of urban amenities: historic buildings; shops; hotels, restaurants and other catering establishments. The numbers of units per amenity type are counted per 100 m grid cell, rescaled to a maximum value of 0.33 per type, added up and averaged out over a 5 km radius"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/UAI_2024.tif"
-			, cdf = "Classifications/Percentage10k/Classes";
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/UAI_2024.tif";
 			
 			attribute<Percent> attractive_surroundings (rdc_500m) 
 			:	Source      = "Landscape attractiveness: MNP/RIVM"
@@ -38,8 +37,8 @@ container Thematic_maps
 			, cdf = "Classifications/Percentage10k/Classes";
 		}
 		
-		attribute<Percent> urban_attractiveness       (domain) := Impl/urban_attractiveness[rdc_100m/domain_rel] * 100[Percent];
-		attribute<Percent> attractive_surroundings    (domain) := Impl/attractive_surroundings[rdc_500m/domain_rel];
+		attribute<Percent> urban_attractiveness       (domain) := float32(Impl/urban_attractiveness)[rdc_100m/domain_rel] * 1[Percent], cdf = "Classifications/Percentage10k/Classes";
+		attribute<Percent> attractive_surroundings    (domain) := Impl/attractive_surroundings[domain/rdc_500m_rel];
 	}
 
 	container Accessibility: Descr = "Maps with a.o. accessibility by road and with euclidean distances"
@@ -52,35 +51,38 @@ container Thematic_maps
 			,	Source      = "Accessibility Factors: RPB"
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/rsmainp.tif";
 
-			attribute<km>    dist_train_station (rdc_100m)
+			attribute<uint16> dist_train_station (rdc_100m)
 			:	Label       = "Distance to nearest train station (2019)"
 			,	Descr       = "Euclidean distance to nearest regular train station"
 			,	Source      = "Railway stations point dataset from NS; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Trainstations_km_2019.tif";
-
-			attribute<Meter> dist_highway_entry (rdc_100m)
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Trainstations_meter_2019.tif";
+			
+			
+			attribute<uint16> dist_highway_entry (rdc_100m)
 			:	Label       = "Distance to nearest highway entry (2018)"
 			,	Descr       = "Euclidean distance to highway entries"
 			,	Source      = "OpenStreetMap; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_highway_acces_exit_2018.tif";
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_highway_acces_exit_meter_2018.tif";
 
-			attribute<Meter> dist_100kjobs (rdc_100m)
+			attribute<uint16> dist_100kjobs (rdc_100m)
 			:	Label       = "Distance to 100.000 Jobs"
 			,	Source      = "Employment: LISA 2018; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
 			,	Descr       = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2018. "
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Jobs_2018.tif";
 			
-			attribute<sec> traveltime_100kinh (rdc_100m)
+			attribute<uint16> traveltime_100kinh (rdc_100m)
 			:	Label       = "Travel time to 100.000 inhabitants"
 			,	Descr       = "Travel time to 100.000 inhabitants (CBS Vierkanten, 2017; OpenStreetMap, 2018); Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Inhabitants_2017.tif";
+			
+			// attribute<uint16>    dist_100kjobsh_clip (rdc_100m) := uint16(dist_100kjobs);
 		}
 
-		attribute<min> traveltime_100kinh (domain) := Makedefined(impl/traveltime_100kinh[min], 999[min])[rdc_100m/domain_rel];
-		attribute<km>  dist_mainports     (domain) := Makedefined(impl/rsmainp[km]            , 999[km])[rdc_500m/domain_rel];
-		attribute<km>  dist_trainstation  (domain) := Makedefined(impl/dist_train_station     , 999[km])[rdc_100m/domain_rel];
-		attribute<km>  dist_highwayentry  (domain) := Makedefined(impl/dist_highway_entry[km] , 999[km])[rdc_100m/domain_rel];
-		attribute<km>  dist_100000jobs    (domain) := Makedefined(impl/dist_100kjobs[km]      , 999[km])[rdc_100m/domain_rel];
+		attribute<min> traveltime_100kinh (domain) := Makedefined((impl/traveltime_100kinh[sec])[min], 999[min])[rdc_100m/domain_rel];
+		attribute<km>  dist_mainports     (domain) := Makedefined(impl/rsmainp[km]            , 999[km])[domain/rdc_500m_rel];
+		attribute<km>  dist_trainstation  (domain) := Makedefined((impl/dist_train_station[Meter])[km] , 999[km])[rdc_100m/domain_rel];
+		attribute<km>  dist_highwayentry  (domain) := Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km])[rdc_100m/domain_rel];
+		attribute<km>  dist_100000jobs    (domain) := Makedefined((impl/dist_100kjobs[meter])[km]      , 999[km])[rdc_100m/domain_rel];
 	}
 	container Noise
 	{
@@ -93,7 +95,7 @@ container Thematic_maps
 			, cdf = "Classifications/Percentage10k/Classes";
 		}
 		
-		attribute<Percent> perc_opp_gt_50dba       (domain) := Impl/perc_opp_gt_50dba[rdc_500m/domain_rel];
+		attribute<Percent> perc_opp_gt_50dba       (domain) := Impl/perc_opp_gt_50dba[domain/rdc_500m_rel];
 	}
 
 	container NatureLandscape
@@ -118,10 +120,10 @@ container Thematic_maps
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/Peat_100m.tif";
 		}
 
-		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[rdc_500m/domain_rel];
+		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500m_rel];
 		attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
-		attribute<ValuationRange> landscape_experience(domain) := MakeDefined(impl/Experience_ls > Int8(10) ? 0[ValuationRange] : impl/Experience_ls[ValuationRange], 0[ValuationRange])[rdc_500m/domain_rel];
-		attribute<Meter>          altitude            (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[rdc_500m/domain_rel];
+		attribute<ValuationRange> landscape_experience(domain) := MakeDefined(impl/Experience_ls > Int8(10) ? 0[ValuationRange] : impl/Experience_ls[ValuationRange], 0[ValuationRange])[domain/rdc_500m_rel];
+		attribute<Meter>          altitude            (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[domain/rdc_500m_rel];
 		attribute<YesOrNo>        peat                (domain) := impl/peat;
 	}
 	container Safety: Descr = "Maps related to various safety issues"
@@ -158,10 +160,10 @@ container Thematic_maps
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/DangerousGoodsTransport.tif";
 		}
 		
-		attribute<Meter>      floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[rdc_500m/domain_rel], cdf = "Classifications/Diepte8k/Classes";
-		attribute<Mercalli3K> earthquakes         (domain) := impl/earthquakes[rdc_500m/domain_rel], cdf = "Classifications/Mercalli3K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/aardbeving.html";
-		attribute<YesOrNo>    dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[rdc_500m/domain_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
-		attribute<Ratio>      dangerous_transport (domain) := MakeDefined(impl/Dangerous_transport, 0[Ratio])[rdc_500m/domain_rel], cdf = "Classifications/Ratio10K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html";
+		attribute<Meter>      floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[domain/rdc_500m_rel], cdf = "Classifications/Diepte8k/Classes";
+		attribute<Mercalli3K> earthquakes         (domain) := impl/earthquakes[domain/rdc_500m_rel], cdf = "Classifications/Mercalli3K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/aardbeving.html";
+		attribute<YesOrNo>    dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[domain/rdc_500m_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
+		attribute<Ratio>      dangerous_transport (domain) := MakeDefined(impl/Dangerous_transport, 0[Ratio])[domain/rdc_500m_rel], cdf = "Classifications/Ratio10K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html";
 	}	
 	
 	container Water

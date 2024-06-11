@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/IsNNN
+	</FullName>
+	<GeoDmsVersion>GeoDms 15.2.0 [May 27 2024 11:15:24]
+	</GeoDmsVersion>
+	<SessionStartTime>2024-06-10 10:32:53
+	</SessionStartTime>
+	<CurrentTime>2024-06-10 10:39:37
+	</CurrentTime>
+	<StatusFlags>0x6e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>15.2.0
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/IsNNN
+	</FullName>
+	<Expr>/SourceData/Beleid/NNN/IsNNN
+	</Expr>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD
+	</Processor>
+	<User>Jip Claassens
+	</User>
+	<ComputerName>OVSRV06
+	</ComputerName>
+</Environment>
+<Parameters>
+	<Model_StartYear>2023
+	</Model_StartYear>
+	<Model_FinalYear>2050
+	</Model_FinalYear>
+	<BAG_RecentYear>Y2023
+	</BAG_RecentYear>
+	<LISA_StartYear>Y2021
+	</LISA_StartYear>
+	<BBG_Year>2017
+	</BBG_Year>
+	<BRT_file_date>20220321
+	</BRT_file_date>
+	<MinimumPandfootprint>20
+	</MinimumPandfootprint>
+	<MinimumWoningAmount>5
+	</MinimumWoningAmount>
+	<MinimumVerblijfsobjectAmount>1
+	</MinimumVerblijfsobjectAmount>
+	<MinimumGroupSize>3
+	</MinimumGroupSize>
+	<MinimumCountNieuwNatuur>10
+	</MinimumCountNieuwNatuur>
+	<Zichtjaar_StartYear>2020
+	</Zichtjaar_StartYear>
+	<Zichtjaar_EndYear>2050
+	</Zichtjaar_EndYear>
+</Parameters>
+</DocType>

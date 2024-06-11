@@ -32,9 +32,9 @@ container Geography: Using = "Units", isHidden = "True"
 	unit<spoint> rdc_100m  := perGridsize/size_100m/grid_domain;
 	unit<spoint> rdc_500m  := perGridsize/size_500m/grid_domain;
 	
-	unit<uint32> Gridsizes : nrofrows = 3
+	unit<uint32> Gridsizes : nrofrows = 2
 	{
-		attribute<string>  size_str : ['25', '100', '500'];
+		attribute<string>  size_str : ['100', '500'];
 		attribute<Meter>   size     := size_str[Meter];
 		attribute<string>  name    := 'size_'+string(size)+'m';
 	}
@@ -65,10 +65,9 @@ container Geography: Using = "Units", isHidden = "True"
 		{
 			parameter<Meter>                gridsize        := ../gridsize;
 			parameter<int16>                nr_cols         := ../nr_cols;
-			attribute<rdc_25m>              rdc_25m_rel     := mapping(., rdc_25m);
 			attribute<rdc_100m>             rdc_100m_rel    := mapping(., rdc_100m);
 			attribute<rdc_500m>             rdc_500m_rel    := mapping(., rdc_500m);
-			attribute<.>                    domain_rel (domain) := id(domain)[.];
+			attribute<domain>               domain_rel      := mapping(., domain);
 			parameter<ha>                   NrHaPerCell     := convert(gridsize * gridsize, ha);
 		}
 	}
