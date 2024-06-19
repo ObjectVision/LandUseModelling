@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 14.14 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2024                               //
+//                               July 2004 - June 2024                                  //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -209,26 +209,6 @@ container Classifications: Using = "Units", isHidden = "True"
 			'  0 to   5','  5 to  10',' 10 to  15',' 15 to  20',' 20 to  25'
 		];
 	}
-	unit<uint8> HaChange11KFlipped: nrofrows = 11
-	{
-		attribute<HaDiff> Classes: DialogType = "Classification",
-		[
-			-25   , -20,-15, -10, -5, -0.01
-		,	  0.01,   5, 10,  15, 20
-		];
-
-		attribute<UInt32> BrushColor: DialogType = "BrushColor",
-		[
-			rgb(  0, 64,  0),rgb( 29,112, 29),rgb( 89,172, 89),rgb(150,200,150),rgb(200,240,200),rgb(219,219,219)
-		,	rgb(255,236,236),rgb(255,206,206),rgb(255,149,149),rgb(255,104,104),rgb(255,  0,  0)
-		];
-
-		attribute<String> Label: DialogType = "LabelText",
-		[
-			'-25 to -20','-20 to -15','-15 to -10','-10 to  -5',' -5 to   0','     0     ',
-			'  0 to   5','  5 to  10',' 10 to  15',' 15 to  20',' 20 to  25'
-		];
-	}
 	unit<uint8> ClaimHa9K: nrofrows = 9
 	{
 		attribute<claimHa> Classes: DialogType = "Classification",
@@ -252,23 +232,6 @@ container Classifications: Using = "Units", isHidden = "True"
 		,	'   50.000 -   100.000','  100.000 -   500.000',' >500.000'
 		];
 	}
-
-	unit<uint8> Districts4K: nrofrows = 4
-	{
-		attribute <Ha> Classes: DialogType = "Classification",
-		[
-			-999.00, 0.01, 100.00, 250.00
-		];
-		attribute<UInt32> BrushColor: DialogType = "BrushColor",
-		[
-			rgb(255,255,255),rgb(  0,  0,255),rgb(  0,255,  0), rgb(255,  0,  0)
-		];
-		attribute <String> Label: DialogType = "LabelText",
-		[
-			"Unbuilt area","Small kernels (until 100 Ha)","Mediumsized kernels (until 250 Ha)","Large kernels (more than 250 Ha)"
-		];
-	}
-
 
 	// =========  Classification for Monetary unit (EUR per m^2)
 	unit<uint8> Eur_M2_15K: nrofrows = 15
@@ -489,7 +452,7 @@ container Classifications: Using = "Units", isHidden = "True"
 	}
 
 	// =========  Classification for depth in m
-		unit<uint8> Diepte8K: nrofrows = 8
+	unit<uint8> Diepte8K: nrofrows = 8
 	{
 		attribute<Meter> Classes: DialogType = "Classification",
 		[

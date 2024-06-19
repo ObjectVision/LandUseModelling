@@ -52,7 +52,7 @@ container A2_TM
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -91,7 +91,7 @@ container A2_TM
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/residential
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/residential
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/birdhabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
  		; 
 
 // ========================= INDUSTRIAL
@@ -105,7 +105,7 @@ container A2_TM
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -138,7 +138,7 @@ container A2_TM
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/industrial
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/industrial
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
  		; 
 
 // ========================= RECREATION
@@ -153,7 +153,7 @@ container A2_TM
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -186,7 +186,7 @@ container A2_TM
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/recreation
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/recreation
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
  		; 
 
 // ========================= NATURE
@@ -200,7 +200,7 @@ container A2_TM
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -233,7 +233,7 @@ container A2_TM
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/nature
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/nature
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
  		; 
 
 // ========================= AGRICULTURE
@@ -248,7 +248,7 @@ container A2_TM
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -281,7 +281,7 @@ container A2_TM
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/agriculture
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/agriculture
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
  		; 
 	
 // ========================= BUILDINGLOT
@@ -295,7 +295,7 @@ container A2_TM
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/birdHabitat [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetwork [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
@@ -328,6 +328,6 @@ container A2_TM
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/buildinglot
   		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/buildinglot
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/BirdHabitat
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetwork
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
  		; 
 }

@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 14.14 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2024                               //
+//                               July 2004 - June 2024                                  //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -212,7 +212,7 @@ are explained in this article and the description of the calculation rules refer
 				unit<uint16>          ThisIterRange                      := Range(IterRange, UInt16(0) , UInt16(nrIter));
 				attribute<String>     IterNames          (ThisIterRange) := 'iter'+String(ID(ThisIterRange));
 				attribute<claimHa>    TotalDeviations    (ThisIterRange) := ='add('+asItemList('Float32(ID(ThisIterRange)==value('+String(ID(ThisIterRange))+',ThisIterRange))*casedata/iterator/'+IterNames+'/TotalDeviation')+')';
-				attribute<Potentiaal> LogTotalDeviations (ThisIterRange) := log(TotalDeviations);
+				attribute<Potentiaal> LogTotalDeviations (ThisIterRange) := log(TotalDeviations / 1[claimHa]);
 			}
 
 			#include <evaluation.dms>

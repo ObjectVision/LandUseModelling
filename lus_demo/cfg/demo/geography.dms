@@ -28,7 +28,6 @@ container Geography: Using = "Units", isHidden = "True"
 	parameter<meter> y_min := 300000[meter];
 	parameter<meter> y_max := 625000[meter];
 	
-	unit<spoint> rdc_25m   := perGridsize/size_25m/grid_domain;
 	unit<spoint> rdc_100m  := perGridsize/size_100m/grid_domain;
 	unit<spoint> rdc_500m  := perGridsize/size_500m/grid_domain;
 	

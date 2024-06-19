@@ -56,7 +56,7 @@ container Policy_maps
 			,	Source      = "Bird and Habitat Directive: SGR2(LNV);  Vogel- en Habitatrichtlijngebieden (LNV)"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/bird_and_habitat.tif";
 
-			attribute<YesorNo> NatureNetwork (rdc_100m)
+			attribute<YesorNo> NatureNetworkNL (rdc_100m)
 			:	Label       = "Nature Network Nedetherlands"
 			,	Source      = "Natuur Netwerk Nederland (NNNN)"
 			,	URL         = "https://www.pdok.nl/downloads/-/article/natuurnetwerk-nederland-nnn-"
@@ -64,7 +64,7 @@ container Policy_maps
 		}
 		
 		attribute<YesorNo> BirdHabitat     (domain) := Impl/birdHabitat[domain/rdc_500m_rel];
-		attribute<YesorNo> NatureNetwork   (domain) := Impl/NatureNetwork[domain/rdc_100m_rel];
+		attribute<YesorNo> NatureNetworkNL (domain) := Impl/NatureNetworkNL[domain/rdc_100m_rel];
 	}
 
 	container Water
