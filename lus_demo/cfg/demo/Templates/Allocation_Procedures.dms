@@ -147,17 +147,17 @@ are explained in this article and the description of the calculation rules refer
 	
 			container result :=
 				discrete_alloc(
-					  classifications/ggEndogenous/label  //attr string
-					, Compacted/ADomain                   //unit uint32
-					, Compacted/SuitabilityMaps           //cont int32
-					, id(classifications/ggEndogenous)    //attr uint8
-					, classifications/ggEndogenous/label  //attr string
-					, AtomicRegions                       //unit uint16
-					, Compacted/AtomicRegionMap           //attr uint16
-					, minclaims                           //cont uint32
-					, maxclaims                           //cont uint32
-					, treshold                            //para int32
-					, FeasibleSolution                    //cont empty
+					  classifications/ggEndogenous/label  //attr string 	1
+					, Compacted/ADomain                   //unit uint32 	2
+					, Compacted/SuitabilityMaps           //cont int32		3
+					, id(classifications/ggEndogenous)    //attr uint8		4
+					, classifications/ggEndogenous/label  //attr string		5
+					, AtomicRegions                       //unit uint16		6
+					, Compacted/AtomicRegionMap           //attr uint16		7
+					, minclaims                           //cont uint32		8
+					, maxclaims                           //cont uint32		9
+					, treshold                            //para int32		10
+					, FeasibleSolution                    //cont empty		11
 				)
 			{
 				attribute<classifications/ggEndogenous> landuse_grid (domain):= landuse[Compacted/BaseGrid];
