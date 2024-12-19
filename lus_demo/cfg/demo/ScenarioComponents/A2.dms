@@ -79,10 +79,10 @@ container A2_TM
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
 		 
-  		 -  10.0 [Eur_M2] * Thematic_maps/Water/TooWetSoil[float32]
-  		 -  10.0 [Eur_M2] * Thematic_maps/Water/TooWeakSoil[float32]
-  		 -  10.0 [Eur_M2] * Thematic_maps/Water/TooSubsidenceProneSoil[float32]
-  		 -  10.0 [Eur_M2] * Thematic_maps/Water/TooMuchFloodDanger[float32]
+  		 -  0.0 [Eur_M2] * Thematic_maps/Water/WetSoil[float32]
+  		 -  0.0 [Eur_M2] * Thematic_maps/Water/WeakSoil[float32]
+  		 -  0.0 [Eur_M2] * Thematic_maps/Water/SubsidenceProne[float32]
+  		 -  0.0 [Eur_M2] * Thematic_maps/Water/FloodHazard[float32]
 		 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below

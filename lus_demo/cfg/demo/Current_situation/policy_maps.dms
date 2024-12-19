@@ -57,8 +57,8 @@ container Policy_maps
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/bird_and_habitat.tif";
 
 			attribute<YesorNo> NatureNetworkNL (rdc_100m)
-			:	Label       = "Nature Network Nedetherlands"
-			,	Source      = "Natuur Netwerk Nederland (NNNN)"
+			:	Label       = "Nature Network Netherlands"
+			,	Source      = "Natuur Netwerk Nederland (NNN)"
 			,	URL         = "https://www.pdok.nl/downloads/-/article/natuurnetwerk-nederland-nnn-"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/Natuur_Netwerk_Nederland_100m_20230818.tif";
 		}

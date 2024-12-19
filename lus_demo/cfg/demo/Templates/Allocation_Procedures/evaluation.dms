@@ -98,7 +98,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			attribute<Ha>          Builtup_Surface            (domain) := ='add('+asItemList(ggUrban/IsExogenous ? 'landuse/Exogenous/' : 'landuse/Endogenous/'+ ggUrban/Name)+')';
 			attribute<YesorNo>     Builtup_Area               (domain) := value(Builtup_Surface > 0.5f * domain/NrHaPerCell, YesorNo);
 			attribute<Ha>          Builtup_Surface_current    (domain) := ='add('+asItemList('orglanduse/' + ggUrban/Name)+')',	IsHidden = "True";
-			attribute<YesorNo>     Builtup_Area_current       (domain) := Builtup_Surface_current > value(15.0, Ha);
+			attribute<YesorNo>     Builtup_Area_current       (domain) := value(Builtup_Surface_current > 0.5f * domain/NrHaPerCell, YesorNo);
 			attribute<HaDiff>      Difference_Builtup_Surface (domain) := Urbanisation/Builtup_Surface - Urbanisation/Builtup_Surface_current, IsHidden = "True";
 			attribute<LossOrGain>  Difference_Builtup_Area    (domain) := value(Urbanisation/Builtup_Area, LossOrGain)- value(Urbanisation/Builtup_Area_current, LossOrGain);
 
@@ -107,28 +107,29 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					? value(1, Ls_QualPress2k)
 					: value(0, Ls_QualPress2k);
 					
-			attribute<HaDiff>  Pressure_netEHS (domain) :=
+			attribute<HaDiff>  Pressure_NatureNetwork (domain) :=
 				Current_situation/policy_maps/NatureLandscape/NatureNetworkNL
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
-			,	Label = "Difference Built-up areas in Netto EHS";
+			,	Descr = "Difference Built-up areas in NNN";
 			
 			attribute<HaDiff>  Pressure_Habitatareas (domain) :=
 				Current_situation/policy_maps/NatureLandscape/birdHabitat
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
-			,	Label = "Difference Built-up in Habitatareas";
+			,	Descr = "Difference Built-up in Habitatareas";
 			
+			attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Current_situation/thematic_maps/NatureLandscape/Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
 			attribute<Ls_QualPress2k> Pressure_LandscapeQuality (domain) := 
 				   Urbanisation/Pressure_new_Builtup > 0[Ls_QualPress2k]
-				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_Qual2k]
+				&& Landscape_quality2k > 0[Ls_Qual2k]   
 					? 1[Ls_QualPress2k]
 					: 0[Ls_QualPress2k]
 				+  Urbanisation/Pressure_new_Builtup < 1[Ls_QualPress2k]
-				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_Qual2k]
+				&& Landscape_quality2k > 0[Ls_Qual2k]
 					? 0[Ls_QualPress2k]
 					: 0[Ls_QualPress2k]
-			,	Label = "New built-up area in (very) high quality landscapes";
+			,	Descr = "New built-up area in (very) high quality landscapes";
 		} 
 	}
 	

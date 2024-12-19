@@ -94,6 +94,14 @@ are explained in this article and the description of the calculation rules refer
 		container allocate_discrete
 		{ 
 			attribute<bool> HasFreeLand (domain) := Land/TotalExogenousLand <= 0.5f * domain/NrHaPerCell;
+			
+			unit<uint32> AtomicRegions := Geography/RegionalUnits/RandstadIntermediatePeripheral
+			{
+				attribute<.> regio := id(.);
+				attribute<.> per_domain             (domain) := poly2grid(geometry, domain);
+				attribute<.> per_Adomain (Compacted/ADomain) := collect_by_cond(Compacted/ADomain, HasFreeLand, per_domain);
+			}	
+			
 			container Compacted
 			{
 				unit <uint32> ADomain := select_with_org_rel(HasFreeLand)
@@ -109,20 +117,11 @@ are explained in this article and the description of the calculation rules refer
 						, Int32
 					)
 				;
-	
-				attribute<AtomicRegions> AtomicRegionMap (ADomain):= AtomicRegions/UnionData[ADomain/org_rel];
-	
+				
+				attribute<AtomicRegions> AtomicRegionMap (ADomain) := AtomicRegions/per_ADomain;
 				attribute<ADomain> BaseGrid (domain):= invert(ADomain/org_rel);
 			}
-			container regionSets
-			{
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> residential (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> industrial  (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> recreation  (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> agriculture (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> nature      (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> buildinglot (domain):= Geography/RegioGrids/ClaimRegions;
-			}
+			
 			container minclaims := //in aantal cellen
 				for_each_nedv(
 					  classifications/ggEndogenous/Label
@@ -141,23 +140,18 @@ are explained in this article and the description of the calculation rules refer
 					, uint32
 				);
 	
-			unit<uint16> AtomicRegions:= overlay(classifications/ggEndogenous/label, domain, regionSets);
 			parameter<int32> treshold := 0i;
-			container FeasibleSolution;
 	
 			container result :=
-				discrete_alloc(
+				discrete_alloc_sp(
 					  classifications/ggEndogenous/label  //attr string
 					, Compacted/ADomain                   //unit uint32
 					, Compacted/SuitabilityMaps           //cont int32
-					, id(classifications/ggEndogenous)    //attr uint8
-					, classifications/ggEndogenous/label  //attr string
 					, AtomicRegions                       //unit uint16
 					, Compacted/AtomicRegionMap           //attr uint16
 					, minclaims                           //cont uint32
 					, maxclaims                           //cont uint32
 					, treshold                            //para int32
-					, FeasibleSolution                    //cont empty
 				)
 			{
 				attribute<classifications/ggEndogenous> landuse_grid (domain):= landuse[Compacted/BaseGrid];
@@ -239,7 +233,7 @@ are explained in this article and the description of the calculation rules refer
 			{
 				attribute<ggEndogenous>  Endogenous (domain) := casedata/allocate_discrete/result/landuse_grid;
 				attribute<ggExogenous>   Exogenous  (domain) := ='casedata/allocate_discrete/HasFreeLand ? value(0 / 0,ggExogenous) : value(argmax('+asItemList(+'ExogenousLand/'+classifications/ggExogenous/name)+'), ggExogenous)';
-				attribute<LUclasses>     Model      (domain) := MakeDefined(classifications/ggEndogenous/nr_OrgEntity[Endogenous], classifications/ggExogenous/nr_OrgEntity[Exogenous])[LUclasses];
+				attribute<LUclasses>     Model      (domain) := MakeDefined(classifications/ggEndogenous/org_rel[Endogenous], classifications/ggExogenous/org_rel[Exogenous])[LUclasses];
 			}
 		}
 	}

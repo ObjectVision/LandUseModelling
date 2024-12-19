@@ -36,7 +36,7 @@ container LUS_Demo
 		
 		container Advanced : IsHidden = "true"
 		{
-			parameter<Year>          StartYear       := 2017[year];
+			parameter<Year>          StartYear       := 2020[year];
 			parameter<Year>          ModelYear       := 2040[year];
 			parameter<YearDiffRange> ClaimPeriod     := (ModelYear - StartYear)[YearDiffRange];
 			parameter<IterRange>     NrOfIterations  := 30[IterRange];

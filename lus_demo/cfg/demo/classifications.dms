@@ -71,31 +71,31 @@ container Classifications: Using = "Units", isHidden = "True"
 	}
 
 	// =========== landusesTypering: subtypes
-	unit<uint8> ggEndogenous:= subSet(not(ggModel/IsExogenous))
+	unit<uint8> ggEndogenous:= select_with_org_rel_with_attr_by_cond(ggModel, not(ggModel/IsExogenous))
 	{
-		attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
-		attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
-		attribute<Eur_m2> Landprice_A1 := lookup(nr_OrgEntity, ggModel/Landprice_A1);
-		attribute<Eur_m2> Landprice_A2 := lookup(nr_OrgEntity, ggModel/Landprice_A2);
-		attribute<Eur_m2> Landprice_B1 := lookup(nr_OrgEntity, ggModel/Landprice_B1);
-		attribute<Eur_m2> Landprice_B2 := lookup(nr_OrgEntity, ggModel/Landprice_B2);
+		// attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
+		// attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
+		// attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
+		// attribute<Eur_m2> Landprice_A1 := lookup(nr_OrgEntity, ggModel/Landprice_A1);
+		// attribute<Eur_m2> Landprice_A2 := lookup(nr_OrgEntity, ggModel/Landprice_A2);
+		// attribute<Eur_m2> Landprice_B1 := lookup(nr_OrgEntity, ggModel/Landprice_B1);
+		// attribute<Eur_m2> Landprice_B2 := lookup(nr_OrgEntity, ggModel/Landprice_B2);
 		
 		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
 
-	unit<uint8> ggExogenous := SubSet(ggModel/IsExogenous)
+	unit<uint8> ggExogenous := select_with_org_rel_with_attr_by_cond(ggModel, ggModel/IsExogenous)
 	{
-		attribute<String> Name :       = lookup(nr_OrgEntity, ggModel/Name);
-		attribute<UInt32> BrushColor:  = lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String> Label:       = lookup(nr_OrgEntity, ggModel/Label),      DialogType = "LabelText";
+		// attribute<String> Name :       = lookup(nr_OrgEntity, ggModel/Name);
+		// attribute<UInt32> BrushColor:  = lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
+		// attribute<String> Label:       = lookup(nr_OrgEntity, ggModel/Label),      DialogType = "LabelText";
 	}
-	unit<uint8> ggUrban:= SubSet(ggModel/IsUrban)
+	unit<uint8> ggUrban:= select_with_attr_by_cond(ggModel, ggModel/IsUrban)
 	{
-		attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
-		attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
-		attribute<Bool>   IsExogenous  := lookup(nr_OrgEntity, ggModel/IsExogenous);
+		// attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
+		// attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
+		// attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
+		// attribute<Bool>   IsExogenous  := lookup(nr_OrgEntity, ggModel/IsExogenous);
 	}
 
 	// ============= YesorNo
@@ -482,6 +482,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<String> Label: DialogType = "LabelText",
 			['Low','High'];
+		container V := for_each_nedv(AsItemName(label), String(ID(.))+'[..]', void, .);
 	}
 	unit<uint8> Ls_Qual4K: nrofrows = 5
 	{
@@ -493,6 +494,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<String> Label: DialogType = "LabelText",
 			['No quality (e.g. urban)', 'Low quality','Moderate quality','High quality','Very high quality'];
+		container V := for_each_nedv(AsItemName(label), String(ID(.))+'[..]', void, .);
 	}
 
 	// =========== Classification for pressure on Landscape quality
@@ -506,6 +508,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<String> Label: DialogType = "LabelText",
 			['Low','High'];
+		container V := for_each_nedv(Label, String(ID(.))+'[..]', void, .);
 	}
 
 	// =========  Classification for Earthquake risk

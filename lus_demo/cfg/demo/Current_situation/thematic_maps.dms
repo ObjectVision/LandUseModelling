@@ -57,6 +57,11 @@ container Thematic_maps
 			,	Source      = "Railway stations point dataset from NS; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Trainstations_meter_2019.tif";
 			
+			attribute<float32> dist_airports (rdc_100m)
+			:	Label       = "Distance to nearest main airport (2019)"
+			,	Descr       = "Euclidean distance to nearest main (top 5) airport"
+			,	Source      = "Airport polygon dataset from BRT; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Airports_2019_Top5_BRT.tif";
 			
 			attribute<uint16> dist_highway_entry (rdc_100m)
 			:	Label       = "Distance to nearest highway entry (2018)"
@@ -102,9 +107,9 @@ container Thematic_maps
 	{
 		container impl: isHidden = "True"
 		{
-			attribute<Int8> experience_ls(rdc_500m)
-			:	Source      = "Kwaliteit landschap: Alterra"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/experience_ls.tif";
+			// attribute<Int8> experience_ls(rdc_500m)
+			// :	Source      = "Kwaliteit landschap: Alterra"
+			// ,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/experience_ls.tif";
 
 			attribute<Int32> altitude (rdc_500m)
 			:	Descr       = "Hoogtekaart in dm"
@@ -118,13 +123,22 @@ container Thematic_maps
 			attribute<YesorNo> peat (domain)
 			:	Source      = "ABCD kaart Martha Bakker: PBL"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/Peat_100m.tif";
+			
+			attribute<bool> WetSoil (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooWetSoil.tif";
+			attribute<bool> WeakSoil (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooWeakSoil.tif";
+			attribute<bool> SubsidenceProne (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooSubsidenceProneSoil.tif";
 		}
 
 		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500m_rel];
-		attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
-		attribute<ValuationRange> landscape_experience(domain) := MakeDefined(impl/Experience_ls > Int8(10) ? 0[ValuationRange] : impl/Experience_ls[ValuationRange], 0[ValuationRange])[domain/rdc_500m_rel];
+		// attribute<ValuationRange> landscape_experience(domain) := MakeDefined(impl/Experience_ls > Int8(10) ? 0[ValuationRange] : impl/Experience_ls[ValuationRange], 0[ValuationRange])[domain/rdc_500m_rel];
 		attribute<Meter>          altitude            (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[domain/rdc_500m_rel];
 		attribute<YesOrNo>        peat                (domain) := impl/peat;
+		attribute<bool>           WetSoil             (domain) := impl/WetSoil[rdc_100m/domain_rel];
+		attribute<bool>           WeakSoil            (domain) := impl/WeakSoil[rdc_100m/domain_rel];
+		attribute<bool>           SubsidenceProne     (domain) := impl/SubsidenceProne[rdc_100m/domain_rel];
 	}
 	container Safety: Descr = "Maps related to various safety issues"
 	{
@@ -158,32 +172,18 @@ container Thematic_maps
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html"
 			,	Descr       = "Line density function with a 100m radius applied to buisleidingen. The resulting map is rescaled between 0 and (approx.) 100 percent"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/DangerousGoodsTransport.tif";
+			
+			attribute<bool> FloodHazard (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooMuchFloodDanger.tif"
+			, 	Descr       = "combinatiekaart waarin LSG (totale lokaal schadegevaar; de schade die gemiddeld jaarlijks te verwachten is door overstromingen als er op die plaats een standaard eengezinswoning zou worden gebouwd) en LVG (lokaal verdrinkingsgevaar; 
+								de gemiddelde kans per jaar voor een hypothetisch daar aanwezige persoon om op die plek door een overstroming te overlijden) zijn gecombineerd, als mogelijk hulpmiddel voor locatiekeuze en/of het vaststellen van bouwvereisten.";
+		
 		}
 		
 		attribute<Meter>      floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[domain/rdc_500m_rel], cdf = "Classifications/Diepte8k/Classes";
 		attribute<Mercalli3K> earthquakes         (domain) := impl/earthquakes[domain/rdc_500m_rel], cdf = "Classifications/Mercalli3K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/aardbeving.html";
 		attribute<YesOrNo>    dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[domain/rdc_500m_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
 		attribute<Ratio>      dangerous_transport (domain) := MakeDefined(impl/Dangerous_transport, 0[Ratio])[domain/rdc_500m_rel], cdf = "Classifications/Ratio10K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html";
+		attribute<bool>       FloodHazard         (domain) := impl/FloodHazard[rdc_100m/domain_rel];
 	}	
-	
-	container Water
-	{
-		container impl: isHidden = "True"
-		{
-			attribute<bool> TooWetSoil (rdc_100m)
-			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooWetSoil.tif";
-			attribute<bool> TooWeakSoil (rdc_100m)
-			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooWeakSoil.tif";
-			attribute<bool> TooSubsidenceProneSoil (rdc_100m)
-			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooSubsidenceProneSoil.tif";
-			attribute<bool> TooMuchFloodDanger (rdc_100m)
-			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/water/TooMuchFloodDanger.tif";
-		}
-		
-		attribute<bool>       TooWetSoil                     (domain) := impl/TooWetSoil[rdc_100m/domain_rel];
-		attribute<bool>       TooWeakSoil                    (domain) := impl/TooWeakSoil[rdc_100m/domain_rel];
-		attribute<bool>       TooSubsidenceProneSoil         (domain) := impl/TooSubsidenceProneSoil[rdc_100m/domain_rel];
-		attribute<bool>       TooMuchFloodDanger             (domain) := impl/TooMuchFloodDanger[rdc_100m/domain_rel];
-
-	}
 }
