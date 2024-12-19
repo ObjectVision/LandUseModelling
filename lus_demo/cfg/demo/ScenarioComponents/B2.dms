@@ -62,7 +62,8 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
 		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
 
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports      , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_seaports      , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
@@ -70,7 +71,7 @@ container B2_RC
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
  		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
 		 
@@ -79,10 +80,10 @@ container B2_RC
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
 		 
-  		 -  0.0 [Eur_M2] * Thematic_maps/Water/WetSoil[float32]
-  		 -  0.0 [Eur_M2] * Thematic_maps/Water/WeakSoil[float32]
-  		 -  0.0 [Eur_M2] * Thematic_maps/Water/SubsidenceProne[float32]
-  		 -  0.0 [Eur_M2] * Thematic_maps/Water/FloodHazard[float32]
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
@@ -115,7 +116,7 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
 		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
 
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
@@ -123,7 +124,7 @@ container B2_RC
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
  		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
 		 
@@ -163,7 +164,7 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
 		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
 
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
@@ -171,7 +172,7 @@ container B2_RC
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
  		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
 		 
@@ -210,7 +211,7 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
 		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
 
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
@@ -218,7 +219,7 @@ container B2_RC
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
  		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
 		 
@@ -258,7 +259,7 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
 		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
 
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
@@ -266,7 +267,7 @@ container B2_RC
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
  		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
 		 
@@ -305,7 +306,7 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
 		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
 
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_mainports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
@@ -313,7 +314,7 @@ container B2_RC
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
+ 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
  		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
 		 
@@ -321,6 +322,7 @@ container B2_RC
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
