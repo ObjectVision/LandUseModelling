@@ -47,7 +47,8 @@ are explained in this article and the description of the calculation rules refer
 		container TotalPeriodClaims := 
 				for_each_nedv(
 					ggEndogenous/Name
-					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/claim * claimFactor + sum(orgLandUse/'+ggEndogenous/Name+', Geography/RegioGrids/ClaimRegions), 0[claimHa])'
+					// ,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/claim * claimFactor + sum(orgLandUse/'+ggEndogenous/Name+', Geography/RegioGrids/ClaimRegions), 0[claimHa])'
+					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/Total, 0[claimHa])'
 					, RegioUnit
 					, claimHa
 				), Descr    = "Dj: Total Claims";

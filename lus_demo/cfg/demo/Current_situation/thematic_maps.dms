@@ -63,11 +63,17 @@ container Thematic_maps
 			,	Source      = "Seaport polygon dataset from a selection of IBIS; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2024)"
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Zeehavens_2022_IBIS_km.tif";
 			
-			attribute<uint16> dist_highway_entry (rdc_100m)
-			:	Label       = "Distance to nearest highway entry (2018)"
+			// attribute<uint16> dist_highway_entry (rdc_100m)
+			// :	Label       = "Distance to nearest highway entry (2018)"
+			// ,	Descr       = "Euclidean distance to highway entries"
+			// ,	Source      = "OpenStreetMap; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
+			// ,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_highway_acces_exit_meter_2018.tif";
+
+			attribute<Meter> dist_highway_entry (rdc_500m)
+			:	Label       = "Distance to nearest highway entry (2012)"
 			,	Descr       = "Euclidean distance to highway entries"
-			,	Source      = "OpenStreetMap; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_highway_acces_exit_meter_2018.tif";
+			,	Source      = "National Road Database (NWB); adapted by SPINlab - VU University Amsterdam"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_highway_entries_2012.tif";
 
 			attribute<uint16> dist_100kjobs (rdc_100m)
 			:	Label       = "Distance to 100.000 Jobs"
@@ -84,7 +90,8 @@ container Thematic_maps
 		attribute<min> traveltime_100kinh (domain) := Makedefined((impl/traveltime_100kinh[sec])[min]  , 999[min])[rdc_100m/domain_rel];
 		attribute<km>  dist_airports      (domain) := Makedefined((impl/dist_airports[meter])[km]      , 999[km])[rdc_100m/domain_rel];
 		attribute<km>  dist_trainstation  (domain) := Makedefined((impl/dist_train_station[Meter])[km] , 999[km])[rdc_100m/domain_rel];
-		attribute<km>  dist_highwayentry  (domain) := Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km])[rdc_100m/domain_rel];
+		// attribute<km>  dist_highwayentry  (domain) := Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km])[rdc_100m/domain_rel];
+		attribute<km>  dist_highwayentry  (domain) := Makedefined(impl/dist_highway_entry * value(0.001 ,km / Meter ), value (999, km) )[domain/rdc_500m_rel];
 		attribute<km>  dist_100000jobs    (domain) := Makedefined((impl/dist_100kjobs[meter])[km]      , 999[km])[rdc_100m/domain_rel];
 		attribute<km>  dist_seaports      (domain) := Makedefined(impl/dist_seaports[km]               , 999[km])[rdc_100m/domain_rel];
 	}
