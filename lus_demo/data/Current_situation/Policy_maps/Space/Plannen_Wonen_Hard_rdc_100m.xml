@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/GetResults/Wonen/Per_HardheidK_x_DomainK/Hard/rdc_100m/IsHardheidK
+	</FullName>
+	<GeoDmsVersion>GeoDms 15.10.2 [Oct 18 2024 17:07:21]
+	</GeoDmsVersion>
+	<SessionStartTime>2024-12-24 14:25:02
+	</SessionStartTime>
+	<CurrentTime>2024-12-24 14:28:32
+	</CurrentTime>
+	<StatusFlags>0x17e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>15.10.2
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/GetResults/Wonen/Per_HardheidK_x_DomainK/Hard/rdc_100m/IsHardheidK
+	</FullName>
+	<Expr>modus(Per_HardheidK/Hard/Dissolve/IsHardheidK_5m, rdc_5m/rdc_100m_rel)
+	</Expr>
+	<RunFile>c:/projdir/jip/plancapaciteit/cfg/main.dms
+	</RunFile>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD
+	</Processor>
+	<User>Jip Claassens
+	</User>
+	<ComputerName>OVSRV06
+	</ComputerName>
+</Environment>
+<Git>
+	<RevisionInfo>heads/main<BR/>
+		On branch main<BR/>
+		Your branch is up to date with &apos;origin/main&apos;.<BR/>
+		<BR/>
+		Changes not staged for commit:<BR/>
+		  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)<BR/>
+		  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)<BR/>
+			modified:   cfg/main.dms<BR/>
+			modified:   git.txt<BR/>
+		<BR/>
+		no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)<BR/>
+		351e35e0c7cb079af74ff5f6b598230ad2c2639a<BR/>
+		
+	</RevisionInfo>
+</Git>
+<Parameters>
+	<RegioIndelingen_jaar>2024
+	</RegioIndelingen_jaar>
+</Parameters>
+</DocType>

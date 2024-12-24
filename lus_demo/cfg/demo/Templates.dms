@@ -96,6 +96,8 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				attribute<claimHa>      buildinglot (RegioUnit) := ../buildinglot/Claim;
 			}
 		}
+		
+		attribute<claimHa> TotalClaims (RegioUnit) := ='Add('+AsList('per_LU_type/'+Classifications/ggEndogenous/name+'/Total',',')+')';
 	}
 	
 	Template Claims_per_LU_T
@@ -110,5 +112,9 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		attribute<claimHa>      Current  (RegioUnit) := ='sum(Current_situation/current_landuse/'+lu_name+', RegioGrids/ClaimRegions)';
 		attribute<claimHa>      Claim    (RegioUnit) := ='rjoin(id(RegioUnit),Read_CSVs/'+lu_name+'/RstIntPer[uint32], Read_CSVs/'+lu_name+'/'+scenario_name_short+'[claimHa])';
 		attribute<claimHa>      Total    (RegioUnit) := Current + Claim;
+		
+		//adhoc
+		attribute<claimHa>      Current_infra  (RegioUnit) := ='sum(Current_situation/current_landuse/infrastructure, RegioGrids/ClaimRegions)';
+
 	}
 }
