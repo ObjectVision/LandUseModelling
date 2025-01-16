@@ -108,7 +108,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		attribute<EUR_M2>       logAj    (RegioUnit) := const(0, RegioUnit, Eur_m2);
 
 		attribute<claimHa>      Current  (RegioUnit) := ='sum(Current_situation/current_landuse/'+lu_name+', RegioGrids/ClaimRegions)';
-		attribute<claimHa>      Claim    (RegioUnit) := ='rjoin(id(RegioUnit),Read_CSVs/'+lu_name+'/RstIntPer[uint32], Read_CSVs/'+lu_name+'/'+scenario_name_short+'[claimHa])';
+		attribute<claimHa>      Claim    (RegioUnit) := ='rjoin(id(RegioUnit),Read_Excel/'+lu_name+'/RstIntPer[uint32], Read_Excel/'+lu_name+'/'+scenario_name_short+'[claimHa])';
 		attribute<claimHa>      Total    (RegioUnit) := Current + Claim;
 	}
 }

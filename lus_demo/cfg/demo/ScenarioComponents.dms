@@ -48,13 +48,17 @@ container Scenario_Components
 				, 'Templates/Claims_per_Scenario_T('+quote(ModelParameters/Advanced/Scenarios/name_short)+')'
 			),	Source          = "Future land use demand: Adapted from WLO(2006), Netherlands Environmental Assessment Agency (PBL)"
 	{
-		container Read_CSVs := 
-			for_each_nxat(
-				Classifications/ggEndogenous/name
-				, uint32
-				, '%ProjDir%/data/Scenarioclaims/'+Classifications/ggEndogenous/name+'_rstintper.csv'
-				, 'gdal.vect'
-			);
+		container Read_Excel 
+		: StorageName = "%ProjDir%/data/Scenarioclaims/LUS_demo_additionalclaims.xlsx"
+		, StorageType = "gdal.vect"
+		{
+			unit<uint32> Residential;
+			unit<uint32> Industrial;
+			unit<uint32> Recreation;
+			unit<uint32> Nature;
+			unit<uint32> Buildinglot;
+			unit<uint32> Agriculture;
+		}
 	}
 	
 	
