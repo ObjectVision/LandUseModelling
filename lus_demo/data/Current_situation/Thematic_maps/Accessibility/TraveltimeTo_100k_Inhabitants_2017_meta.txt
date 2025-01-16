@@ -1,0 +1,3 @@
+Reistijd100kInw
+
+Reistijd per auto over het OpenStreetMap-autonetwerk van 15 mei 2018 naar 100.000 inwoners op basis van de CBS Vierkanten van 1 januari 2017.

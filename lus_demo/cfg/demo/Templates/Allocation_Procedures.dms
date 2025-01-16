@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 14.14 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2024                               //
+//                               July 2004 - June 2024                                  //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -42,12 +42,12 @@ are explained in this article and the description of the calculation rules refer
 			attribute<Ha> FreeLand           (domain) := TotalLand - UsedLand, Descr    = "Lc = TotalLand - exogenousLand: free allocatable land";
 		}
 
-		parameter<Potentiaal> claimFactor := PeriodDuration[float32] / Additional_Claims/ClaimPeriod[float32], Descr = "Indication of how much of the additional claims must be consumed in this allocation";
+		parameter<Potentiaal> claimFactor := PeriodDuration[float32] / ModelParameters/Advanced/ClaimPeriod[float32], Descr = "Indication of how much of the additional claims must be consumed in this allocation";
 
 		container TotalPeriodClaims := 
 				for_each_nedv(
 					ggEndogenous/Name
-					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/Claim * claimFactor + sum(orgLandUse/'+ggEndogenous/Name+', Additional_Claims/Regios), 0[claimHa])'
+					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/claim * claimFactor + sum(orgLandUse/'+ggEndogenous/Name+', Geography/RegioGrids/ClaimRegions), 0[claimHa])'
 					, RegioUnit
 					, claimHa
 				), Descr    = "Dj: Total Claims";
@@ -56,7 +56,7 @@ are explained in this article and the description of the calculation rules refer
 		{ 
 			attribute<bool> HasFreeLand (domain):= Land/TotalExogenousLand < domain/NrHaPerCell;
 
-			unit <uint32> ADomain := Subset(HasFreeLand)
+			unit <uint32> ADomain := select_with_org_rel(HasFreeLand)
 			,	label      = "allocation domain"
 			,	DialogType = "Map"
 			,	DialogData = "BaseGrid";
@@ -64,12 +64,12 @@ are explained in this article and the description of the calculation rules refer
 			container SuitabilityMaps :=
 				for_each_nedv(
 					  classifications/ggEndogenous/label
-					, 'Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/nr_orgEntity]'
+					, 'Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel]'
 					, ADomain
 					, EUR_M2
 				);
 				
-			attribute<ADomain> BaseGrid (domain):= invert(ADomain/nr_OrgEntity);
+			attribute<ADomain> BaseGrid (domain):= invert(ADomain/org_rel);
 
 			container Demands :=
 				for_each_nedv(
@@ -82,7 +82,7 @@ are explained in this article and the description of the calculation rules refer
 			container RegioGrids :=
 				for_each_nedv(
 					  Classifications/ggEndogenous/Name
-					, 'Additional_Claims/Regios[ADomain/nr_orgEntity]'
+					, 'Geography/RegioGrids/ClaimRegions[ADomain/org_rel]'
 					, ADomain
 					, RegioUnit
 				);
@@ -94,9 +94,17 @@ are explained in this article and the description of the calculation rules refer
 		container allocate_discrete
 		{ 
 			attribute<bool> HasFreeLand (domain) := Land/TotalExogenousLand <= 0.5f * domain/NrHaPerCell;
+			
+			unit<uint32> AtomicRegions := Geography/RegionalUnits/RandstadIntermediatePeripheral
+			{
+				attribute<.> regio := id(.);
+				attribute<.> per_domain             (domain) := poly2grid(geometry, domain);
+				attribute<.> per_Adomain (Compacted/ADomain) := collect_by_cond(Compacted/ADomain, HasFreeLand, per_domain);
+			}	
+			
 			container Compacted
 			{
-				unit <uint32> ADomain := subset(HasFreeLand)
+				unit <uint32> ADomain := select_with_org_rel(HasFreeLand)
 				,	label      = "allocation domain"
 				,	DialogType = "Map"
 				,	DialogData = "BaseGrid";
@@ -104,32 +112,23 @@ are explained in this article and the description of the calculation rules refer
 				container SuitabilityMaps := 
 					for_each_nedv(
 						  classifications/ggEndogenous/label
-						, 'MakeDefined(Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/nr_orgEntity] * 100f, 0f)[int32]'
+						, 'MakeDefined(Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel] * 100f, 0f)[int32]'
 						, ADomain
 						, Int32
 					)
 				;
-	
-				attribute<AtomicRegions> AtomicRegionMap (ADomain):= AtomicRegions/UnionData[ADomain/nr_orgEntity];
-	
-				attribute<ADomain> BaseGrid (domain):= invert(ADomain/nr_OrgEntity);
+				
+				attribute<AtomicRegions> AtomicRegionMap (ADomain) := AtomicRegions/per_ADomain;
+				attribute<ADomain> BaseGrid (domain):= invert(ADomain/org_rel);
 			}
-			container regionSets
-			{
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> residential (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> industrial  (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> recreation  (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> agriculture (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> nature      (domain):= Geography/RegioGrids/ClaimRegions;
-				attribute<Geography/RegionalUnits/RandstadIntermediatePeripheral> buildinglot (domain):= Geography/RegioGrids/ClaimRegions;
-			}
+			
 			container minclaims := //in aantal cellen
 				for_each_nedv(
 					  classifications/ggEndogenous/Label
-					, 'id(Additional_Claims/RegioUnit) <> 0[Additional_Claims/RegioUnit]
+					, 'id(RegioUnit) <> 0[RegioUnit]
 						? uint32(0.9f * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)
 						: 0'
-					, Additional_Claims/RegioUnit
+					, RegioUnit
 					, uint32
 				);
 				
@@ -137,27 +136,22 @@ are explained in this article and the description of the calculation rules refer
 				for_each_nedv(
 					  classifications/ggEndogenous/Label
 					, 'uint32(1.1f * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)'
-					, Additional_Claims/RegioUnit
+					, RegioUnit
 					, uint32
 				);
 	
-			unit<uint16> AtomicRegions:= overlay(classifications/ggEndogenous/label, domain, regionSets);
 			parameter<int32> treshold := 0i;
-			container FeasibleSolution;
 	
 			container result :=
-				discrete_alloc(
-					  classifications/ggEndogenous/label  //attr string 	1
-					, Compacted/ADomain                   //unit uint32 	2
-					, Compacted/SuitabilityMaps           //cont int32		3
-					, id(classifications/ggEndogenous)    //attr uint8		4
-					, classifications/ggEndogenous/label  //attr string		5
-					, AtomicRegions                       //unit uint16		6
-					, Compacted/AtomicRegionMap           //attr uint16		7
-					, minclaims                           //cont uint32		8
-					, maxclaims                           //cont uint32		9
-					, treshold                            //para int32		10
-					, FeasibleSolution                    //cont empty		11
+				discrete_alloc_sp(
+					  classifications/ggEndogenous/label  //attr string
+					, Compacted/ADomain                   //unit uint32
+					, Compacted/SuitabilityMaps           //cont int32
+					, AtomicRegions                       //unit uint16
+					, Compacted/AtomicRegionMap           //attr uint16
+					, minclaims                           //cont uint32
+					, maxclaims                           //cont uint32
+					, treshold                            //para int32
 				)
 			{
 				attribute<classifications/ggEndogenous> landuse_grid (domain):= landuse[Compacted/BaseGrid];
@@ -212,7 +206,7 @@ are explained in this article and the description of the calculation rules refer
 				unit<uint16>          ThisIterRange                      := Range(IterRange, UInt16(0) , UInt16(nrIter));
 				attribute<String>     IterNames          (ThisIterRange) := 'iter'+String(ID(ThisIterRange));
 				attribute<claimHa>    TotalDeviations    (ThisIterRange) := ='add('+asItemList('Float32(ID(ThisIterRange)==value('+String(ID(ThisIterRange))+',ThisIterRange))*casedata/iterator/'+IterNames+'/TotalDeviation')+')';
-				attribute<Potentiaal> LogTotalDeviations (ThisIterRange) := log(TotalDeviations);
+				attribute<Potentiaal> LogTotalDeviations (ThisIterRange) := log(TotalDeviations / 1[claimHa]);
 			}
 
 			#include <evaluation.dms>
@@ -239,7 +233,7 @@ are explained in this article and the description of the calculation rules refer
 			{
 				attribute<ggEndogenous>  Endogenous (domain) := casedata/allocate_discrete/result/landuse_grid;
 				attribute<ggExogenous>   Exogenous  (domain) := ='casedata/allocate_discrete/HasFreeLand ? value(0 / 0,ggExogenous) : value(argmax('+asItemList(+'ExogenousLand/'+classifications/ggExogenous/name)+'), ggExogenous)';
-				attribute<LUclasses>     Model      (domain) := MakeDefined(classifications/ggEndogenous/nr_OrgEntity[Endogenous], classifications/ggExogenous/nr_OrgEntity[Exogenous])[LUclasses];
+				attribute<LUclasses>     Model      (domain) := MakeDefined(classifications/ggEndogenous/org_rel[Endogenous], classifications/ggExogenous/org_rel[Exogenous])[LUclasses];
 			}
 		}
 	}

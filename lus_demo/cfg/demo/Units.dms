@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 14.14 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - Januray 2023                               //
+//                               July 2004 - June 2024                                  //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -18,6 +18,9 @@
 
 container Units : IsHidden = "true"
 {
+	unit<Float32> Sec:             = BaseUnit('sec', float32);
+	unit<Float32> Min:             = 60 * sec,         cdf = "Classifications/Min_7k/Classes";
+	
 	unit<Float32> Meter:           = BaseUnit('m', float32), cdf = "Classifications/Altitude8K/Classes";
 	unit<Float32> Km:              = 1000.0 * Meter,         cdf = "Classifications/Km_7k/Classes";
 	unit<Float32> Dm:              =    0.1 * Meter;

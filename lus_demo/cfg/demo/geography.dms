@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 14.14 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2023                               //
+//                               July 2004 - June 2024                                  //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -19,55 +19,60 @@
 
 container Geography: Using = "Units", isHidden = "True"
 { 
-	unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "=Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/Province_name'", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
+	// unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "=Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/Province_name'", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
+	unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "ngr_layer", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
 	unit<FPoint> rdc_meter := range(rdc_base, point_yx(300000f,0f), point_yx(625000f,280000f));
 
-	parameter<meter> gridsize_100m := 100[meter];
-	parameter<meter> gridsize_500m := 500[meter];
 	parameter<meter> x_min := 0[meter];
 	parameter<meter> x_max := 280000[meter];
 	parameter<meter> y_min := 300000[meter];
 	parameter<meter> y_max := 625000[meter];
 	
-	parameter<int16> nr_cols_100m := int16((x_max - x_min) / gridsize_100m);
-	parameter<int16> nr_rows_100m := int16((y_max - y_min) / gridsize_100m);
-	parameter<int16> nr_cols_500m := int16((x_max - x_min) / gridsize_500m);
-	parameter<int16> nr_rows_500m := int16((y_max - y_min) / gridsize_500m);
+	unit<spoint> rdc_25m   := perGridsize/size_25m/grid_domain;
+	unit<spoint> rdc_100m  := perGridsize/size_100m/grid_domain;
+	unit<spoint> rdc_500m  := perGridsize/size_500m/grid_domain;
 	
-	unit<SPoint> rdc_500lu :=
-			range(
-				gridset(
-					  rdc_meter
-					, point_yx(-gridsize_500m, gridsize_500m, rdc_meter)
-					, point_yx(y_max, x_min, rdc_meter)
-					, spoint
-				)
-				,point_yx(0s, 0s)
-				, point_yx(nr_rows_500m, nr_cols_500m)
-			)
-			, DialogData = "rdc_meter"
+	unit<uint32> Gridsizes : nrofrows = 3
 	{
-		parameter<ha>     NrHaPerCell := gridsize_500m*gridsize_500m / 10000[meter2] * 1[ha];
-		attribute<domain> domain_rel  := id(.)[domain];
+		attribute<string>  size_str : ['25', '100', '500'];
+		attribute<Meter>   size     := size_str[Meter];
+		attribute<string>  name    := 'size_'+string(size)+'m';
 	}
-
-	unit<SPoint> rdc_100lu :=
-			range(
-				gridset(
-					  rdc_meter
-					, point_yx(-gridsize_100m, gridsize_100m, rdc_meter)
-					, point_yx(y_max, x_min, rdc_meter)
-					, spoint
-				)
-				,point_yx(0s, 0s)
-				, point_yx(nr_rows_100m, nr_cols_100m)
-			)
-			, DialogData = "rdc_meter"
+	
+	container perGridsize :=
+		for_each_ne(
+			Gridsizes/name
+			, 'Create_GridDomain_T('+string(Gridsizes/size)+'[Meter])'
+		);
+	
+	Template Create_GridDomain_T
 	{
-		attribute<rdc_500lu>    rdc_500lu_rel := id(.)[rdc_500lu];
-		parameter<ha>           NrHaPerCell := gridsize_100m*gridsize_100m / 10000[meter2] * 1[ha];
+		parameter<Meter> gridsize;
+		parameter<int16> nr_cols := int16((x_max - x_min) / gridsize);
+		parameter<int16> nr_rows := int16((y_max - y_min) / gridsize);
+		
+		unit<spoint> grid_domain :=
+			range(
+				 gridset(
+					 rdc_meter
+					,point_xy(gridsize, -gridsize, rdc_meter)
+					,point_xy(x_min, y_max, rdc_meter)
+					,spoint
+				)
+				,point_xy(0s, 0s)
+				,point_xy(nr_cols, nr_rows)
+			),	DialogData = "rdc_meter"
+		{
+			parameter<Meter>                gridsize        := ../gridsize;
+			parameter<int16>                nr_cols         := ../nr_cols;
+			attribute<rdc_25m>              rdc_25m_rel     := mapping(., rdc_25m);
+			attribute<rdc_100m>             rdc_100m_rel    := mapping(., rdc_100m);
+			attribute<rdc_500m>             rdc_500m_rel    := mapping(., rdc_500m);
+			attribute<domain>               domain_rel      := mapping(., domain);
+			parameter<ha>                   NrHaPerCell     := convert(gridsize * gridsize, ha);
+		}
 	}
-
+	
 	#include <ngr_layer.dms>
 	
 	unit<uint8> Matrix : nrofrows = 10
@@ -93,6 +98,7 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<.>         claimregio                 : Descr = "This is the entity of shapes of claimregions (0=Exterior)";
 			attribute<Meter2>    area                       := area(geometry, meter2);
 			attribute<String>    Label                      : ['none','Randstad','Intermediate zone','Peripheral zone'], DialogType = "LabelText";
+			attribute<.>         domain_rel        (domain) := poly2grid(geometry, domain);
 		}
 		
 		unit<UInt32> Province

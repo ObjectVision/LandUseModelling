@@ -27,142 +27,162 @@ container Thematic_maps
 	{
 		container Impl : isHidden = "True"
 		{
-			attribute<Percent> urban_attractiveness (rdc_500lu)
-			:	Source      = "Residential Attractiveness: MNP/RIVM"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/UrbanAttractivity.tif"
-			, cdf = "Classifications/Percentage10k/Classes";
+			attribute<uint16> urban_attractiveness (rdc_100m)
+			:	Source      = "Urban attractiveness index 2024: describes the presence of three types of urban amenities: historic buildings; shops; hotels, restaurants and other catering establishments. The numbers of units per amenity type are counted per 100 m grid cell, rescaled to a maximum value of 0.33 per type, added up and averaged out over a 5 km radius"
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/UAI_2024.tif";
 			
-			attribute<Percent> attractive_surroundings (rdc_500lu) 
+			attribute<Percent> attractive_surroundings (rdc_500m) 
 			:	Source      = "Landscape attractiveness: MNP/RIVM"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/AttractivitySurroundings.tif"
 			, cdf = "Classifications/Percentage10k/Classes";
 		}
 		
-		attribute<Percent> urban_attractiveness       (domain) := Impl/urban_attractiveness[domain/rdc_500lu_rel];
-		attribute<Percent> attractive_surroundings    (domain) := Impl/attractive_surroundings[domain/rdc_500lu_rel];
+		attribute<Percent> urban_attractiveness       (domain) := float32(Impl/urban_attractiveness)[rdc_100m/domain_rel] * 1[Percent], cdf = "Classifications/Percentage10k/Classes";
+		attribute<Percent> attractive_surroundings    (domain) := Impl/attractive_surroundings[domain/rdc_500m_rel];
 	}
 
 	container Accessibility: Descr = "Maps with a.o. accessibility by road and with euclidean distances"
 	{
 		container impl : isHidden = "True"
 		{
-			attribute<Meter> rsmainp (rdc_500lu)
-			:	Label       = "Distance to mainports"
-			,	Descr       = "Average distance tp Mainports (Schiphol + Rotterdam harbour)"
-			,	Source      = "Accessibility Factors: RPB"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/rsmainp.tif";
-
-			attribute<Meter> dist_train_station (rdc_500lu)
-			:	Label       = "Distance to nearest train station (2010)"
-			,	Descr       = "Euclidean distance to nearest regular train station (i.e. Spoorwegmuseum-station and stations that are only open for events are excluded). Including Randstadrail-stations"
-			,	Source      = "Railway stations point dataset from VU-Geoplaza; adapted by SPINlab-Vu University Amsterdam"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_train_stations_2010.tif";
-
-			attribute<Meter> dist_highway_entry (rdc_500lu)
-			:	Label       = "Distance to nearest highway entry (2012)"
+			attribute<uint16> dist_train_station (rdc_100m)
+			:	Label       = "Distance to nearest train station (2019)"
+			,	Descr       = "Euclidean distance to nearest regular train station"
+			,	Source      = "Railway stations point dataset from NS; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Trainstations_meter_2019.tif";
+			
+			attribute<float32> dist_airports (rdc_100m)
+			:	Label       = "Distance to nearest main airport (2019)"
+			,	Descr       = "Euclidean distance (in meters) to nearest main (top 5) airport"
+			,	Source      = "Airport polygon dataset from BRT; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Airports_2019_Top5_BRT.tif";
+			
+			attribute<uint8> dist_seaports (rdc_100m)
+			:	Label       = "Distance to nearest seaport (2022)"
+			,	Descr       = "Euclidean distance (in kilometers) to nearest seaport"
+			,	Source      = "Seaport polygon dataset from a selection of IBIS; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2024)"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Zeehavens_2022_IBIS_km.tif";
+			
+			attribute<uint16> dist_highway_entry (rdc_100m)
+			:	Label       = "Distance to nearest highway entry (2018)"
 			,	Descr       = "Euclidean distance to highway entries"
-			,	Source      = "National Road Database (NWB); adapted by SPINlab - VU University Amsterdam"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_highway_entries_2012.tif";
+			,	Source      = "OpenStreetMap; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_highway_acces_exit_meter_2018.tif";
 
-			attribute<Meter> dist_100kinh (rdc_500lu)
-			:	Label       = "Distance to 100.000 inhabitants"
-			,	Descr       = "Distance to 100.000 inhabitants (PC4, 2009); Calculations: Jan Möhlmann & Jasper Dekkers (VU University Amsterdam-Spatial Economics)"
-			,	Source      = "Euclidean distance calculations on PC4 gravity points including number of inhabitants per PC4 area"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_100kinhabitants_pc4_2009.tif";
-
-			attribute<Meter> dist_100kjobs (rdc_500lu)
+			attribute<uint16> dist_100kjobs (rdc_100m)
 			:	Label       = "Distance to 100.000 Jobs"
-			,	Source      = "Employment: ABR Regiobase (CBS, 2009); PC4 & Municipalities: CBS (2009); Calculations: Jan Möhlmann & Jasper Dekkers (VU University Amsterdam-Spatial Economics)"
-			,	Descr       = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2009. Expressed as an average per municipality. Euclidean-distances between PC4-areas have been used, averages have been weighted using number of inhabitants per PC4-area."
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/dist_100kjobs_pc4_2009.tif";
+			,	Source      = "Employment: LISA 2018; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
+			,	Descr       = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2018. "
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Jobs_2018.tif";
+			
+			attribute<uint16> traveltime_100kinh (rdc_100m)
+			:	Label       = "Travel time to 100.000 inhabitants"
+			,	Descr       = "Travel time to 100.000 inhabitants (CBS Vierkanten, 2017; OpenStreetMap, 2018); Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Inhabitants_2017.tif";
 		}
 
-		attribute<km> dist_mainports    (domain) := Makedefined(impl/rsmainp            * value(0.001 ,km / Meter ), value (999, km) )[domain/rdc_500lu_rel];
-		attribute<km> dist_trainstation (domain) := Makedefined(impl/dist_train_station * value(0.001 ,km / Meter ), value (999, km) )[domain/rdc_500lu_rel];
-		attribute<km> dist_highwayentry (domain) := Makedefined(impl/dist_highway_entry * value(0.001 ,km / Meter ), value (999, km) )[domain/rdc_500lu_rel];
-		attribute<km> dist_100000inh    (domain) := Makedefined(impl/dist_100kinh       * value(0.001 ,km / Meter ), value (999, km) )[domain/rdc_500lu_rel];
-		attribute<km> dist_100000jobs   (domain) := Makedefined(impl/dist_100kjobs      * value(0.001 ,km / Meter ), value (999, km) )[domain/rdc_500lu_rel];
+		attribute<min> traveltime_100kinh (domain) := Makedefined((impl/traveltime_100kinh[sec])[min]  , 999[min])[rdc_100m/domain_rel];
+		attribute<km>  dist_airports      (domain) := Makedefined((impl/dist_airports[meter])[km]      , 999[km])[rdc_100m/domain_rel];
+		attribute<km>  dist_trainstation  (domain) := Makedefined((impl/dist_train_station[Meter])[km] , 999[km])[rdc_100m/domain_rel];
+		attribute<km>  dist_highwayentry  (domain) := Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km])[rdc_100m/domain_rel];
+		attribute<km>  dist_100000jobs    (domain) := Makedefined((impl/dist_100kjobs[meter])[km]      , 999[km])[rdc_100m/domain_rel];
+		attribute<km>  dist_seaports      (domain) := Makedefined(impl/dist_seaports[km]               , 999[km])[rdc_100m/domain_rel];
 	}
 	container Noise
 	{
 		container impl : isHidden = "True"
 		{
-			attribute<Percent> perc_opp_gt_50dba(rdc_500lu)
+			attribute<Percent> perc_opp_gt_50dba(rdc_500m)
 			:	Label       = "% opp > 50 db(A)"
 			,	Source      = "Noise: Empara/RIVM"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/noise/perc_opp_gt_50dba.tif"
 			, cdf = "Classifications/Percentage10k/Classes";
 		}
 		
-		attribute<Percent> perc_opp_gt_50dba       (domain) := Impl/perc_opp_gt_50dba[domain/rdc_500lu_rel];
+		attribute<Percent> perc_opp_gt_50dba       (domain) := Impl/perc_opp_gt_50dba[domain/rdc_500m_rel];
 	}
 
 	container NatureLandscape
 	{
 		container impl: isHidden = "True"
 		{
-			attribute<Int8> experience_ls(rdc_500lu)
-			:	Source      = "Kwaliteit landschap: Alterra"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/experience_ls.tif";
-
-			attribute<Int32> altitude (rdc_500lu)
+			attribute<Int32> altitude (rdc_500m)
 			:	Descr       = "Hoogtekaart in dm"
 			,	Source      = "Hoogtekaart: RIVM"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/altitude.tif";
 			
-			attribute<Ls_Qual4k> landscape_quality4K (rdc_500lu)
+			attribute<Ls_Qual4k> landscape_quality4K (rdc_500m)
 			:	Source      = "Kwaliteit landschap: Alterra"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/landscape_quality4k.tif";
 			
 			attribute<YesorNo> peat (domain)
 			:	Source      = "ABCD kaart Martha Bakker: PBL"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/Peat_100m.tif";
+			
+			attribute<bool> WetSoil (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/TooWetSoil.tif";
+			attribute<bool> WeakSoil (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/TooWeakSoil.tif";
+			attribute<bool> SubsidenceProne (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/TooSubsidenceProneSoil.tif";
 		}
 
-		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500lu_rel];
-		attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
-		attribute<ValuationRange> landscape_experience(domain) := MakeDefined(impl/Experience_ls > Int8(10) ? 0[ValuationRange] : impl/Experience_ls[ValuationRange], 0[ValuationRange])[domain/rdc_500lu_rel];
-		attribute<Meter>          altitude            (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[domain/rdc_500lu_rel];
-		attribute<YesOrNo>        peat                (domain) := MakeDefined(impl/peat , 0[YesOrNo]);
+		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500m_rel];
+		attribute<Meter>          altitude            (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[domain/rdc_500m_rel];
+		attribute<YesOrNo>        peat                (domain) := impl/peat;
+		attribute<bool>           WetSoil             (domain) := impl/WetSoil[rdc_100m/domain_rel];
+		attribute<bool>           WeakSoil            (domain) := impl/WeakSoil[rdc_100m/domain_rel];
+		attribute<bool>           SubsidenceProne     (domain) := impl/SubsidenceProne[rdc_100m/domain_rel];
 	}
 	container Safety: Descr = "Maps related to various safety issues"
 	{
 		container impl: isHidden = "True"
 		{
-			attribute<Meter> waterdepth (rdc_500lu)
+			attribute<Meter> waterdepth (rdc_500m)
 			:	Label      = "Water depth following worst possible flood"
 			,	Source     = "Risicokaart.nl; Association of Dutch Provinces (IPO)"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/waterdepth.tif";
 
-			attribute<uint8> earthquakes (rdc_500lu)
+			attribute<uint8> earthquakes (rdc_500m)
 			:	Label       = "Earthquake zone (intensity on Mercalli scale)"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/earthquakes.tif";
 
-			attribute<YesorNo> riskcontour_10_6 (rdc_500lu)
+			attribute<YesorNo> riskcontour_10_6 (rdc_500m)
 			:	Label       = "Dangerous sites with a risk contour of 10-6"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/risicocontour.html"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/rgs_irg_ctr.tif";
 
-			attribute<YesorNo> borssele_evac (rdc_500lu)
+			attribute<YesorNo> borssele_evac (rdc_500m)
 			:	Label       = "Evacuation zone around Borssele nuclear power plant"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/kernenergie.html"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/borssele_evac_zone.tif";
 
-			attribute<ratio> dangerous_transport (rdc_500lu)
+			attribute<ratio> dangerous_transport (rdc_500m)
 			:	Label       = "Dangerous goods transport in undergound pipelines"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html"
 			,	Descr       = "Line density function with a 100m radius applied to buisleidingen. The resulting map is rescaled between 0 and (approx.) 100 percent"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/DangerousGoodsTransport.tif";
+			
+			attribute<FloodZonesK> FloodHazardZones (rdc_25m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/Safety/FloodHazardZones.tif"
+			, 	Descr       = "combinatiekaart waarin LSG (totale lokaal schadegevaar; de schade die gemiddeld jaarlijks te verwachten is door overstromingen als er op die plaats een standaard eengezinswoning zou worden gebouwd) en LVG (lokaal verdrinkingsgevaar; 
+								de gemiddelde kans per jaar voor een hypothetisch daar aanwezige persoon om op die plek door een overstroming te overlijden) zijn gecombineerd, als mogelijk hulpmiddel voor locatiekeuze en/of het vaststellen van bouwvereisten.";
+			
+			attribute<float32> FloodHazardZones2 (rdc_25m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/Safety/20230330_gevaarzonering_huidig_com.tif"
+			, 	Descr       = "combinatiekaart waarin LSG (totale lokaal schadegevaar; de schade die gemiddeld jaarlijks te verwachten is door overstromingen als er op die plaats een standaard eengezinswoning zou worden gebouwd) en LVG (lokaal verdrinkingsgevaar; 
+								de gemiddelde kans per jaar voor een hypothetisch daar aanwezige persoon om op die plek door een overstroming te overlijden) zijn gecombineerd, als mogelijk hulpmiddel voor locatiekeuze en/of het vaststellen van bouwvereisten.";
 		}
 		
-		attribute<Meter>      floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[domain/rdc_500lu_rel], cdf = "Classifications/Diepte8k/Classes";
-		attribute<Mercalli3K> earthquakes         (domain) := impl/earthquakes[domain/rdc_500lu_rel], cdf = "Classifications/Mercalli3K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/aardbeving.html";
-		attribute<YesOrNo>    dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[domain/rdc_500lu_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
-		attribute<Ratio>      dangerous_transport (domain) := MakeDefined(impl/Dangerous_transport, 0[Ratio])[domain/rdc_500lu_rel], cdf = "Classifications/Ratio10K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html";
-		}
-
+		attribute<Meter>       floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[domain/rdc_500m_rel], cdf = "Classifications/Diepte8k/Classes";
+		attribute<Mercalli3K>  earthquakes         (domain) := impl/earthquakes[domain/rdc_500m_rel], cdf = "Classifications/Mercalli3K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/aardbeving.html";
+		attribute<YesOrNo>     dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[domain/rdc_500m_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
+		attribute<Ratio>       dangerous_transport (domain) := MakeDefined(impl/Dangerous_transport, 0[Ratio])[domain/rdc_500m_rel], cdf = "Classifications/Ratio10K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html";
+		attribute<FloodZonesK> FloodHazardZones    (domain) := modus(impl/FloodHazardZones, rdc_25m/domain_rel);
+		attribute<bool>        HasFloodHazard      (domain) := FloodHazardZones >= FloodZonesK/v/Enigszins_gevaarlijk; //opties op volgorde: 'Nihil','Gering_20','Gering_200','Enigszins_gevaarlijk','Gevaarlijk','Zeer_gevaarlijk'
+	}
 }

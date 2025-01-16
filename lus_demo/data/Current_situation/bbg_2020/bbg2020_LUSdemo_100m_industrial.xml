@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Analysis/LUS_Demo/per_ggModel/industrial
+	</FullName>
+	<GeoDmsVersion>GeoDms 16.0.2 [Nov 15 2024 12:49:29]
+	</GeoDmsVersion>
+	<SessionStartTime>2024-12-19 10:08:31
+	</SessionStartTime>
+	<CurrentTime>2024-12-19 10:25:08
+	</CurrentTime>
+	<StatusFlags>0x16e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>16.0.2
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Analysis/LUS_Demo/per_ggModel/industrial
+	</FullName>
+	<Expr>(sum(SourceData/LandUse/BBG/Dominant/bbg2020_10m_lusdemo  == ggModel/v/industrial ? 1f : 0f, rdc_10m/rdc_100m_rel) / pcount(rdc_10m/rdc_100m_rel)[float32])
+	</Expr>
+</Config>
+<Environment>
+	<Processor>Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
+	</Processor>
+	<User>jipcl
+	</User>
+	<ComputerName>JIP-LAPTOP
+	</ComputerName>
+</Environment>
+<Parameters>
+	<BGT_file_date>20220110
+	</BGT_file_date>
+	<UseSimplify>True
+	</UseSimplify>
+	<Simplify_Value>500
+	</Simplify_Value>
+	<bouwjaar_truncation_expr>bouwjaar &lt;= 1005s || bouwjaar &gt; @YYYY@[int16] ? (0/0)[int16] : bouwjaar &lt; 1500s ? 1500s : bouwjaar
+	</bouwjaar_truncation_expr>
+	<Use_BAG_VoorraadStatussen>True
+	</Use_BAG_VoorraadStatussen>
+	<VBO_opp_truncation>500
+	</VBO_opp_truncation>
+	<VBO_opp_truncation_lower>10
+	</VBO_opp_truncation_lower>
+	<VBO_opp_truncation_defaultvalue>120
+	</VBO_opp_truncation_defaultvalue>
+</Parameters>
+</DocType>

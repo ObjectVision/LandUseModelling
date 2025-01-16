@@ -66,8 +66,8 @@ container Distance_decay : Using    = "DistMatrices"
 	{
 		container Km1
 		{
-			attribute<Potentiaal> birdhabitat     (domain) := ='rescale( potential(policy_maps/NatureLandscape/birdHabitat[float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
-			attribute<Potentiaal> NatureNetwork   (domain) := ='rescale( potential(policy_maps/NatureLandscape/NatureNetwork[float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
+			attribute<Potentiaal> birdhabitat     (domain) := ='rescale( potential(policy_maps/NatureLandscape/birdHabitat [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
+			attribute<Potentiaal> NatureNetworkNL   (domain) := ='rescale( potential(policy_maps/NatureLandscape/NatureNetworkNL [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
 		}
 	}
 }

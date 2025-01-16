@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 14.14 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2024                               //
+//                               July 2004 - June 2024                                  //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -71,31 +71,31 @@ container Classifications: Using = "Units", isHidden = "True"
 	}
 
 	// =========== landusesTypering: subtypes
-	unit<uint8> ggEndogenous:= subSet(not(ggModel/IsExogenous))
+	unit<uint8> ggEndogenous:= select_with_org_rel_with_attr_by_cond(ggModel, not(ggModel/IsExogenous))
 	{
-		attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
-		attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
-		attribute<Eur_m2> Landprice_A1 := lookup(nr_OrgEntity, ggModel/Landprice_A1);
-		attribute<Eur_m2> Landprice_A2 := lookup(nr_OrgEntity, ggModel/Landprice_A2);
-		attribute<Eur_m2> Landprice_B1 := lookup(nr_OrgEntity, ggModel/Landprice_B1);
-		attribute<Eur_m2> Landprice_B2 := lookup(nr_OrgEntity, ggModel/Landprice_B2);
+		// attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
+		// attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
+		// attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
+		// attribute<Eur_m2> Landprice_A1 := lookup(nr_OrgEntity, ggModel/Landprice_A1);
+		// attribute<Eur_m2> Landprice_A2 := lookup(nr_OrgEntity, ggModel/Landprice_A2);
+		// attribute<Eur_m2> Landprice_B1 := lookup(nr_OrgEntity, ggModel/Landprice_B1);
+		// attribute<Eur_m2> Landprice_B2 := lookup(nr_OrgEntity, ggModel/Landprice_B2);
 		
 		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
 
-	unit<uint8> ggExogenous := SubSet(ggModel/IsExogenous)
+	unit<uint8> ggExogenous := select_with_org_rel_with_attr_by_cond(ggModel, ggModel/IsExogenous)
 	{
-		attribute<String> Name :       = lookup(nr_OrgEntity, ggModel/Name);
-		attribute<UInt32> BrushColor:  = lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String> Label:       = lookup(nr_OrgEntity, ggModel/Label),      DialogType = "LabelText";
+		// attribute<String> Name :       = lookup(nr_OrgEntity, ggModel/Name);
+		// attribute<UInt32> BrushColor:  = lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
+		// attribute<String> Label:       = lookup(nr_OrgEntity, ggModel/Label),      DialogType = "LabelText";
 	}
-	unit<uint8> ggUrban:= SubSet(ggModel/IsUrban)
+	unit<uint8> ggUrban:= select_with_attr_by_cond(ggModel, ggModel/IsUrban)
 	{
-		attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
-		attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
-		attribute<Bool>   IsExogenous  := lookup(nr_OrgEntity, ggModel/IsExogenous);
+		// attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
+		// attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
+		// attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
+		// attribute<Bool>   IsExogenous  := lookup(nr_OrgEntity, ggModel/IsExogenous);
 	}
 
 	// ============= YesorNo
@@ -209,26 +209,6 @@ container Classifications: Using = "Units", isHidden = "True"
 			'  0 to   5','  5 to  10',' 10 to  15',' 15 to  20',' 20 to  25'
 		];
 	}
-	unit<uint8> HaChange11KFlipped: nrofrows = 11
-	{
-		attribute<HaDiff> Classes: DialogType = "Classification",
-		[
-			-25   , -20,-15, -10, -5, -0.01
-		,	  0.01,   5, 10,  15, 20
-		];
-
-		attribute<UInt32> BrushColor: DialogType = "BrushColor",
-		[
-			rgb(  0, 64,  0),rgb( 29,112, 29),rgb( 89,172, 89),rgb(150,200,150),rgb(200,240,200),rgb(219,219,219)
-		,	rgb(255,236,236),rgb(255,206,206),rgb(255,149,149),rgb(255,104,104),rgb(255,  0,  0)
-		];
-
-		attribute<String> Label: DialogType = "LabelText",
-		[
-			'-25 to -20','-20 to -15','-15 to -10','-10 to  -5',' -5 to   0','     0     ',
-			'  0 to   5','  5 to  10',' 10 to  15',' 15 to  20',' 20 to  25'
-		];
-	}
 	unit<uint8> ClaimHa9K: nrofrows = 9
 	{
 		attribute<claimHa> Classes: DialogType = "Classification",
@@ -252,23 +232,6 @@ container Classifications: Using = "Units", isHidden = "True"
 		,	'   50.000 -   100.000','  100.000 -   500.000',' >500.000'
 		];
 	}
-
-	unit<uint8> Districts4K: nrofrows = 4
-	{
-		attribute <Ha> Classes: DialogType = "Classification",
-		[
-			-999.00, 0.01, 100.00, 250.00
-		];
-		attribute<UInt32> BrushColor: DialogType = "BrushColor",
-		[
-			rgb(255,255,255),rgb(  0,  0,255),rgb(  0,255,  0), rgb(255,  0,  0)
-		];
-		attribute <String> Label: DialogType = "LabelText",
-		[
-			"Unbuilt area","Small kernels (until 100 Ha)","Mediumsized kernels (until 250 Ha)","Large kernels (more than 250 Ha)"
-		];
-	}
-
 
 	// =========  Classification for Monetary unit (EUR per m^2)
 	unit<uint8> Eur_M2_15K: nrofrows = 15
@@ -431,8 +394,27 @@ container Classifications: Using = "Units", isHidden = "True"
 	{
 		attribute<km> Classes: DialogType = "Classification",
 		[
+			  0,  2.5, 5, 10
+			,15, 25, 50,100
+		];
+
+		attribute<UInt32> BrushColor: DialogType = "BrushColor",
+		[
+			rgb(  0,  0,255),rgb( 85, 85,170),rgb(170,170, 85),rgb(255,255,  0)
+		,	rgb(255,204,  0),rgb(255,153,  0),rgb(255,102,  0),rgb(192,192,192)
+		];
+
+		attribute<String> Label: DialogType = "LabelText",
+		[
+			'0 to 2.5'  ,'2.5 to 5' ,'5 to 10' ,'10 to 15'
+		,	'15 to 25','25 to 50','50 to 100','None'];
+	}
+	unit<uint8> min_7k: nrofrows = 8
+	{
+		attribute<min> Classes: DialogType = "Classification",
+		[
 			  0,  5, 10, 15
-			,30, 50, 75,100
+			,30, 50, 75,120
 		];
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
@@ -470,7 +452,7 @@ container Classifications: Using = "Units", isHidden = "True"
 	}
 
 	// =========  Classification for depth in m
-		unit<uint8> Diepte8K: nrofrows = 8
+	unit<uint8> Diepte8K: nrofrows = 8
 	{
 		attribute<Meter> Classes: DialogType = "Classification",
 		[
@@ -500,6 +482,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<String> Label: DialogType = "LabelText",
 			['Low','High'];
+		container V := for_each_nedv(AsItemName(label), String(ID(.))+'[..]', void, .);
 	}
 	unit<uint8> Ls_Qual4K: nrofrows = 5
 	{
@@ -511,6 +494,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<String> Label: DialogType = "LabelText",
 			['No quality (e.g. urban)', 'Low quality','Moderate quality','High quality','Very high quality'];
+		container V := for_each_nedv(AsItemName(label), String(ID(.))+'[..]', void, .);
 	}
 
 	// =========== Classification for pressure on Landscape quality
@@ -524,6 +508,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<String> Label: DialogType = "LabelText",
 			['Low','High'];
+		container V := for_each_nedv(Label, String(ID(.))+'[..]', void, .);
 	}
 
 	// =========  Classification for Earthquake risk
@@ -535,5 +520,25 @@ container Classifications: Using = "Units", isHidden = "True"
 			[rgb(192,192,192),rgb(255,255,0),rgb(255,128,0),rgb(255,0, 0)];
 		attribute <String> Label: DialogType = "LabelText",
 			[' 0',' 6.0',' 6.5',' 7.0'];
+	}
+	
+	unit<uint8> FloodZonesK: NrOfRows = 6
+	{
+		attribute<string> name       : ['Nihil','Gering_20','Gering_200','Enigszins_gevaarlijk','Gevaarlijk','Zeer_gevaarlijk'];
+		attribute<string> Label      := name, DialogType = "LabelText";
+		attribute<uint32> BrushColor : DialogType = "BrushColor",
+		[
+			rgb(127,127,127), rgb(218,218,235), rgb(188,184,217), rgb(158,154,200), rgb(106, 81,163), rgb( 63,  0,125)
+		];
+		
+		container V := for_each_nedv(name, string(id(.)) + '[..]', void, .);
+		
+		// Zone Gevaar	Overstromingskarakteristieken
+		// 0	Nihil	Niet-overstroombaar
+		// 1	Gering(schadegevaar < 20 €/jr)	Overstroombaar,onbekende (zeer kleine) kans
+		// 2	Gering(schadegevaar < 200 €/jr)	Overstroombaar,onbekende (zeer kleine) kans
+		// 3	Enigszins gevaarlijk (schadegevaar 200- 2000 €/jr)	Overstroombaar, kleine kans en/of beperkte waterdiepte
+		// 4	Gevaarlijk(schadegevaar 2000- 20.000 €/jr)	Overstroombaar, middelgrote kans en middelgrote waterdiepte
+		// 5	Zeer gevaarlijk(schadegevaar > 20.000 €/jr)	Overstroombaar, grote kans en grote waterdiepte
 	}
 }

@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 14.14 or newer                         //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2023                               //
+//                               July 2004 - June 2024                                  //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -53,8 +53,8 @@ container Evaluation : Descr = "This container contains several evaluation indic
 		container CurrentLanduse :=
 			for_each_nedv(
 				  ggEndogenous/Name
-				, 'sum(orglanduse/'+ggEndogenous/Name+', Additional_Claims/Regios)'
-				, Additional_Claims/RegioUnit
+				, 'sum(orglanduse/'+ggEndogenous/Name+', RegioUnit/domain_rel)'
+				, RegioUnit
 				, claimHa
 			), Descr = "Total current land use";
 
@@ -62,15 +62,15 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			for_each_nedv(
 				  ggEndogenous/Name
 				, 'CaseData/TotalPeriodClaims/'+ggEndogenous/Name
-				, Additional_Claims/RegioUnit
+				, RegioUnit
 				, claimHa
 			), Descr = "Total land demand";
 
 		container AllocatedLanduse :=
 			for_each_nedv(
 				  ggEndogenous/Name
-				, 'sum(landuse/Endogenous/'+ggEndogenous/Name+', Additional_Claims/Regios)'
-				, Additional_Claims/RegioUnit
+				, 'sum(landuse/Endogenous/'+ggEndogenous/Name+', RegioUnit/domain_rel)'
+				, RegioUnit
 				, claimHa
 			), Descr = "Total allocated land use";
 
@@ -78,7 +78,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			for_each_nedv(
 				  ggEndogenous/Name
 				, '(AllocatedLanduse/'+ggEndogenous/Name+' / Demand/'+ggEndogenous/Name+')'
-				, Additional_Claims/RegioUnit
+				, RegioUnit
 				, ratio
 			), Descr = "Degree to which initial demand is allocated";
 	}
@@ -96,10 +96,10 @@ container Evaluation : Descr = "This container contains several evaluation indic
 		container Urbanisation : Descr = "Built-up surface per gridcel"
 		{
 			attribute<Ha>          Builtup_Surface            (domain) := ='add('+asItemList(ggUrban/IsExogenous ? 'landuse/Exogenous/' : 'landuse/Endogenous/'+ ggUrban/Name)+')';
-			attribute<YesorNo>     Builtup_Area               (domain) := value(Builtup_Surface > value(15.0, Ha), YesorNo);
+			attribute<YesorNo>     Builtup_Area               (domain) := value(Builtup_Surface > 0.5f * domain/NrHaPerCell, YesorNo);
 			attribute<Ha>          Builtup_Surface_current    (domain) := ='add('+asItemList('orglanduse/' + ggUrban/Name)+')',	IsHidden = "True";
-			attribute<YesorNo>     Builtup_Area_current       (domain) := Builtup_Surface_current > value(15.0, Ha);
-			attribute<HaDiff>      Difference_Builtup_Surface (domain) := Urbanisation/Builtup_Surface - Urbanisation/Builtup_Surface_current, cdf      = "Classifications/HaChange11KFlipped/Classes", IsHidden = "True";
+			attribute<YesorNo>     Builtup_Area_current       (domain) := value(Builtup_Surface_current > 0.5f * domain/NrHaPerCell, YesorNo);
+			attribute<HaDiff>      Difference_Builtup_Surface (domain) := Urbanisation/Builtup_Surface - Urbanisation/Builtup_Surface_current, IsHidden = "True";
 			attribute<LossOrGain>  Difference_Builtup_Area    (domain) := value(Urbanisation/Builtup_Area, LossOrGain)- value(Urbanisation/Builtup_Area_current, LossOrGain);
 
 			attribute<Ls_QualPress2k> Pressure_new_builtup (domain) :=
@@ -107,31 +107,30 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					? value(1, Ls_QualPress2k)
 					: value(0, Ls_QualPress2k);
 					
-			attribute<HaDiff>  Pressure_netEHS (domain) :=
-				Current_situation/policy_maps/NatureLandscape/NatureNetwork
+			attribute<HaDiff>  Pressure_NatureNetwork (domain) :=
+				Current_situation/policy_maps/NatureLandscape/NatureNetworkNL
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
-			,	Label = "Difference Built-up areas in Netto EHS"
-			,	cdf   = "Classifications/HaChange11KFlipped/Classes";
+			,	Descr = "Difference Built-up areas in NNN";
 			
 			attribute<HaDiff>  Pressure_Habitatareas (domain) :=
 				Current_situation/policy_maps/NatureLandscape/birdHabitat
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
-			,	Label = "Difference Built-up in Habitatareas"
-			,	cdf   = "Classifications/HaChange11KFlipped/Classes";
+			,	Descr = "Difference Built-up in Habitatareas";
 			
+			attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Current_situation/thematic_maps/NatureLandscape/Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
 			attribute<Ls_QualPress2k> Pressure_LandscapeQuality (domain) := 
 				   Urbanisation/Pressure_new_Builtup > 0[Ls_QualPress2k]
-				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_Qual2k]
+				&& Landscape_quality2k > 0[Ls_Qual2k]   
 					? 1[Ls_QualPress2k]
 					: 0[Ls_QualPress2k]
 				+  Urbanisation/Pressure_new_Builtup < 1[Ls_QualPress2k]
-				&& Current_situation/thematic_maps/NatureLandscape/Landscape_quality2k > 0[Ls_Qual2k]
+				&& Landscape_quality2k > 0[Ls_Qual2k]
 					? 0[Ls_QualPress2k]
 					: 0[Ls_QualPress2k]
-			,	Label = "New built-up area in (very) high quality landscapes";
-		}
+			,	Descr = "New built-up area in (very) high quality landscapes";
+		} 
 	}
 	
 	container Floodrisk
