@@ -51,11 +51,11 @@ container Thematic_maps
 			,	Source      = "Railway stations point dataset from NS; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Trainstations_meter_2019.tif";
 			
-			attribute<float32> dist_airports (rdc_100m)
+			attribute<uint8> dist_airports (rdc_100m)
 			:	Label       = "Distance to nearest main airport (2019)"
-			,	Descr       = "Euclidean distance (in meters) to nearest main (top 5) airport"
+			,	Descr       = "Euclidean distance (in kilometers) to nearest main (top 5) airport"
 			,	Source      = "Airport polygon dataset from BRT; Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Airports_2019_Top5_BRT.tif";
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Airports_2019_Top5_BRT_km.tif";
 			
 			attribute<uint8> dist_seaports (rdc_100m)
 			:	Label       = "Distance to nearest seaport (2022)"
@@ -75,18 +75,18 @@ container Thematic_maps
 			,	Descr       = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2018. "
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Jobs_2018.tif";
 			
-			attribute<uint16> traveltime_100kinh (rdc_100m)
+			attribute<uint16> traveltime_100000inh (rdc_100m)
 			:	Label       = "Travel time to 100.000 inhabitants"
 			,	Descr       = "Travel time to 100.000 inhabitants (CBS Vierkanten, 2017; OpenStreetMap, 2018); Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Inhabitants_2017.tif";
 		}
 
-		attribute<min> traveltime_100kinh (domain) := Makedefined((impl/traveltime_100kinh[sec])[min]  , 999[min])[rdc_100m/domain_rel];
-		attribute<km>  dist_airports      (domain) := Makedefined((impl/dist_airports[meter])[km]      , 999[km])[rdc_100m/domain_rel];
-		attribute<km>  dist_trainstation  (domain) := Makedefined((impl/dist_train_station[Meter])[km] , 999[km])[rdc_100m/domain_rel];
-		attribute<km>  dist_highwayentry  (domain) := Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km])[rdc_100m/domain_rel];
-		attribute<km>  dist_100000jobs    (domain) := Makedefined((impl/dist_100kjobs[meter])[km]      , 999[km])[rdc_100m/domain_rel];
-		attribute<km>  dist_seaports      (domain) := Makedefined(impl/dist_seaports[km]               , 999[km])[rdc_100m/domain_rel];
+		attribute<min> traveltime_100000inh (domain) := Makedefined((impl/traveltime_100000inh[sec])[min]  , 999[min])[rdc_100m/domain_rel], Descr = "Travel time to 100.000 inhabitants (CBS Vierkanten, 2017; OpenStreetMap, 2018); Calculations: Jip Claassens (Vrije Universiteit; Object Vision, 2018)";
+		attribute<km>  dist_airports        (domain) := Makedefined(impl/dist_airports[km]               , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance (in kilometers) to nearest main (top 5) airport";
+		attribute<km>  dist_trainstation    (domain) := Makedefined((impl/dist_train_station[Meter])[km] , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance to nearest regular train station";
+		attribute<km>  dist_highwayentry    (domain) := Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance to highway entries";
+		attribute<km>  dist_100000jobs      (domain) := Makedefined((impl/dist_100kjobs[meter])[km]      , 999[km])[rdc_100m/domain_rel], Descr = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2018. ";
+		attribute<km>  dist_seaports        (domain) := Makedefined(impl/dist_seaports[km]               , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance (in kilometers) to nearest seaport";
 	}
 	container Noise
 	{
@@ -114,11 +114,6 @@ container Thematic_maps
 			attribute<Ls_Qual4k> landscape_quality4K (rdc_500m)
 			:	Source      = "Kwaliteit landschap: Alterra"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/landscape_quality4k.tif";
-			
-			attribute<YesorNo> peat (domain)
-			:	Source      = "ABCD kaart Martha Bakker: PBL"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/Peat_100m.tif";
-			
 			attribute<bool> WetSoil (rdc_100m)
 			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/TooWetSoil.tif";
 			attribute<bool> WeakSoil (rdc_100m)
@@ -129,7 +124,6 @@ container Thematic_maps
 
 		attribute<Ls_Qual4k>      landscape_quality4K (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500m_rel];
 		attribute<Meter>          altitude            (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[domain/rdc_500m_rel];
-		attribute<YesOrNo>        peat                (domain) := impl/peat;
 		attribute<bool>           WetSoil             (domain) := impl/WetSoil[rdc_100m/domain_rel];
 		attribute<bool>           WeakSoil            (domain) := impl/WeakSoil[rdc_100m/domain_rel];
 		attribute<bool>           SubsidenceProne     (domain) := impl/SubsidenceProne[rdc_100m/domain_rel];
@@ -183,6 +177,6 @@ container Thematic_maps
 		attribute<YesOrNo>     dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[domain/rdc_500m_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
 		attribute<Ratio>       dangerous_transport (domain) := MakeDefined(impl/Dangerous_transport, 0[Ratio])[domain/rdc_500m_rel], cdf = "Classifications/Ratio10K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html";
 		attribute<FloodZonesK> FloodHazardZones    (domain) := modus(impl/FloodHazardZones, rdc_25m/domain_rel);
-		attribute<bool>        HasFloodHazard      (domain) := FloodHazardZones >= FloodZonesK/v/Enigszins_gevaarlijk; //opties op volgorde: 'Nihil','Gering_20','Gering_200','Enigszins_gevaarlijk','Gevaarlijk','Zeer_gevaarlijk'
+		attribute<bool>        HasFloodHazard      (domain) := FloodHazardZones >= FloodZonesK/v/moderate; //opties op volgorde: 'Nihil','Gering_20','Gering_200','Enigszins_gevaarlijk','Gevaarlijk','Zeer_gevaarlijk'
 	}
 }

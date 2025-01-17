@@ -66,14 +66,14 @@ container A2_TM
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_seaports      , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
- 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+
 		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
@@ -119,14 +119,14 @@ container A2_TM
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
- 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+
 		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
@@ -167,14 +167,14 @@ container A2_TM
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
- 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+
 		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
@@ -214,14 +214,14 @@ container A2_TM
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
- 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+
 		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
@@ -262,14 +262,14 @@ container A2_TM
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
- 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+
 		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
@@ -309,14 +309,14 @@ container A2_TM
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100kinh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
  		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
- 		 +  0.0 [Eur_M2] * NatureLandscape/peat[float32] 
+
 		 
   		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
   		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/dist_airports_int1
+	</FullName>
+	<GeoDmsVersion>GeoDms 16.0.2 [Nov 15 2024 12:49:29]
+	</GeoDmsVersion>
+	<SessionStartTime>2025-01-17 11:39:48
+	</SessionStartTime>
+	<CurrentTime>2025-01-17 11:45:14
+	</CurrentTime>
+	<StatusFlags>0x17e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>16.0.2
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/dist_airports_int1
+	</FullName>
+	<Expr>/Current_Situation/thematic_maps/Accessibility/Impl/dist_airports_int
+	</Expr>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD
+	</Processor>
+	<User>Jip Claassens
+	</User>
+	<ComputerName>OVSRV06
+	</ComputerName>
+	<Date>env:DATE
+	</Date>
+	<Time>env:TIME
+	</Time>
+</Environment>
+</DocType>
