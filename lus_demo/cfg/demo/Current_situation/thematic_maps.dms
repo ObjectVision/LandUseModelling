@@ -142,13 +142,13 @@ container Thematic_maps
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/earthquakes.tif";
 
-			attribute<YesorNo> riskcontour_10_6 (rdc_500m)
+			attribute<bool> riskcontour_10_6 (rdc_500m)
 			:	Label       = "Dangerous sites with a risk contour of 10-6"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/risicocontour.html"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/rgs_irg_ctr.tif";
 
-			attribute<YesorNo> borssele_evac (rdc_500m)
+			attribute<bool> borssele_evac (rdc_500m)
 			:	Label       = "Evacuation zone around Borssele nuclear power plant"
 			,	Source      = "Risk map of the Netherlands (www.risicokaart.nl)"
 			,	url         = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/kernenergie.html"
@@ -174,7 +174,7 @@ container Thematic_maps
 		
 		attribute<Meter>       floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[domain/rdc_500m_rel], cdf = "Classifications/Diepte8k/Classes";
 		attribute<Mercalli3K>  earthquakes         (domain) := impl/earthquakes[domain/rdc_500m_rel], cdf = "Classifications/Mercalli3K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/aardbeving.html";
-		attribute<YesOrNo>     dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[domain/rdc_500m_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
+		attribute<bool>     dangerous_sites     (domain) := max_elem(impl/RiskContour_10_6, impl/Borssele_evac)[domain/rdc_500m_rel], Label = "RiskContour_10_6 / Evac. zone Borssele";
 		attribute<Ratio>       dangerous_transport (domain) := MakeDefined(impl/Dangerous_transport, 0[Ratio])[domain/rdc_500m_rel], cdf = "Classifications/Ratio10K/Classes", url = "http://nederland.risicokaart.nl/risicokaart/legendauitleg_pub/en/transport_gs_buisleiding.html";
 		attribute<FloodZonesK> FloodHazardZones    (domain) := modus(impl/FloodHazardZones, rdc_25m/domain_rel);
 		attribute<bool>        HasFloodHazard      (domain) := FloodHazardZones >= FloodZonesK/v/moderate; //opties op volgorde: 'Nihil','Gering_20','Gering_200','Enigszins_gevaarlijk','Gevaarlijk','Zeer_gevaarlijk'

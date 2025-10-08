@@ -98,12 +98,12 @@ container Classifications: Using = "Units", isHidden = "True"
 		// attribute<Bool>   IsExogenous  := lookup(nr_OrgEntity, ggModel/IsExogenous);
 	}
 
-	// ============= YesorNo
-	unit<bool> YesorNo
-	{
-		attribute<UInt32> BrushColor : [rgb(192,192,192),rgb(255,0,0)], DialogType = "BrushColor";
-		attribute<String> Label      : ['No','Yes'], DialogType = "LabelText";
-	}
+	// ============= bool
+	// unit<bool> bool
+	// {
+		// attribute<UInt32> BrQushColor : [rgb(192,192,192),rgb(255,0,0)], DialogType = "BrushColor";
+		// attribute<String> Label      : ['No','Yes'], DialogType = "LabelText";
+	// }
 
 	// ============= LossOrGain
 	unit<uint8> LossOrGain_Class: nrofrows = 3
