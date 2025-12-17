@@ -40,8 +40,6 @@ container Scenario_Components
 		#include <B2.dms>
 	}
 	
-
-	
 	container Regional_Demand := 
 			for_each_ne(
 				ModelParameters/Advanced/Scenarios/name
@@ -60,7 +58,6 @@ container Scenario_Components
 			unit<uint32> Agriculture;
 		}
 	}
-	
 	
 	container Exogenous_Landuse : Descr = "Reference to exogenous developments (e.g. proposed roads or railway lines) can be included here. Spatial representations of such developments are, however, not included in this demo"
 	{

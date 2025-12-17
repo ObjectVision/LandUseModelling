@@ -33,7 +33,7 @@ container Policy_maps
 			attribute<bool> residential (rdc_100m)
 			:	Label       = "residential"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/SpatialPlans_residential.tif";
-			attribute<uint32> industrial (rdc_100m)
+			attribute<uint8> industrial (rdc_100m)
 			:	Label       = "industrial"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/spatialplans_industrial.tif";
 			attribute<bool> recreation (rdc_500m)

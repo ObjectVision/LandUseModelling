@@ -166,10 +166,10 @@ container Thematic_maps
 			, 	Descr       = "combinatiekaart waarin LSG (totale lokaal schadegevaar; de schade die gemiddeld jaarlijks te verwachten is door overstromingen als er op die plaats een standaard eengezinswoning zou worden gebouwd) en LVG (lokaal verdrinkingsgevaar; 
 								de gemiddelde kans per jaar voor een hypothetisch daar aanwezige persoon om op die plek door een overstroming te overlijden) zijn gecombineerd, als mogelijk hulpmiddel voor locatiekeuze en/of het vaststellen van bouwvereisten.";
 			
-			attribute<float32> FloodHazardZones2 (rdc_25m)
-			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/Safety/20230330_gevaarzonering_huidig_com.tif"
-			, 	Descr       = "combinatiekaart waarin LSG (totale lokaal schadegevaar; de schade die gemiddeld jaarlijks te verwachten is door overstromingen als er op die plaats een standaard eengezinswoning zou worden gebouwd) en LVG (lokaal verdrinkingsgevaar; 
-								de gemiddelde kans per jaar voor een hypothetisch daar aanwezige persoon om op die plek door een overstroming te overlijden) zijn gecombineerd, als mogelijk hulpmiddel voor locatiekeuze en/of het vaststellen van bouwvereisten.";
+			// attribute<float32> FloodHazardZones2 (rdc_25m)
+			// :	StorageName = "%projDir%/data/Current_situation/thematic_maps/Safety/20230330_gevaarzonering_huidig_com.tif"
+			// , 	Descr       = "combinatiekaart waarin LSG (totale lokaal schadegevaar; de schade die gemiddeld jaarlijks te verwachten is door overstromingen als er op die plaats een standaard eengezinswoning zou worden gebouwd) en LVG (lokaal verdrinkingsgevaar; 
+								// de gemiddelde kans per jaar voor een hypothetisch daar aanwezige persoon om op die plek door een overstroming te overlijden) zijn gecombineerd, als mogelijk hulpmiddel voor locatiekeuze en/of het vaststellen van bouwvereisten.";
 		}
 		
 		attribute<Meter>       floodWaterdepth     (domain) := MakeDefined(impl/waterdepth, 0[Meter])[domain/rdc_500m_rel], cdf = "Classifications/Diepte8k/Classes";
