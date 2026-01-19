@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/per_100m
+	</FullName>
+	<GeoDmsVersion>GeoDms 18.2.2 [23/12/2025]
+	</GeoDmsVersion>
+	<SessionStartTime>2026-01-19 08:49:20
+	</SessionStartTime>
+	<CurrentTime>2026-01-19 08:51:46
+	</CurrentTime>
+	<StatusFlags>0x6e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MT1 MT2 MT3 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>18.2.2
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/per_100m
+	</FullName>
+	<Expr>/SourceData/Policies/N2000_2024/n2000_processed/per_100m
+	</Expr>
+	<ProjDir>c:/projdir/stikstof
+	</ProjDir>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD
+	</Processor>
+	<User>JipClaassens
+	</User>
+	<ComputerName>OVSRV08
+	</ComputerName>
+	<Date>env:DATE
+	</Date>
+	<Time>env:TIME
+	</Time>
+</Environment>
+<Git>
+	<RevisionInfo>heads/main<BR/>
+		On branch main<BR/>
+		Your branch is up to date with &apos;origin/main&apos;.<BR/>
+		<BR/>
+		nothing to commit, working tree clean<BR/>
+		c191c705e2175a4b463b90dab3c46e84747110de<BR/>
+		
+	</RevisionInfo>
+</Git>
+<Parameters>
+	<BAG_Selection_Area>NL
+	</BAG_Selection_Area>
+	<big_inflate_size_meters>10
+	</big_inflate_size_meters>
+	<bouwjaar_truncation_expr>bouwjaar &lt;= 1005w || bouwjaar &gt; @YYYY@[jaar] ? (0/0)[uint16] : bouwjaar &lt; 1500w ? 1500w : bouwjaar
+	</bouwjaar_truncation_expr>
+	<highrise_threshold>30
+	</highrise_threshold>
+	<BRT_file_date>20250318
+	</BRT_file_date>
+	<BAG_file_date>20251009
+	</BAG_file_date>
+</Parameters>
+</DocType>

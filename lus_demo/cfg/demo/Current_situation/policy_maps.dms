@@ -61,10 +61,16 @@ container Policy_maps
 			,	Source      = "Natuur Netwerk Nederland (NNN)"
 			,	URL         = "https://www.pdok.nl/downloads/-/article/natuurnetwerk-nederland-nnn-"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/Natuur_Netwerk_Nederland_100m_20230818.tif";
+			
+			attribute<bool> Natura2000 (rdc_100m)
+			:	Label       = "Natura 2000 areas"
+			,	Source      = "Natura 2000 areas"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/Natura2000_2024_100m_20260119.tif";
 		}
 		
 		attribute<bool> BirdHabitat     (domain) := Impl/birdHabitat[domain/rdc_500m_rel];
 		attribute<bool> NatureNetworkNL (domain) := Impl/NatureNetworkNL[domain/rdc_100m_rel];
+		attribute<bool> Natura2000      (domain) := Impl/Natura2000[domain/rdc_100m_rel];
 	}
 
 	container Water
