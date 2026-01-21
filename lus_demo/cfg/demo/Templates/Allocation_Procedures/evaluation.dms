@@ -107,17 +107,17 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					? value(1, Ls_QualPress2k)
 					: value(0, Ls_QualPress2k);
 					
+			attribute<HaDiff>  Pressure_Natura2000 (domain) :=
+				Current_situation/policy_maps/NatureLandscape/Natura2000
+					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
+					: 0[Ha]
+			,	Descr = "Difference Built-up in Natura2000 areas";
+			
 			attribute<HaDiff>  Pressure_NatureNetwork (domain) :=
 				Current_situation/policy_maps/NatureLandscape/NatureNetworkNL
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
 			,	Descr = "Difference Built-up areas in NNN";
-			
-			attribute<HaDiff>  Pressure_Habitatareas (domain) :=
-				Current_situation/policy_maps/NatureLandscape/birdHabitat
-					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
-					: 0[Ha]
-			,	Descr = "Difference Built-up in Habitatareas";
 			
 			attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Current_situation/thematic_maps/NatureLandscape/Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
 			attribute<Ls_QualPress2k> Pressure_LandscapeQuality (domain) := 
