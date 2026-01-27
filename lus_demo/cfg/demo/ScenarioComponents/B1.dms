@@ -127,11 +127,16 @@ container B1_SE
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
 
-		 
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
+
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
@@ -175,11 +180,16 @@ container B1_SE
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
 
-		 
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
+
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
@@ -222,11 +232,16 @@ container B1_SE
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
 
-		 
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
+
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
@@ -270,11 +285,16 @@ container B1_SE
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
 
-		 
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
+
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
@@ -317,11 +337,15 @@ container B1_SE
  		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
  		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
 
-		 
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth  							/ 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]    					/ 3 [float32]
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
+  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
   		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below

@@ -24,7 +24,6 @@ container Distance_decay : Using    = "DistMatrices"
 	{
 		container Km1 := for_each_nedvld(
 					  Classifications/ggModel/Name
-					// , 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', pot02Range/RelWeightSqrt))'
 					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
@@ -34,7 +33,6 @@ container Distance_decay : Using    = "DistMatrices"
 
 		container Km5 := for_each_nedvld(
 					  Classifications/ggModel/Name
-					// , 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', pot10Range/RelWeightSqrt))'
 					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot5000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
@@ -44,7 +42,6 @@ container Distance_decay : Using    = "DistMatrices"
 
 		container Km25 := for_each_nedvld(
 					  Classifications/ggModel/Name
-					// , 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', pot50Range/RelWeightSqrt))'
 					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot25000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
@@ -54,7 +51,6 @@ container Distance_decay : Using    = "DistMatrices"
 				
 		container Km50 := for_each_nedvld(
 					  Classifications/ggModel/Name
-					// , 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', pot100Range/RelWeightSqrt))'
 					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot50000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
@@ -66,8 +62,8 @@ container Distance_decay : Using    = "DistMatrices"
 	{
 		container Km1
 		{
-			attribute<Potentiaal> Natura2000     (domain) := ='rescale( potential(policy_maps/NatureLandscape/Natura2000 [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
-			attribute<Potentiaal> NatureNetworkNL   (domain) := ='rescale( potential(policy_maps/NatureLandscape/NatureNetworkNL [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
+			attribute<Potentiaal> IsNatura2000        (domain) := ='rescale( potential(policy_maps/NatureLandscape/IsNatura2000 [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
+			attribute<Potentiaal> IsNatureNetworkNL   (domain) := ='rescale( potential(policy_maps/NatureLandscape/IsNatureNetworkNL [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
 		}
 	}
 }

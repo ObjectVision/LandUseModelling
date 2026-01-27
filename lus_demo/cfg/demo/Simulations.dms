@@ -27,6 +27,15 @@ container Simulations: Using = "Units"
 			, ModelParameters/Advanced/NrOfIterations
 			, ModelParameters/Advanced/BetaFactor
 		);
+	container A1_GE_Policy := Templates/Allocation_procedures_T(
+			  Current_situation/current_landuse
+			, Scenario_Components/Exogenous_Landuse/A1_GE_Policy
+			, Scenario_Components/Local_Suitability/A1_GE_Policy
+			, Scenario_Components/Regional_Demand/A1_GE_Policy/per_LU_type
+			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
+			, ModelParameters/Advanced/NrOfIterations
+			, ModelParameters/Advanced/BetaFactor
+		);
 	container A2_TM := Templates/Allocation_procedures_T(
 			  Current_situation/current_landuse
 			, Scenario_Components/Exogenous_Landuse/A2_TM

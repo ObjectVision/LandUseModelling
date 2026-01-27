@@ -31,40 +31,40 @@ container Policy_maps
 		container Impl: isHidden = "True"
 		{
 			attribute<bool> residential (rdc_100m)
-			:	Label       = "residential"
+			:	Descr       = "residential"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/SpatialPlans_residential.tif";
 			attribute<uint8> industrial (rdc_100m)
-			:	Label       = "industrial"
+			:	Descr       = "industrial"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/spatialplans_industrial.tif";
 			attribute<bool> recreation (rdc_500m)
-			:	Label       = "recreation"
+			:	Descr       = "recreation"
 			,	Source      = "Concrete recreation (i.e. bungalows, theme parks etc.) spatial plans (long-term, medium-term & short-term together): Nieuwe Kaart van Nederland (New Map of the Netherlands); revised by SPINlab-VU University Amsterdam"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/space/recreation_municipalities_hard_nkvnl.tif";
 		}
 		
-		attribute<bool> residential (domain) := Impl/residential[domain/rdc_100m_rel];
-		attribute<bool> industrial  (domain) := IsDefined(Impl/industrial)[domain/rdc_100m_rel];
-		attribute<bool> recreation  (domain) := Impl/recreation[domain/rdc_500m_rel];
+		attribute<bool> residential (domain) := Impl/residential[domain/rdc_100m_rel], Descr = "Spatial development plans for new residential areas";
+		attribute<bool> industrial  (domain) := IsDefined(Impl/industrial)[domain/rdc_100m_rel], Descr = "Spatial development plans for new commercial areas (Nieuwe nieuwe kaart NL, RIGO, 2020 and IBIS, 2022)";
+		attribute<bool> recreation  (domain) := Impl/recreation[domain/rdc_500m_rel], Descr = "Spatial development plans for new recreational areas";
 
 	}
 	container NatureLandscape
 	{
 		container Impl: isHidden = "True"
 		{
-			attribute<bool> Natura2000 (rdc_100m)
-			:	Label       = "Natura 2000 areas"
-			,	Source      = "Natura 2000 areas"
-			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/Natura2000_2024_100m_20260119.tif";
-
 			attribute<bool> NatureNetworkNL (rdc_100m)
-			:	Label       = "Nature Network Netherlands"
+			:	Descr       = "Nature Network Netherlands"
 			,	Source      = "Natuur Netwerk Nederland (NNN)"
 			,	URL         = "https://www.pdok.nl/downloads/-/article/natuurnetwerk-nederland-nnn-"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/Natuur_Netwerk_Nederland_100m_20230818.tif";
+			
+			attribute<bool> Natura2000 (rdc_100m)
+			:	Descr       = "Natura 2000 areas"
+			,	Source      = "Natura 2000 areas"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/NatureLandscape/Natura2000_2024_100m_20260119.tif";
 		}
 		
-		attribute<bool> Natura2000      (domain) := Impl/Natura2000[domain/rdc_100m_rel];
-		attribute<bool> NatureNetworkNL (domain) := Impl/NatureNetworkNL[domain/rdc_100m_rel];
+		attribute<bool> IsNatureNetworkNL (domain) := Impl/NatureNetworkNL[domain/rdc_100m_rel], Descr = "";
+		attribute<bool> IsNatura2000      (domain) := Impl/Natura2000[domain/rdc_100m_rel], Descr = "";
 	}
 
 	container Water
@@ -72,35 +72,42 @@ container Policy_maps
 		container Impl: isHidden = "True"
 		{
 			attribute<bool> intake_reservoir (rdc_500m)
-			:	Label       = "Intake reservoir in polder"
+			:	Descr       = "Intake reservoir in polder"
 			,	Source      = "Intake reservoir: MNP/RIVM"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/intake_reservoirs.tif";
 
 			attribute<bool> disaster_retention (rdc_500m)
-			:	Label       = "Disaster retention"
+			:	Descr       = "Disaster retention"
 			,	Source      = "Disaster retention: VenW, RIZA"
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/disaster_retention.tif";
 
-			attribute<Ratio> space_for_rivers (rdc_500m)
-			:	Label       = "Space for rivers restrictive development zones"
-			,	Source      = "PBL"
-			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/SpaceForRivers.tif";
+			attribute<bool>  groundwater_protection (rdc_25m)
+			:	Descr       = "Groundwater protection zones around wells."
+			,	Source      = "RIVM, 2025"
+			,	URL         = "https://www.atlasleefomgeving.nl/kaarten?config=3ef897de-127f-471a-959b-93b7597de188&gm-x=143840.99258028742&gm-y=490734.57135725924&gm-z=4&gm-b=1544180834512,true,1;1555317816612,true,0.8;&activateOnStart=info&deactivateOnStart=layercollection"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/GroundWaterProtection_20260119.tif";
 
-			attribute<Ratio> groundwater_protection (rdc_500m)
-			:	Label       = "Groundwater protection zones"
-			,	Source      = "PBL"
-			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/GroundWaterProtection.tif";
-
-			attribute<Ratio> groundwater_intrusion (rdc_500m)
-			:	Label       = "Groundwater intrusion"
-			,	Source      = "PBL"
-			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/GroundWaterIntrusion.tif";
+			attribute<bool> groundwater_intrusion (rdc_25m)
+			:	Descr       = "Groundwater intrusion zones, legally protected areas"
+			,	URL         = "https://www.atlasleefomgeving.nl/kaarten?config=3ef897de-127f-471a-959b-93b7597de188&gm-x=143840.99258028742&gm-y=490734.57135725924&gm-z=4&gm-b=1544180834512,true,1;1555317816612,true,0.8;&activateOnStart=info&deactivateOnStart=layercollection"
+			,	Source      = "RIVM, 2025"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/GroundWaterIntrusion_20260121.tif";
+			
+			attribute<bool> Reserved_for_rivers (rdc_25m)
+			:	Descr       = "Long-term reservation areas for Maas and Rijn rivers"
+			,	Source      = "AmvB 2025, BKL, Long-term reservation areas for Maas and Rijn branches"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/IsReservedForRivers_20260119.tif";
+			
+			attribute<bool> Riverbed_major_rivers (rdc_25m)
+			:	Descr       = "Riverbed of major rivers"
+			,	Source      = "AmvB 2025, BKL, Riverbed of major rivers"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/IsRiverbedMajorRivers_20260119.tif";
 		}
 		
-		attribute<bool> intake_reservoir       (domain) := Impl/intake_reservoir[domain/rdc_500m_rel];
-		attribute<bool> disaster_retention     (domain) := Impl/disaster_retention[domain/rdc_500m_rel];
-		attribute<Ratio>   space_for_rivers       (domain) := Impl/space_for_rivers[domain/rdc_500m_rel];
-		attribute<Ratio>   groundwater_protection (domain) := Impl/groundwater_protection[domain/rdc_500m_rel];
-		attribute<Ratio>   groundwater_intrusion  (domain) := Impl/groundwater_intrusion[domain/rdc_500m_rel];
+		attribute<bool>    IsIntake_reservoir       (domain) := Impl/intake_reservoir[domain/rdc_500m_rel], Descr = "Intake reservoir in polder";
+		attribute<bool>    IsDisaster_retention     (domain) := Impl/disaster_retention[domain/rdc_500m_rel], Descr = "Disaster retention";
+		attribute<bool>    IsGroundwater_protection (domain) := Impl/groundwater_protection[domain/rdc_25m_rel], Descr = "Groundwater protection zones around wells.";
+		attribute<bool>    IsGroundwater_intrusion  (domain) := Impl/groundwater_intrusion[domain/rdc_25m_rel], Descr = "Groundwater intrusion zones, legally protected areas";
+		attribute<bool>    IsReservedForRivers      (domain) := Impl/riverbed_major_rivers[domain/rdc_25m_rel] || Impl/reserved_for_rivers[domain/rdc_25m_rel], Descr = "Current riverbed of major rivers and long-term reservation areas for Maas and Rijn rivers ";
 	}
 }

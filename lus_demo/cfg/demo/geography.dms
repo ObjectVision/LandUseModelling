@@ -28,13 +28,14 @@ container Geography: Using = "Units", isHidden = "True"
 	parameter<meter> y_min := 300000[meter];
 	parameter<meter> y_max := 625000[meter];
 	
+	unit<spoint> rdc_10m   := perGridsize/size_10m/grid_domain;
 	unit<spoint> rdc_25m   := perGridsize/size_25m/grid_domain;
 	unit<spoint> rdc_100m  := perGridsize/size_100m/grid_domain;
 	unit<spoint> rdc_500m  := perGridsize/size_500m/grid_domain;
 	
-	unit<uint32> Gridsizes : nrofrows = 3
+	unit<uint32> Gridsizes : nrofrows = 4
 	{
-		attribute<string>  size_str : ['25', '100', '500'];
+		attribute<string>  size_str : ['10','25', '100', '500'];
 		attribute<Meter>   size     := size_str[Meter];
 		attribute<string>  name    := 'size_'+string(size)+'m';
 	}

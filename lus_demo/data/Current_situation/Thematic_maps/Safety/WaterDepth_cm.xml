@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/WaterDepth_cm
+	</FullName>
+	<GeoDmsVersion>GeoDms 18.2.2 [23/12/2025]
+	</GeoDmsVersion>
+	<SessionStartTime>2026-01-19 10:29:30
+	</SessionStartTime>
+	<CurrentTime>2026-01-19 12:33:15
+	</CurrentTime>
+	<StatusFlags>0x6e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MT1 MT2 MT3 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>18.2.2
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/WaterDepth_cm
+	</FullName>
+	<Expr>/SourceData/Water/WaterDepth_cm
+	</Expr>
+	<RunFile>c:/projdir/rsopen_herijking/cfg/main.dms
+	</RunFile>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD
+	</Processor>
+	<User>JipClaassens
+	</User>
+	<Computername>OVSRV08
+	</Computername>
+</Environment>
+<Git>
+	<RevisionInfo>heads/RS_HerijkingKlimaatRisicos<BR/>
+		On branch RS_HerijkingKlimaatRisicos<BR/>
+		Your branch is up to date with &apos;origin/RS_HerijkingKlimaatRisicos&apos;.<BR/>
+		<BR/>
+		Changes not staged for commit:<BR/>
+		  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)<BR/>
+		  (use &quot;git restore &lt;file&gt;...&quot; to discard changes in working directory)<BR/>
+			modified:   cfg/main/ModelParameters.dms<BR/>
+			modified:   cfg/main/SourceData/Water.dms<BR/>
+			modified:   cfg/main/VariantParameters.dms<BR/>
+		<BR/>
+		no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)<BR/>
+		efca42c28c442a5bbd98297d5deefb7558a6ec01<BR/>
+		
+	</RevisionInfo>
+</Git>
+<Svn>
+	<RevisionInfo>SubWCRev: &apos;E:\SourceData\RSOpen&apos;<BR/>
+		Last committed at revision 11539<BR/>
+		Mixed revision range 11532:11539<BR/>
+		Unversioned items found<BR/>
+		
+	</RevisionInfo>
+</Svn>
+<Parameters>
+	<Scenario_name>WLO_hoog
+	</Scenario_name>
+	<Variant_name>Transformeren
+	</Variant_name>
+	<StudyArea>Nederland
+	</StudyArea>
+	<SectorAllocRegios>NVM_Wonen,NVM_Werken,Provincie_Verblijfsrecreatie
+	</SectorAllocRegios>
+	<Subsector_rels>0_Wonen_eengezins_VrijeSector,1_Wonen_eengezins_SocialeHuur,2_Wonen_meergezins_VrijeSector,3_Wonen_meergezins_SocialeHuur,4_Werken_Nijverheid,5_Werken_Logistiek,6_Werken_Detailhandel,7_Werken_Ov_consumentendiensten,8_Werken_Zak_dienstverlening,9_Werken_Overheid_kw_diensten,10_Verblijfsrecreatie_Totaal
+	</Subsector_rels>
+	<LU_ModelTypes>0_Wonen,1_Werken,2_Verblijfsrecreatie,3_Rietteelt,4_Akkerbouw,5_Cranberry,6_Boomgaard,7_Moerasbomen,8_Rijst,9_Yacon,10_GG_vee_extensief,11_GG_vee,12_GG_vee_intensief,13_Natuur,14_Infra,15_Water,16_Overig
+	</LU_ModelTypes>
+	<AlleenEindjaar>True
+	</AlleenEindjaar>
+	<AdminDomain>25m
+	</AdminDomain>
+	<AllocDomain>100m
+	</AllocDomain>
+	<Default_NrOfIters>3
+	</Default_NrOfIters>
+	<NrOfIters_Wind>3
+	</NrOfIters_Wind>
+	<Default_NrOfSequences>2
+	</Default_NrOfSequences>
+	<Model_StartYear>2023
+	</Model_StartYear>
+	<Model_FinalYear>2050
+	</Model_FinalYear>
+	<BAG_RecentYear>2026
+	</BAG_RecentYear>
+	<LISA_StartYear>2023
+	</LISA_StartYear>
+	<BAG_file_date>20260108
+	</BAG_file_date>
+	<BGT_file_date>20251117
+	</BGT_file_date>
+	<BRT_file_date>20250318
+	</BRT_file_date>
+	<NVM_filedate>20251024
+	</NVM_filedate>
+	<NVM_coeff_Year>2023
+	</NVM_coeff_Year>
+	<TIGRIS_filedate>20241223_Run29_correctie_Grensfix
+	</TIGRIS_filedate>
+	<Restricties_filedate>2025-10-24_19-15-40
+	</Restricties_filedate>
+	<Stimuli_filedate>2025-02-17_11-52-29
+	</Stimuli_filedate>
+	<PlanCapaciteit_filedate>2025-11-20_15-23-29
+	</PlanCapaciteit_filedate>
+	<UsePrivPlanCapaciteit>True
+	</UsePrivPlanCapaciteit>
+	<Bouwkosten_Huurwoningen>1220,1190,1379,1108
+	</Bouwkosten_Huurwoningen>
+	<Bouwkosten_Koopwoningen>1193,1100,1233,1089
+	</Bouwkosten_Koopwoningen>
+	<Hoogbouwgrens>15
+	</Hoogbouwgrens>
+	<Bouwlaaghoogte>2.6
+	</Bouwlaaghoogte>
+	<VormfactorEengezins>0.76
+	</VormfactorEengezins>
+	<VormfactorMeergezins>0.78
+	</VormfactorMeergezins>
+	<VormfactorHoogbouw>0.65
+	</VormfactorHoogbouw>
+	<FractieUitgeefbaar>0.5
+	</FractieUitgeefbaar>
+	<FractieUitgeefbaarTinyHouses>0.25
+	</FractieUitgeefbaarTinyHouses>
+	<MaximaleDiepteAangepastBouwen>1
+	</MaximaleDiepteAangepastBouwen>
+	<MaxBodemdaling>40
+	</MaxBodemdaling>
+	<grondproductie_kosten_Variant>Nominaal_high
+	</grondproductie_kosten_Variant>
+	<Suitability_ref>ExploitatieSaldo
+	</Suitability_ref>
+	<Type_m2perBaan>PerRegio
+	</Type_m2perBaan>
+	<m2BVO_job_Kantoor_PreCORONA>20
+	</m2BVO_job_Kantoor_PreCORONA>
+	<Thuiswerk_verdikking_ook_op_bestaandekantoren>True
+	</Thuiswerk_verdikking_ook_op_bestaandekantoren>
+	<Groeifactor_CommercieelVastgoed_Kantoor>1.45
+	</Groeifactor_CommercieelVastgoed_Kantoor>
+	<Groeifactor_CommercieelVastgoed_industrie>1.56
+	</Groeifactor_CommercieelVastgoed_industrie>
+	<Groeifactor_CommercieelVastgoed_winkel>1.15
+	</Groeifactor_CommercieelVastgoed_winkel>
+	<Verwervingskosten_NietWoningen>12900
+	</Verwervingskosten_NietWoningen>
+	<Sloopkosten_Rijtjeswoning>28.38
+	</Sloopkosten_Rijtjeswoning>
+	<Sloopkosten_Twee_onder_1_kap>51.6
+	</Sloopkosten_Twee_onder_1_kap>
+	<Sloopkosten_Vrijstaand>73.53
+	</Sloopkosten_Vrijstaand>
+	<Sloopkosten_Appartement>28.38
+	</Sloopkosten_Appartement>
+	<Sloopkosten_Kantoor>32.25
+	</Sloopkosten_Kantoor>
+	<Windpotentie_StempelAan>False
+	</Windpotentie_StempelAan>
+	<WindmolenAfschrijving>20
+	</WindmolenAfschrijving>
+	<Wind_aantal_stempel_in1richting>2
+	</Wind_aantal_stempel_in1richting>
+	<Wind_afstand_offset_stempel>300
+	</Wind_afstand_offset_stempel>
+	<Wind_max_aantal_rijen_zonder_tussenruimte>3
+	</Wind_max_aantal_rijen_zonder_tussenruimte>
+	<Wind_rijkolom_tussenruimte>2
+	</Wind_rijkolom_tussenruimte>
+	<Zon_Vermogen_ref>hoog
+	</Zon_Vermogen_ref>
+	<Zon_FractieVermogenHaIndienZonCombinerenMetBestaandGroen>0.5
+	</Zon_FractieVermogenHaIndienZonCombinerenMetBestaandGroen>
+	<Zon_Vollasturen_zonnepaneel>854
+	</Zon_Vollasturen_zonnepaneel>
+	<Zon_Vermogen_ha_laag>0.6
+	</Zon_Vermogen_ha_laag>
+	<Zon_Vermogen_ha_midden>0.8
+	</Zon_Vermogen_ha_midden>
+	<Zon_Vermogen_ha_hoog>1.2
+	</Zon_Vermogen_ha_hoog>
+	<Zon_minimale_opp_berm>1000
+	</Zon_minimale_opp_berm>
+	<Zon_minimale_opp_gras>1000
+	</Zon_minimale_opp_gras>
+	<Zon_minimale_opp_groen>1000
+	</Zon_minimale_opp_groen>
+	<Zon_minimale_opp_parkeervlak>1000
+	</Zon_minimale_opp_parkeervlak>
+	<Zon_minimale_IQ>0.05
+	</Zon_minimale_IQ>
+</Parameters>
+</DocType>

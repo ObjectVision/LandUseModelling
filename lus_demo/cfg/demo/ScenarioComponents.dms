@@ -35,6 +35,7 @@ container Scenario_Components
 	container Local_Suitability: Using = "Current_situation/current_landuse;Current_situation/policy_maps;Current_situation/Distance_decay"
 	{
 		#include <A1.dms>
+		#include <A1_Policy.dms>
 		#include <A2.dms>
 		#include <B1.dms>
 		#include <B2.dms>
@@ -68,6 +69,13 @@ container Scenario_Components
 			attribute<Ha> exterior       (domain) := current_situation/current_landuse/exterior;
 		}
 		container A1_GE: Descr = "Exogenous claims for A1"
+		{
+			attribute<Ha> infrastructure (domain):= Exogenous_developments/infrastructure;
+			attribute<Ha> water          (domain):= Exogenous_developments/water;
+			attribute<Ha> exterior       (domain):= Exogenous_developments/exterior;
+		}
+		
+		container A1_GE_Policy : Descr = "Exogenous claims for A1"
 		{
 			attribute<Ha> infrastructure (domain):= Exogenous_developments/infrastructure;
 			attribute<Ha> water          (domain):= Exogenous_developments/water;

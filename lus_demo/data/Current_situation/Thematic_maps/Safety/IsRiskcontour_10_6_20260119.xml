@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/IsRiskcontour_10_6
+	</FullName>
+	<GeoDmsVersion>GeoDms 18.2.2 [23/12/2025]
+	</GeoDmsVersion>
+	<SessionStartTime>2026-01-19 10:29:30
+	</SessionStartTime>
+	<CurrentTime>2026-01-19 10:47:51
+	</CurrentTime>
+	<StatusFlags>0x6e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MT1 MT2 MT3 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>18.2.2
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/IsRiskcontour_10_6
+	</FullName>
+	<Expr>/SourceData/Beleid/OmgRecht/Bevi/Externe_Veiligheid/rrgs_risico_10_6/PR10_6/Multi/IsRiskcontour_10_6
+	</Expr>
+	<RunFile>c:/projdir/pbl_ruimtelijkerestricties/cfg/main.dms
+	</RunFile>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD
+	</Processor>
+	<User>JipClaassens
+	</User>
+	<Computername>OVSRV08
+	</Computername>
+</Environment>
+<Git>
+</Git>
+<Parameters>
+	<RegioIndelingen_jaar>2024
+	</RegioIndelingen_jaar>
+</Parameters>
+</DocType>

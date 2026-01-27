@@ -42,10 +42,10 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 			parameter<IterRange>     NrOfIterations  := 30[IterRange];
 			parameter<m2_Eur>        BetaFactor      := 1[m2_Eur];
 			
-			unit<uint8> Scenarios : nrofrows = 4
+			unit<uint8> Scenarios : nrofrows = 5
 			{
-				attribute<string> name       : ['A1_GE','A2_TM','B1_SE','B2_RC'];
-				attribute<string> name_short : ['A1','A2','B1','B2'];
+				attribute<string> name       : ['A1_GE','A1_GE_Policy','A2_TM','B1_SE','B2_RC'];
+				attribute<string> name_short : ['A1','A1_Policy','A2','B1','B2'];
 			}
 			
 		}
@@ -61,14 +61,16 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 	
 	container Final_Results : IsHidden = "true"
 	{
-		attribute <Classifications/LUclasses> A1_GE_Discr     (domain) := Simulations/A1_GE/Results/Discrete/LandUse/Model;
-		attribute <Classifications/LUclasses> A1_GE_Cont      (domain) := Simulations/A1_GE/Results/Continuous/LandUse/predominant;
-		attribute <Classifications/LUclasses> A2_TM_Discr     (domain) := Simulations/A2_TM/Results/Discrete/LandUse/Model;
-		attribute <Classifications/LUclasses> A2_TM_Cont      (domain) := Simulations/A2_TM/Results/Continuous/LandUse/predominant;
-		attribute <Classifications/LUclasses> B1_SE_Discr     (domain) := Simulations/B1_SE/Results/Discrete/LandUse/Model;
-		attribute <Classifications/LUclasses> B1_SE_Cont      (domain) := Simulations/B1_SE/Results/Continuous/LandUse/predominant;
-		attribute <Classifications/LUclasses> B2_RC_Discr     (domain) := Simulations/B2_RC/Results/Discrete/LandUse/Model;
-		attribute <Classifications/LUclasses> B2_RC_Cont      (domain) := Simulations/B2_RC/Results/Continuous/LandUse/predominant;
+		attribute <Classifications/LUclasses> A1_GE_Discr        (domain) := Simulations/A1_GE/Results/Discrete/LandUse/Model;
+		attribute <Classifications/LUclasses> A1_GE_Cont         (domain) := Simulations/A1_GE/Results/Continuous/LandUse/predominant;
+		attribute <Classifications/LUclasses> A1_GE_Policy_Discr (domain) := Simulations/A1_GE_Policy/Results/Discrete/LandUse/Model;
+		attribute <Classifications/LUclasses> A1_GE_Policy_Cont  (domain) := Simulations/A1_GE_Policy/Results/Continuous/LandUse/predominant;
+		attribute <Classifications/LUclasses> A2_TM_Discr        (domain) := Simulations/A2_TM/Results/Discrete/LandUse/Model;
+		attribute <Classifications/LUclasses> A2_TM_Cont         (domain) := Simulations/A2_TM/Results/Continuous/LandUse/predominant;
+		attribute <Classifications/LUclasses> B1_SE_Discr        (domain) := Simulations/B1_SE/Results/Discrete/LandUse/Model;
+		attribute <Classifications/LUclasses> B1_SE_Cont         (domain) := Simulations/B1_SE/Results/Continuous/LandUse/predominant;
+		attribute <Classifications/LUclasses> B2_RC_Discr        (domain) := Simulations/B2_RC/Results/Discrete/LandUse/Model;
+		attribute <Classifications/LUclasses> B2_RC_Cont         (domain) := Simulations/B2_RC/Results/Continuous/LandUse/predominant;
 	}
 	
 	container ExportSettings : IsHidden = "true"

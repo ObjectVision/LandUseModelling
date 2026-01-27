@@ -520,6 +520,17 @@ container Classifications: Using = "Units", isHidden = "True"
 			[rgb(192,192,192),rgb(255,255,0),rgb(255,128,0),rgb(255,0, 0)];
 		attribute <String> Label: DialogType = "LabelText",
 			[' 0',' 6.0',' 6.5',' 7.0'];
+		container V := for_each_nedv(AsItemName(label), String(ID(.))+'[..]', void, .);
+	}
+	unit<uint8> Mercalli4K: nrofrows = 5
+	{
+		attribute <Mercalli3K> Classes: DialogType = "Classification",
+			[0.0, 5.0, 6.0, 7.0, 8.0];
+		attribute<UInt32> BrushColor: DialogType = "BrushColor",
+			[rgb(255,255,255),rgb(255,255,0),rgb(255,200,0),rgb(255,128,0),rgb(255,0, 0)];
+		attribute <String> Label: DialogType = "LabelText",
+			['None',' V',' VI',' VII','VIII'];
+		container V := for_each_nedv(AsItemName(label), String(ID(.))+'[..]', void, .);
 	}
 	
 	unit<uint8> FloodZonesK: NrOfRows = 6

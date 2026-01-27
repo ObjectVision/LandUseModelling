@@ -23,6 +23,7 @@ container Units : IsHidden = "true"
 	
 	unit<Float32> Meter:           = BaseUnit('m', float32), cdf = "Classifications/Altitude8K/Classes";
 	unit<Float32> Km:              = 1000.0 * Meter,         cdf = "Classifications/Km_7k/Classes";
+	unit<int32>   cm:              = int32(0.01 * Meter);
 	unit<Float32> Dm:              =    0.1 * Meter;
 	unit<Float32> Year:            = BaseUnit('Yr', float32);
 	unit<Float32> Meter2:          = Meter * Meter;

@@ -107,17 +107,17 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					? value(1, Ls_QualPress2k)
 					: value(0, Ls_QualPress2k);
 					
-			attribute<HaDiff>  Pressure_Natura2000 (domain) :=
-				Current_situation/policy_maps/NatureLandscape/Natura2000
-					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
-					: 0[Ha]
-			,	Descr = "Difference Built-up in Natura2000 areas";
-			
 			attribute<HaDiff>  Pressure_NatureNetwork (domain) :=
 				Current_situation/policy_maps/NatureLandscape/NatureNetworkNL
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
 			,	Descr = "Difference Built-up areas in NNN";
+			
+			attribute<HaDiff>  Pressure_Habitatareas (domain) :=
+				Current_situation/policy_maps/NatureLandscape/Natura2000
+					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
+					: 0[Ha]
+			,	Descr = "Difference Built-up in Habitatareas";
 			
 			attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Current_situation/thematic_maps/NatureLandscape/Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
 			attribute<Ls_QualPress2k> Pressure_LandscapeQuality (domain) := 
@@ -131,10 +131,50 @@ container Evaluation : Descr = "This container contains several evaluation indic
 					: 0[Ls_QualPress2k]
 			,	Descr = "New built-up area in (very) high quality landscapes";
 		} 
+		
+		container DifferenceMaps_between_scenarios
+		: Descr = "Compare land use in current scenario to the result of other scenarios"
+		{
+			container compare_with_A1_GE :=
+				for_each_nedv(
+					  ggEndogenous/Name
+					, '(landuse/Endogenous/'+ggEndogenous/Name+' - /Simulations/A1_GE/Results/Continuous/Landuse/Endogenous/'+ggEndogenous/Name+')'
+					, domain
+					, HaDiff
+				), Descr = "Difference allocation - current landuse";
+			container compare_with_A1_GE_Policy :=
+				for_each_nedv(
+					  ggEndogenous/Name
+					, '(landuse/Endogenous/'+ggEndogenous/Name+' - /Simulations/A1_GE_Policy/Results/Continuous/Landuse/Endogenous/'+ggEndogenous/Name+')'
+					, domain
+					, HaDiff
+				), Descr = "Difference allocation - current landuse";
+			container compare_with_A2_TM :=
+				for_each_nedv(
+					  ggEndogenous/Name
+					, '(landuse/Endogenous/'+ggEndogenous/Name+' - /Simulations/A2_TM/Results/Continuous/Landuse/Endogenous/'+ggEndogenous/Name+')'
+					, domain
+					, HaDiff
+				), Descr = "Difference allocation - current landuse";
+			container compare_with_B1_SE :=
+				for_each_nedv(
+					  ggEndogenous/Name
+					, '(landuse/Endogenous/'+ggEndogenous/Name+' - /Simulations/B1_SE/Results/Continuous/Landuse/Endogenous/'+ggEndogenous/Name+')'
+					, domain
+					, HaDiff
+				), Descr = "Difference allocation - current landuse";
+			container compare_with_B2_RC :=
+				for_each_nedv(
+					  ggEndogenous/Name
+					, '(landuse/Endogenous/'+ggEndogenous/Name+' - /Simulations/B2_RC/Results/Continuous/Landuse/Endogenous/'+ggEndogenous/Name+')'
+					, domain
+					, HaDiff
+				), Descr = "Difference allocation - current landuse";
+		}
 	}
 	
 	container Floodrisk
-		{
+	{
 		container Current
 		{
 			attribute<LUclasses> LandUse              (domain)                 := Current_situation/current_landuse/predominant, Label = "Current dominant land use";

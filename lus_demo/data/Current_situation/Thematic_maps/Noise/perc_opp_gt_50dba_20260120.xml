@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Desktops/Default/Exports/perc_opp_gt_50dba_new
+	</FullName>
+	<GeoDmsVersion>GeoDms 18.2.2 [23/12/2025]
+	</GeoDmsVersion>
+	<SessionStartTime>2026-01-19 08:46:05
+	</SessionStartTime>
+	<CurrentTime>2026-01-20 10:28:46
+	</CurrentTime>
+	<StatusFlags>0x6e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MT1 MT2 MT3 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>18.2.2
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Desktops/Default/Exports/perc_opp_gt_50dba_new
+	</FullName>
+	<Expr>/Current_Situation/Thematic_maps/Noise/impl/perc_opp_gt_50dba_new
+	</Expr>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD
+	</Processor>
+	<User>JipClaassens
+	</User>
+	<Computername>OVSRV08
+	</Computername>
+	<Date>env:DATE
+	</Date>
+	<Time>env:TIME
+	</Time>
+</Environment>
+</DocType>
