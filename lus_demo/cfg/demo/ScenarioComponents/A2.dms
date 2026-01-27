@@ -1,10 +1,10 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //                 Configuration Land Use Scanner - Student Edition                     //
-//                          using GeoDMS version 7.130 or newer                         //
+//                          using GeoDMS version 17 or newer                            //
 //                                                                                      //
 //                           Vrije Universiteit Amsterdam                               //
-//                               July 2004 - January 2023                               //
+//                               July 2004 - January 2026                               //
 //                                                                                      //
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
@@ -13,7 +13,7 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 // In this configurationfile the suitability maps of the endogenous land use classes    //
-//                for the scenario A2 TRANSATLANTIC MARKET (TM) are defined             //
+//                for the scenario are defined                                          //
 //                                                                                      //
 //  Basic logic                                                                         //
 //   * The model starts with an empty map. Therefore, we first include current land use //
@@ -37,8 +37,7 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 
 container A2_TM
-: Using  = "current_landuse;policy_maps;thematic_maps"
-, url = "%projDir%/data/metadata/scenarios.htm#A2"
+: Using  = "current_situation;current_landuse;policy_maps;thematic_maps"
 {
 // ========================= RESIDENTIAL
 
@@ -47,312 +46,324 @@ container A2_TM
 		   20.0 [Eur_M2] * current_landuse/residential                              / domain/NrHaPerCell
 		 -  0.0 [Eur_M2] * current_landuse/nature                                   / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
 		 +  0.0 [Eur_M2] * current_landuse/buildinglot                              / domain/NrHaPerCell // you may consider buildinglots likely locations for development
+	
 	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
-		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/Natura2000 [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_protection [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_intrusion [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float32]
+		 
 	//Thematic maps
-		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
-		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings         / 100 [Percent]
 
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports      , 60 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_seaports      , 60 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_airports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_seaports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1f, 0f))
  		 
- 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality[float32]           / max(id(Classifications/Ls_Qual4K))[float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                             / max(NatureLandscape/altitude)
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsSubsidenceProne[float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                               / max(Safety/floodwaterdepth)
+  		 -  0.0 [Eur_M2] * Safety/earthquakes[float32]                          / max(id(Classifications/Mercalli4K))[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousSite[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousTransport [float32]
   		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
 		 
+		
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/residential
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/residential
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/residential
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/Natura2000
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
 
 // ========================= INDUSTRIAL
 	attribute <Eur_M2> industrial (domain):= 
 	//Current Landuse
-		   18.0 [Eur_M2] * current_landuse/industrial      							/ domain/NrHaPerCell
-		 -  0.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
-		 +  0.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell // you may consider buildinglots likely locations for development
-	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
-		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/Natura2000 [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_protection [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_intrusion [float32]
-	//Thematic maps
-		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
-		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
-
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 
- 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		   18.0 [Eur_M2] * current_landuse/residential                              / domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature                                   / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot                              / domain/NrHaPerCell // you may consider buildinglots likely locations for development
 		 
-  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float32]
+		 
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings         / 100 [Percent]
 
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_airports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_seaports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1f, 0f))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
+		 
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality[float32]           / max(id(Classifications/Ls_Qual4K))[float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                             / max(NatureLandscape/altitude)
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsSubsidenceProne[float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                               / max(Safety/floodwaterdepth)
+  		 -  0.0 [Eur_M2] * Safety/earthquakes[float32]                          / max(id(Classifications/Mercalli4K))[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousSite[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousTransport [float32]
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+		 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/industrial
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/industrial
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/industrial
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/Natura2000
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
 
 // ========================= RECREATION
 
 	attribute <Eur_M2> recreation (domain):=
 	//Current Landuse
-		   18.0 [Eur_M2] * current_landuse/recreation      							/ domain/NrHaPerCell
-		 -  0.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
-		 +  0.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell // you may consider buildinglots likely locations for development
-	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
-		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/Natura2000 [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_protection [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_intrusion [float32]
-	//Thematic maps
-		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
-		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
-
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 
- 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		   18.0 [Eur_M2] * current_landuse/recreation                               / domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature                                   / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot                              / domain/NrHaPerCell // you may consider buildinglots likely locations for development
 		 
-  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float32]
+		 
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings         / 100 [Percent]
 
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_airports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_seaports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1f, 0f))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
+		 
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality[float32]           / max(id(Classifications/Ls_Qual4K))[float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                             / max(NatureLandscape/altitude)
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsSubsidenceProne[float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                               / max(Safety/floodwaterdepth)
+  		 -  0.0 [Eur_M2] * Safety/earthquakes[float32]                          / max(id(Classifications/Mercalli4K))[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousSite[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousTransport [float32]
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
+		 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/recreation
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/recreation
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/recreation
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/Natura2000
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/recreation
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/recreation
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/recreation
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
 
 // ========================= NATURE
 
 	attribute <Eur_M2> nature (domain):=
 	//Current Landuse
-		   12.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell
-		 -  0.0 [Eur_M2] * (current_landuse/residential + current_landuse/industrial)			/ domain/NrHaPerCell // a value can be added to prevent development in current residential areas
-	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
-		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/Natura2000 [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_protection [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_intrusion [float32]
-	//Thematic maps
-		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
-		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
-
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 
- 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		   12.0 [Eur_M2] * current_landuse/nature                                      / domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * (current_landuse/residential + current_landuse/industrial)  / domain/NrHaPerCell // a value can be added to prevent development in current residential areas
 		 
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float32]
+		 
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings         / 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_airports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_seaports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1f, 0f))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
+		 
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality[float32]           / max(id(Classifications/Ls_Qual4K))[float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                             / max(NatureLandscape/altitude)
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsSubsidenceProne[float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                               / max(Safety/floodwaterdepth)
+  		 -  0.0 [Eur_M2] * Safety/earthquakes[float32]                          / max(id(Classifications/Mercalli4K))[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousSite[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousTransport [float32]
   		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/nature
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/nature
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/nature
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/Natura2000
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/nature
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/nature
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/nature
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
 
 // ========================= AGRICULTURE
 
 	attribute <Eur_M2> agriculture (domain):=
 	//Current Landuse
-		   14.0 [Eur_M2] * current_landuse/agriculture     							/ domain/NrHaPerCell
-		 -  0.0 [Eur_M2] * current_landuse/nature          							/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
-		 +  0.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell // you may consider buildinglots likely locations for development
-	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
-		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
-		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/Natura2000 [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_protection [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_intrusion [float32]
-	//Thematic maps
-		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
-		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
-
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 
- 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		   14.0 [Eur_M2] * current_landuse/agriculture                                      / domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature                                           / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot                                      / domain/NrHaPerCell // you may consider buildinglots likely locations for development
 		 
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/residential [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/industrial [float32]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float32]
+
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness        / 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings     / 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_airports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_seaports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1f, 0f))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
+		 
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality[float32]           / max(id(Classifications/Ls_Qual4K))[float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                             / max(NatureLandscape/altitude)
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsSubsidenceProne[float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                               / max(Safety/floodwaterdepth)
+  		 -  0.0 [Eur_M2] * Safety/earthquakes[float32]                          / max(id(Classifications/Mercalli4K))[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousSite[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousTransport [float32]
   		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/agriculture
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/agriculture
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/agriculture
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/Natura2000
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/agriculture
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/agriculture
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/agriculture
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
 	
 // ========================= BUILDINGLOT
 
 	attribute <Eur_M2> buildinglot(domain):=
 	//Current Landuse
-		    5.0 [Eur_M2] * current_landuse/buildinglot     							/ domain/NrHaPerCell
-		 -  0.0 [Eur_M2] * current_landuse/nature          						 	/ domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		    5.0 [Eur_M2] * current_landuse/buildinglot                                      / domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature                                           / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 
 	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
 		 +  0.0 [Eur_M2] * Spatial_plans/residential [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/industrial [float32]
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/Natura2000 [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/NatureNetworkNL [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/intake_reservoir [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/disaster_retention [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/space_for_rivers [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_protection [float32]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/groundwater_intrusion [float32]
-	//Thematic maps
-		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness       	/ 100 [Percent]
-		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings		/ 100 [Percent]
-
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_airports    , 60 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_TrainStation ,  5 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_HighwayEntry , 15 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/traveltime_100000inh , 30 [Min]), 1.0 [float32], 0.0 [float32]))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/dist_100000jobs   , 25 [Km]), 1.0 [float32], 0.0 [float32]))
- 		 
- 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                             / 100 [Percent]
- 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality4K [float32]       /   4 [float32]
- 		 // +  0.0 [Eur_M2] * NatureLandscape/landscape_experience[float32]       /   5 [float32]
- 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                            / 320.8 [Meter]
-
-  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                              / 6 [Meter]
-  		 -  0.0 [Eur_M2] * Safety/earthquakes [float32]                        / 3 [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_sites [float32]
-  		 -  0.0 [Eur_M2] * Safety/dangerous_transport [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float32]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float32]
 		 
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness         / 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings      / 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_airports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_seaports       , 60 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1f, 0f))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1f, 0f))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
+		 
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality[float32]           / max(id(Classifications/Ls_Qual4K))[float32]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                             / max(NatureLandscape/altitude)
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWetSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWeakSoil[float32]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsSubsidenceProne[float32]
+		 
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                               / max(Safety/floodwaterdepth)
+  		 -  0.0 [Eur_M2] * Safety/earthquakes[float32]                          / max(id(Classifications/Mercalli4K))[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousSite[float32]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousTransport [float32]
   		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WetSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/WeakSoil[float32]
-  		 -  0.0 [Eur_M2] * NatureLandscape/SubsidenceProne[float32]
 
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km1/buildinglot
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km5/buildinglot
-  		 +  0.0 [Eur_M2] * Distance_Decay/LandUse/Km50/buildinglot
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/Natura2000
-  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/NatureNetworkNL
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/buildinglot
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/buildinglot
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/buildinglot
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
 }

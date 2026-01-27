@@ -30,9 +30,10 @@
 
 container Scenario_Components
 :	Using  = "Units;Geography;Classifications;ModelParameters"
-,	url    = "http://www.welvaartenleefomgeving.nl/context_UK.html"
 {
-	container Local_Suitability: Using = "Current_situation/current_landuse;Current_situation/policy_maps;Current_situation/Distance_decay"
+	container Local_Suitability
+	: Using = "Current_situation/current_landuse;Current_situation/policy_maps;Current_situation/Distance_decay"
+	, Descr = "In these container the user can change the weights for the suitability factors per land-use type for each scenario."
 	{
 		#include <A1.dms>
 		#include <A1_Policy.dms>
@@ -45,11 +46,12 @@ container Scenario_Components
 			for_each_ne(
 				ModelParameters/Advanced/Scenarios/name
 				, 'Templates/Claims_per_Scenario_T('+quote(ModelParameters/Advanced/Scenarios/name_short)+')'
-			),	Source          = "Future land use demand: Adapted from WLO(2006), Netherlands Environmental Assessment Agency (PBL)"
+			),	Source = "Future land use demand: Adapted from WLO(2006), Netherlands Environmental Assessment Agency (PBL)"
 	{
 		container Read_Excel 
 		: StorageName = "%ProjDir%/data/Scenarioclaims/LUS_demo_additionalclaims.xlsx"
 		, StorageType = "gdal.vect"
+		, isHidden = "True"
 		{
 			unit<uint32> Residential;
 			unit<uint32> Industrial;
@@ -62,7 +64,7 @@ container Scenario_Components
 	
 	container Exogenous_Landuse : Descr = "Reference to exogenous developments (e.g. proposed roads or railway lines) can be included here. Spatial representations of such developments are, however, not included in this demo"
 	{
-		container Exogenous_developments: DialogType= "hidden"
+		container Exogenous_developments : isHidden = "True"
 		{
 			attribute<Ha> infrastructure (domain) := current_situation/current_landuse/infrastructure;
 			attribute<Ha> water          (domain) := current_situation/current_landuse/water;
