@@ -83,7 +83,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		container per_LU_type := 
 			for_each_ne(
 				/Classifications/ggEndogenous/name
-				, 'Templates/Claims_Per_LU_T('+quote(/Classifications/ggEndogenous/name)+', RegioGrids/ClaimRegions)'
+				, 'Templates/Claims_Per_LU_T('+quote(/Classifications/ggEndogenous/name)+', RegioUnit/per_domain)'
 			)
 		{
 			container Additional_Claims // this container provides an overview of the claims for demo users that do not use administrator mode
@@ -107,7 +107,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		attribute<OperatorType> Operator (RegioUnit) := const(1, RegioUnit, OperatorType);
 		attribute<EUR_M2>       logAj    (RegioUnit) := const(0, RegioUnit, Eur_m2);
 
-		attribute<claimHa>      Current  (RegioUnit) := ='sum(Current_situation/current_landuse/'+lu_name+', RegioGrids/ClaimRegions)';
+		attribute<claimHa>      Current  (RegioUnit) := ='sum(Current_situation/current_landuse/'+lu_name+', RegioUnit/per_domain)';
 		attribute<claimHa>      Claim    (RegioUnit) := ='rjoin(id(RegioUnit),Read_Excel/'+lu_name+'/RstIntPer[uint32], Read_Excel/'+lu_name+'/'+scenario_name_short+'[claimHa])';
 		attribute<claimHa>      Total    (RegioUnit) := Current + Claim;
 	}
