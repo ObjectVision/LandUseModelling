@@ -1,0 +1,29 @@
+container ExportSettings : IsHidden = "true"
+{
+	container MetaInfo 
+	{
+		parameter<string> FileName : ='%storageBaseName%.xml';
+		parameter<string> FileType : ='xml'; // default is 'ini' but ini files cannot be used well to store multi-line properties such as error messages of inproperly configured properties
+		
+		container Contents
+		{
+			container Software
+			{
+				parameter<string> GeoDMSVersion := string(GeoDmsMajorVersionNumber()) + '.' +  string(GeoDmsMinorVersionNumber())  +'.'  +  string(GeoDmsPatchNumber());
+			}
+			container Config
+			{
+				parameter<string> FullName := '=PropValue(this, '+Quote('FullName')+')';
+				parameter<string> Expr     := '=PropValue(this, '+Quote('Expr'    )+')';
+			}
+			container Environment
+			{
+				parameter<string> Processor    := expand(., '%env:PROCESSOR_IDENTIFIER%');
+				parameter<string> User         := expand(., '%env:USERNAME%');
+				parameter<string> ComputerName := expand(., '%env:COMPUTERNAME%');
+				parameter<string> Date         := expand(., '%env:DATE%');
+				parameter<string> Time         := expand(., '%env:TIME%');
+			}
+		}
+	}
+}

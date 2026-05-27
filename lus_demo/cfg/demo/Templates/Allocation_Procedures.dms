@@ -42,7 +42,7 @@ are explained in this article and the description of the calculation rules refer
 			attribute<Ha> FreeLand           (domain) := TotalLand - UsedLand, Descr    = "Lc = TotalLand - exogenousLand: free allocatable land";
 		}
 
-		parameter<Potentiaal> claimFactor := PeriodDuration[float32] / ModelParameters/Advanced/ClaimPeriod[float32], Descr = "Indication of how much of the additional claims must be consumed in this allocation";
+		parameter<Potentiaal> claimFactor := PeriodDuration[float64] / ModelParameters/Advanced/ClaimPeriod[float64], Descr = "Indication of how much of the additional claims must be consumed in this allocation";
 
 		container TotalPeriodClaims := 
 				for_each_nedv(
@@ -93,7 +93,7 @@ are explained in this article and the description of the calculation rules refer
 
 		container allocate_discrete
 		{ 
-			attribute<bool> HasFreeLand (domain) := Land/TotalExogenousLand <= 0.5f * domain/NrHaPerCell;
+			attribute<bool> HasFreeLand (domain) := Land/TotalExogenousLand <= 0.5d * domain/NrHaPerCell;
 			
 			unit<uint32> AtomicRegions := Geography/RegionalUnits/RandstadIntermediatePeripheral
 			{
@@ -112,7 +112,7 @@ are explained in this article and the description of the calculation rules refer
 				container SuitabilityMaps := 
 					for_each_nedv(
 						  classifications/ggEndogenous/label
-						, 'MakeDefined(Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel] * 100f, 0f)[int32]'
+						, 'MakeDefined(Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel] * 100d, 0d)[int32]'
 						, ADomain
 						, Int32
 					)
@@ -126,7 +126,7 @@ are explained in this article and the description of the calculation rules refer
 				for_each_nedv(
 					  classifications/ggEndogenous/Label
 					, 'id(RegioUnit) <> 0[RegioUnit]
-						? uint32(0.9f * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)
+						? uint32(0.9d * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)
 						: 0'
 					, RegioUnit
 					, uint32
@@ -135,7 +135,7 @@ are explained in this article and the description of the calculation rules refer
 			container maxclaims := //in aantal cellen
 				for_each_nedv(
 					  classifications/ggEndogenous/Label
-					, 'uint32(1.1f * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)'
+					, 'uint32(1.1d * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)'
 					, RegioUnit
 					, uint32
 				);

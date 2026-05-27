@@ -40,7 +40,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				  ggEndogenous/Name
 				, 'exp(betaFactor * MakeDefined(Additional_Claims/' + ggEndogenous/Name +'/logAj, 0[EUR_m2]))'
 				, RegioUnit
-				, float32
+				, float64
 			),	Descr = "Aj: This will be initialized with InitialWeigths and then receives a copy of nextValue (Aj) for each iteration";
 
 		unit<uint32> ADomain := .../Compacted/ADomain;
@@ -50,7 +50,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				  ggEndogenous/Name
 				, 'MakeDefined(CaseData/Compacted/Demands/'+ggEndogenous/Name+' * lookup(CaseData/Compacted/RegioGrids/'+ggEndogenous/Name+', currValue/'+ggEndogenous/Name+'), 0[Units/DemandUnit])'
 				, ADomain
-				, float32
+				, float64
 			), Descr = "Tcj = Aj * exp(beta*Scj): new demands based on given Aj (currValue)";
 
 		attribute<DemandUnit> total_demand  (ADomain) := ='add('+asItemList('adjusted_demands/'+ggEndogenous/Name)+')', Descr = "Tc = sum(j, Tcj): total demand on input"; // for unused land category, add "+'value(1.0, DemandUnit)'"		
@@ -69,9 +69,9 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		container nextValue :=
 			for_each_nedv(
 				  ggEndogenous/Name
-				, 'claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+' * currValue/'+ ggEndogenous/Name+', allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio, Additional_Claims/'+ggEndogenous/Name+'/Operator)'
+				, 'claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+'[float32] * currValue/'+ ggEndogenous/Name+'[float32], allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio[float32], Additional_Claims/'+ggEndogenous/Name+'/Operator)[float64]'
 				, RegioUnit
-				, float32
+				, float64
 			), Descr    = "Aj' = Aj * Dj/Tj: see formula (6b')";
 	}
 	

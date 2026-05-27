@@ -18,42 +18,42 @@
 
 container Units : IsHidden = "true"
 {
-	unit<Float32> Sec:             = BaseUnit('sec', float32);
-	unit<Float32> Min:             = 60 * sec,         cdf = "Classifications/Min_7k/Classes";
+	unit<Float64> Sec:             = BaseUnit('sec', Float64);
+	unit<Float64> Min:             = 60 * sec,         cdf = "Classifications/Min_7k/Classes";
 	
-	unit<Float32> Meter:           = BaseUnit('m', float32), cdf = "Classifications/Altitude8K/Classes";
-	unit<Float32> Km:              = 1000.0 * Meter,         cdf = "Classifications/Km_7k/Classes";
+	unit<Float64> Meter:           = BaseUnit('m', Float64), cdf = "Classifications/Altitude8K/Classes";
+	unit<Float64> Km:              = 1000.0 * Meter,         cdf = "Classifications/Km_7k/Classes";
 	unit<int32>   cm:              = int32(0.01 * Meter);
-	unit<Float32> Dm:              =    0.1 * Meter;
-	unit<Float32> Year:            = BaseUnit('Yr', float32);
-	unit<Float32> Meter2:          = Meter * Meter;
-	unit<Float32> Ha:              = 10000.0 * Meter * Meter, cdf = "Classifications/landuseHaK/Classes";
-	unit<Float32> HaDiff:          = Ha,                      cdf = "Classifications/HaChangeK/Classes";
+	unit<Float64> Dm:              =    0.1 * Meter;
+	unit<Float64> Year:            = BaseUnit('Yr', Float64);
+	unit<Float64> Meter2:          = Meter * Meter;
+	unit<Float64> Ha:              = 10000.0 * Meter * Meter, cdf = "Classifications/landuseHaK/Classes";
+	unit<Float64> HaDiff:          = Ha,                      cdf = "Classifications/HaChangeK/Classes";
 
-	unit<Float32> claimHa:         = Ha, cdf = "Classifications/ClaimHa9K/Classes";
-	unit<Float32> claimHa2:       = claimHa * claimHa;
+	unit<Float64> claimHa:         = Ha, cdf = "Classifications/ClaimHa9K/Classes";
+	unit<Float64> claimHa2:        = claimHa * claimHa;
 
-	unit<Float32> DemandUnit:     = BaseUnit('ClaimDemand', float32), Descr = "used for Aj balancing Factor";
-	unit<Float32> BcUnit:         = Ha / DemandUnit, Descr = "used for Bj balancing Factor";
-	unit<Float32> Ratio:          = 1.0 * Ha / Ha,           cdf = "Classifications/Ratio6k/Classes";
-	unit<Float32> Percent:        = 100.0 * Ha / Ha,         cdf = "Classifications/Percentage13K/Classes";
-	unit<Float32> Eur:            = BaseUnit('EURO', float32);
-	unit<Float32> kEur:           = 1000.0 * Eur;
-	unit<Float32> mEur:           = 1000.0 * kEur;
-	unit<Float32> Eur_Ha:         = Eur / Ha;
-	unit<Float32> kEur_Ha:        = 1000.0 * Eur_Ha;
-	unit<Float32> mEur_Ha:        = 1000.0 * kEur_Ha;
-	unit<Float32> Eur_M2:         = Eur / Meter2,                cdf = "Classifications/Eur_M2_15K/Classes";
-	unit<Float32> M2_Eur:         = 1.0 / Eur_M2;
-	unit<float32> mEur_yr:        = mEur / Year;
+	unit<Float64> DemandUnit:     = BaseUnit('ClaimDemand', Float64), Descr = "used for Aj balancing Factor";
+	unit<Float64> BcUnit:         = Ha / DemandUnit, Descr = "used for Bj balancing Factor";
+	unit<Float64> Ratio:          = 1.0 * Ha / Ha,           cdf = "Classifications/Ratio6k/Classes";
+	unit<Float64> Percent:        = 100.0 * Ha / Ha,         cdf = "Classifications/Percentage13K/Classes";
+	unit<Float64> Eur:            = BaseUnit('EURO', Float64);
+	unit<Float64> kEur:           = 1000.0 * Eur;
+	unit<Float64> mEur:           = 1000.0 * kEur;
+	unit<Float64> Eur_Ha:         = Eur / Ha;
+	unit<Float64> kEur_Ha:        = 1000.0 * Eur_Ha;
+	unit<Float64> mEur_Ha:        = 1000.0 * kEur_Ha;
+	unit<Float64> Eur_M2:         = Eur / Meter2,                cdf = "Classifications/Eur_M2_15K/Classes";
+	unit<Float64> M2_Eur:         = 1.0 / Eur_M2;
+	unit<Float64> mEur_yr:        = mEur / Year;
 
-	unit<Float32> NrPersons:      = BaseUnit('Inwoners', float32), cdf  = "Classifications/NrInhabitants12K/Classes"
+	unit<Float64> NrPersons:      = BaseUnit('Inwoners', Float64), cdf  = "Classifications/NrInhabitants12K/Classes"
 	{
 		parameter<Float64> DotValuePalette: DialogType = "DotValuePalette", = 100.0;
 	}
 	
 // ============ Artificial quantities, relate to EUR_M2
-	unit<Float32> Potentiaal: cdf = "Classifications/Potentiaal10K/Classes";
+	unit<Float64> Potentiaal: cdf = "Classifications/Potentiaal10K/Classes";
 
 // ============ Required ranges 
 	unit<Int8>   ValuationRange : Range = "[-4, 5)" , cdf = "Classifications/ValuationRange10K/Classes";

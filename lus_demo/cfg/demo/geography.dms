@@ -19,9 +19,8 @@
 
 container Geography: Using = "Units", isHidden = "True"
 { 
-	// unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "=Modelparameters/EnableBackgroundMap ? 'ngr_layer' : '/Geography/RegionalUnits/Province/Province_name'", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
-	unit<fpoint> rdc_base : SpatialReference = "EPSG:28992", DialogData = "ngr_layer", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
-	unit<FPoint> rdc_meter := range(rdc_base, point_yx(300000f,0f), point_yx(625000f,280000f));
+	unit<dpoint> rdc_meter_base : SpatialReference = "EPSG:28992", DialogData = "ngr_layer", Label = "rdc"; // wms achtergrondlaag voor kaarten met rd coordinaten
+	unit<dPoint> rdc_meter := range(rdc_meter_base, point_yx(300000d,0d), point_yx(625000d,280000d));
 
 	parameter<meter> x_min := 0[meter];
 	parameter<meter> x_max := 280000[meter];

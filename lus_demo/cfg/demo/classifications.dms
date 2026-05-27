@@ -21,7 +21,6 @@ container Classifications: Using = "Units", isHidden = "True"
 	// =========== landusesTypering
 	unit<uint8> ggModel: NrOfRows = 9 // @USERINPUT: keep in sync with the actual nr of model classes
 	{	
-		parameter<uint32> nrAttr := 16; // @USERINPUT: keep in sync with nr of Text-Element attributes in the next lines
 		unit<uint32>      Elements:= Range(uint32, 0, nrAttr*#ggModel)
 		{
 			attribute<String> Text: [ // @USERINPUT
@@ -57,6 +56,8 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<Eur_m2>       LandPrice_B1:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 12, Elements)]), Eur_m2);
 		attribute<Eur_m2>       LandPrice_B2:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 13, Elements)]), Eur_m2);
 		attribute<mEur_ha>      MaxDamagePerha:   = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 15, Elements)]), mEUR_ha);
+		
+		parameter<uint32> nrAttr := 16; // @USERINPUT: keep in sync with nr of Text-Element attributes in the next lines
 	}
 
 	unit<uint8> LUclasses := Range(ggModel,uint8(0),uint8(nrofrows(ggModel)))

@@ -37,7 +37,7 @@ container Thematic_maps
 			, 	cdf = "Classifications/Percentage10k/Classes";
 		}
 		
-		attribute<Percent> urban_attractiveness       (domain) := float32(Impl/urban_attractiveness)[rdc_100m/domain_rel] * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Index expressing relative richness in three types of amenities: historic buildings; shop and hotels & catering outlets (2024)";
+		attribute<Percent> urban_attractiveness       (domain) := float64(Impl/urban_attractiveness)[rdc_100m/domain_rel] * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Index expressing relative richness in three types of amenities: historic buildings; shop and hotels & catering outlets (2024)";
 		attribute<Percent> attractive_surroundings    (domain) := Impl/attractive_surroundings[domain/rdc_500m_rel], Descr = "Landscape attractiveness as perceived by the general public", URL = "https://www.clo.nl/indicatoren/nl102305-belevingskaart-van-het-nederlandse-landschap";
 	}
 
@@ -153,7 +153,7 @@ container Thematic_maps
 
 			unit<uint32> NuclearPlantBorssele : nrofrows = 1
 			{
-				attribute<rdc_meter> geometry                   := const(point_xy(38910f, 383749f, rdc_meter),.);
+				attribute<rdc_meter> geometry                   := const(point_xy(38910d, 383749d, rdc_meter),.);
 				attribute<rdc_meter> geometry_buffer     (poly) := bg_buffer_point(geometry, 5000d, 16b);
 				attribute<.>         per_25m          (rdc_25m) := poly2grid(geometry_buffer, rdc_25m);
 				attribute<bool>      EvacuationZone   (rdc_25m) := IsDefined(geometry_buffer[per_25m]);

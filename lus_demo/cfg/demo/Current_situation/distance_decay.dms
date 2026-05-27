@@ -62,8 +62,8 @@ container Distance_decay : Using    = "DistMatrices"
 	{
 		container Km1
 		{
-			attribute<Potentiaal> IsNatura2000        (domain) := ='rescale( potential(policy_maps/NatureLandscape/IsNatura2000 [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
-			attribute<Potentiaal> IsNatureNetworkNL   (domain) := ='rescale( potential(policy_maps/NatureLandscape/IsNatureNetworkNL [float32], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
+			attribute<Potentiaal> IsNatura2000        (domain) := ='rescale( potential(policy_maps/NatureLandscape/IsNatura2000 [float64], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
+			attribute<Potentiaal> IsNatureNetworkNL   (domain) := ='rescale( potential(policy_maps/NatureLandscape/IsNatureNetworkNL [float64], /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))';
 		}
 	}
 }
