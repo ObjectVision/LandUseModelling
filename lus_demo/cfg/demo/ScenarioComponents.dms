@@ -29,7 +29,7 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 
 container Scenario_Components
-:	Using  = "Units;Geography;Classifications;ModelParameters"
+:	Using  = "Units;Geography;Classifications;ModelParameters;Geography/RegionalUnits"
 {
 	container Local_Suitability
 	: Using = "Current_situation/current_landuse;Current_situation/policy_maps;Current_situation/Distance_decay"
@@ -128,7 +128,7 @@ container Scenario_Components
 			attribute<LUclasses> LandUse (domain) := Current_situation/current_landuse/predominant;
 			attribute<mEur_Ha>   Damage  (domain) := ='switch('+asItemList('case(LandUse == value('+String(ID(LUclasses))+', LUclasses), DepthDataFactors/'+LUclasses/Name+')')+', 0f) * LUclasses/MaxDamagePerHa[LandUse]';
 
-			attribute<mEur>      DamagePerDikeRing (RegionalUnits/DijkRing):= Sum(Damage * 1[Ha],RegioGrids/DijkRing);
+			attribute<mEur>      DamagePerDikeRing (RegionalUnits/DijkRing):= Sum(Damage * 1[Ha],RegionalUnits/DijkRing/per_domain);
 		}
 	}
 }

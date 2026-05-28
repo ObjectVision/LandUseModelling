@@ -54,7 +54,7 @@ are explained in this article and the description of the calculation rules refer
 
 		container Compacted
 		{ 
-			attribute<bool> HasFreeLand (domain):= Land/TotalExogenousLand < domain/NrHaPerCell;
+			attribute<bool> HasFreeLand (domain):= (Land/TotalExogenousLand < domain/NrHaPerCell) && IsDefined(RegioUnit/per_domain);
 
 			unit <uint32> ADomain := select_with_org_rel(HasFreeLand)
 			,	label      = "allocation domain"
@@ -63,8 +63,8 @@ are explained in this article and the description of the calculation rules refer
 
 			container SuitabilityMaps :=
 				for_each_nedv(
-					  classifications/ggEndogenous/label
-					, 'Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel]'
+					  ggEndogenous/label
+					, 'Suitabilities/'+ggEndogenous/label+'[ADomain/org_rel]'
 					, ADomain
 					, EUR_M2
 				);
@@ -93,49 +93,37 @@ are explained in this article and the description of the calculation rules refer
 
 		container allocate_discrete
 		{ 
-			attribute<bool> HasFreeLand (domain) := Land/TotalExogenousLand <= 0.5d * domain/NrHaPerCell;
+			unit<uint32> ADomain       := Compacted/ADomain;
+
+			container SuitabilityMaps := 
+				for_each_nedv(
+					  ggEndogenous/label
+					, 'MakeDefined(Compacted/SuitabilityMaps/'+ggEndogenous/label+' * 100d, 0d)[int32]'
+					, ADomain
+					, Int32
+				);
 			
 			unit<uint32> AtomicRegions := RegioUnit
 			{
-				attribute<.> regio := id(.);
+				// attribute<.> regio        := id(.);
 				attribute<.> per_domain             (domain) := poly2grid(geometry, domain);
-				attribute<.> per_Adomain (Compacted/ADomain) := collect_by_cond(Compacted/ADomain, HasFreeLand, per_domain);
-			}	
-			
-			container Compacted
-			{
-				unit <uint32> ADomain := select_with_org_rel(HasFreeLand)
-				,	label      = "allocation domain"
-				,	DialogType = "Map"
-				,	DialogData = "BaseGrid";
-
-				container SuitabilityMaps := 
-					for_each_nedv(
-						  classifications/ggEndogenous/label
-						, 'MakeDefined(Suitabilities/'+classifications/ggEndogenous/label+'[ADomain/org_rel] * 100d, 0d)[int32]'
-						, ADomain
-						, Int32
-					)
-				;
-				
-				attribute<AtomicRegions> AtomicRegionMap (ADomain) := AtomicRegions/per_ADomain;
-				attribute<ADomain> BaseGrid (domain):= invert(ADomain/org_rel);
+				attribute<.> per_Adomain           (ADomain) := collect_by_cond(Compacted/ADomain, Compacted/HasFreeLand, per_domain);
 			}
+			
+			attribute<AtomicRegions> AtomicRegionMap (ADomain) := AtomicRegions/per_ADomain;
 			
 			container minclaims := //in aantal cellen
 				for_each_nedv(
-					  classifications/ggEndogenous/Label
-					, 'id(RegioUnit) <> 0[RegioUnit]
-						? uint32(0.9d * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)
-						: 0'
+					  ggEndogenous/Label
+					, 'uint32(0.9d * CaseData/TotalPeriodClaims/'+ggEndogenous/Label+' / domain/NrHaPerCell)' 
 					, RegioUnit
 					, uint32
 				);
 				
 			container maxclaims := //in aantal cellen
 				for_each_nedv(
-					  classifications/ggEndogenous/Label
-					, 'uint32(1.1d * CaseData/TotalPeriodClaims/'+classifications/ggEndogenous/Label+' / domain/NrHaPerCell)'
+					  ggEndogenous/Label
+					, 'uint32(1.1d * CaseData/TotalPeriodClaims/'+ggEndogenous/Label+' / domain/NrHaPerCell)'
 					, RegioUnit
 					, uint32
 				);
@@ -144,17 +132,17 @@ are explained in this article and the description of the calculation rules refer
 	
 			container result :=
 				discrete_alloc_sp(
-					  classifications/ggEndogenous/label  //attr string
-					, Compacted/ADomain                   //unit uint32
-					, Compacted/SuitabilityMaps           //cont int32
+					  ggEndogenous/label                  //attr string
+					, ADomain                             //unit uint32
+					, SuitabilityMaps                     //cont int32
 					, AtomicRegions                       //unit uint16
-					, Compacted/AtomicRegionMap           //attr uint16
+					, AtomicRegionMap                     //attr uint16
 					, minclaims                           //cont uint32
 					, maxclaims                           //cont uint32
 					, treshold                            //para int32
 				)
 			{
-				attribute<classifications/ggEndogenous> landuse_grid (domain):= landuse[Compacted/BaseGrid];
+				attribute<ggEndogenous> landuse_grid (domain):= landuse[Compacted/BaseGrid];
 			}
 		}
 	}
@@ -205,7 +193,7 @@ are explained in this article and the description of the calculation rules refer
 			{
 				unit<uint16>          ThisIterRange                      := Range(IterRange, UInt16(0) , UInt16(nrIter));
 				attribute<String>     IterNames          (ThisIterRange) := 'iter'+String(ID(ThisIterRange));
-				attribute<claimHa>    TotalDeviations    (ThisIterRange) := ='add('+asItemList('Float32(ID(ThisIterRange)==value('+String(ID(ThisIterRange))+',ThisIterRange))*casedata/iterator/'+IterNames+'/TotalDeviation')+')';
+				attribute<claimHa>    TotalDeviations    (ThisIterRange) := ='add('+asItemList('Float64(ID(ThisIterRange)==value('+String(ID(ThisIterRange))+',ThisIterRange))*casedata/iterator/'+IterNames+'/TotalDeviation')+')';
 				attribute<Potentiaal> LogTotalDeviations (ThisIterRange) := log(TotalDeviations / 1[claimHa]);
 			}
 
@@ -222,7 +210,7 @@ are explained in this article and the description of the calculation rules refer
 				attribute<DemandUnit> total_demand (domain):= casedata/iterator/lastIter/total_demand[CaseData/Compacted/BaseGrid];
 				attribute<EUR_M2>     land_price   (domain):= log(total_demand / value(1.0, DemandUnit)) / betaFactor;
 	
-				attribute <ggEndogenous> Dominant_ggEndogenous (domain):= ='CaseData/Land/FreeLand > domain/NrHaPerCell / 10f
+				attribute <ggEndogenous> Dominant_ggEndogenous (domain):= ='CaseData/Land/FreeLand > domain/NrHaPerCell / 10d
 																				? argmax('+asItemList(ggEndogenous/Name)+')[ggEndogenous]
 																				: (0/0)[ggEndogenous]';
 			}

@@ -136,7 +136,7 @@ container Geography: Using = "Units", isHidden = "True"
 		{
 			attribute<rdc_meter>          Geometry(poly) := DijkringImport/shp/Geometry[Shape_rel];
 			attribute<DijkringImport/shp> Shape_rel      := rlookup(Dijkringnr, DijkringImport/shp/DijkringNr);
-
+			attribute<.>                  per_domain (domain) := poly2grid(geometry, domain);
 			attribute<DijkringImport/EK>  AsciiGridCode := DijkringImport/csv/AsciiGridCode[DijkringImport/EK];
 			attribute<mEur>               MinDamage     := DijkringImport/csv/MinSchade [mEur];
 			attribute<mEur>               ExpDamage     := DijkringImport/csv/ExpSchade [mEur];

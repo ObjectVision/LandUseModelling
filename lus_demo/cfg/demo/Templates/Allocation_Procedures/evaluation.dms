@@ -45,7 +45,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 				  ggEndogenous/Name
 				, '(AllocatedLanduse/'+ggEndogenous/Name+' / TotalDemand/'+ggEndogenous/Name+')'
 				, void
-				, float32
+				, float64
 			), Descr = "Degree to which initial demand is allocated";
 	}
 	container Regional
@@ -53,7 +53,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 		container CurrentLanduse :=
 			for_each_nedv(
 				  ggEndogenous/Name
-				, 'sum(orglanduse/'+ggEndogenous/Name+', RegioUnit/domain_rel)'
+				, 'sum(orglanduse/'+ggEndogenous/Name+', RegioUnit/per_domain)'
 				, RegioUnit
 				, claimHa
 			), Descr = "Total current land use";
@@ -69,7 +69,7 @@ container Evaluation : Descr = "This container contains several evaluation indic
 		container AllocatedLanduse :=
 			for_each_nedv(
 				  ggEndogenous/Name
-				, 'sum(landuse/Endogenous/'+ggEndogenous/Name+', RegioUnit/domain_rel)'
+				, 'sum(landuse/Endogenous/'+ggEndogenous/Name+', RegioUnit/per_domain)'
 				, RegioUnit
 				, claimHa
 			), Descr = "Total allocated land use";
@@ -96,30 +96,30 @@ container Evaluation : Descr = "This container contains several evaluation indic
 		container Urbanisation : Descr = "Built-up surface per gridcel"
 		{
 			attribute<Ha>          Builtup_Surface            (domain) := ='add('+asItemList(ggUrban/IsExogenous ? 'landuse/Exogenous/' : 'landuse/Endogenous/'+ ggUrban/Name)+')';
-			attribute<bool>        Builtup_Area               (domain) := Builtup_Surface > 0.5f * domain/NrHaPerCell;
+			attribute<bool>        Builtup_Area               (domain) := Builtup_Surface > 0.5d * domain/NrHaPerCell;
 			attribute<Ha>          Builtup_Surface_current    (domain) := ='add('+asItemList('orglanduse/' + ggUrban/Name)+')',	IsHidden = "True";
-			attribute<bool>        Builtup_Area_current       (domain) := Builtup_Surface_current > 0.5f * domain/NrHaPerCell;
+			attribute<bool>        Builtup_Area_current       (domain) := Builtup_Surface_current > 0.5d * domain/NrHaPerCell;
 			attribute<HaDiff>      Difference_Builtup_Surface (domain) := Urbanisation/Builtup_Surface - Urbanisation/Builtup_Surface_current, IsHidden = "True";
 			attribute<LossOrGain>  Difference_Builtup_Area    (domain) := value(Urbanisation/Builtup_Area, LossOrGain)- value(Urbanisation/Builtup_Area_current, LossOrGain);
 
 			attribute<Ls_QualPress2k> Pressure_new_builtup (domain) :=
-				Difference_Builtup_Surface > 0.2f * domain/NrHaPerCell 
+				Difference_Builtup_Surface > 0.2d * domain/NrHaPerCell 
 					? value(1, Ls_QualPress2k)
 					: value(0, Ls_QualPress2k);
 					
 			attribute<HaDiff>  Pressure_NatureNetwork (domain) :=
-				Current_situation/policy_maps/NatureLandscape/NatureNetworkNL
+				Current_situation/policy_maps/NatureLandscape/IsNatureNetworkNL
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
 			,	Descr = "Difference Built-up areas in NNN";
 			
 			attribute<HaDiff>  Pressure_Habitatareas (domain) :=
-				Current_situation/policy_maps/NatureLandscape/Natura2000
+				Current_situation/policy_maps/NatureLandscape/IsNatura2000
 					? evaluation/Local/Urbanisation/Difference_Builtup_Surface 
 					: 0[Ha]
 			,	Descr = "Difference Built-up in Habitatareas";
 			
-			attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Current_situation/thematic_maps/NatureLandscape/Landscape_quality4k > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
+			attribute<Ls_Qual2k>      landscape_quality2k (domain) := (Current_situation/thematic_maps/NatureLandscape/Landscape_quality > 2[Ls_Qual4k] ? 1[Ls_Qual2k] : 0[Ls_QUal2k]);
 			attribute<Ls_QualPress2k> Pressure_LandscapeQuality (domain) := 
 				   Urbanisation/Pressure_new_Builtup > 0[Ls_QualPress2k]
 				&& Landscape_quality2k > 0[Ls_Qual2k]   
@@ -180,12 +180,12 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			attribute<LUclasses> LandUse              (domain)                 := Current_situation/current_landuse/predominant, Label = "Current dominant land use";
 			attribute<mEur>      LU_Damage            (domain)                 := ='switch(
 																						'+asItemList('case(LandUse == LUclasses/V/'+LUclasses/name+'[LUclasses]
-																												, /Scenario_Components/Floodrisk/Curr/DepthDataFactors/'+LUclasses/Name+')')+'
-																									, 0f
+																												, float64(/Scenario_Components/Floodrisk/Curr/DepthDataFactors/'+LUclasses/Name+'))')+'
+																									, 0d
 																						)
 																					* LUclasses/MaxDamagePerHa[LandUse]
 																					* domain/NrHaPerCell', Label    = "Potential damage based on dominant land use";
-			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage,RegioGrids/DijkRing), Label = "Potential damage aggregated to dike rings";
+			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage, RegionalUnits/DijkRing/per_domain), Label = "Potential damage aggregated to dike rings";
 			attribute<mEur>      ExpertDamage         (RegionalUnits/DijkRing) := RegionalUnits/DijkRing/ExpDamage, Label = "Expert-based damage assessments current situation";
 		}
 		
@@ -195,13 +195,13 @@ container Evaluation : Descr = "This container contains several evaluation indic
 			attribute<LUclasses> LandUse              (domain)              := results/continuous/landuse/Predominant, Label = "Simulated dominant land use";
 			attribute<mEur>      LU_Damage            (domain)                 := ='switch(
 																						'+asItemList('case(LandUse == LUclasses/V/'+LUclasses/name+'[LUclasses]
-																												, /Scenario_Components/Floodrisk/Curr/DepthDataFactors/'+LUclasses/Name+')')+'
-																									, 0f
+																												,float64(/Scenario_Components/Floodrisk/Curr/DepthDataFactors/'+LUclasses/Name+'))')+'
+																									, 0d
 																						)
 																					* LUclasses/MaxDamagePerHa[LandUse]
 																					* domain/NrHaPerCell', Label    = "Potential damage based on dominant land use";
-			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage, RegioGrids/DijkRing), Label = "Potential damage aggregated to dike rings";
-			attribute<float32>   LU_DamageChange      (RegionalUnits/DijkRing) := MakeDefined(LU_DamagePerDikeRing  / Current/LU_DamagePerDikeRing,  sum(LU_DamagePerDikeRing ) / sum(Current/LU_DamagePerDikeRing )), Label = "Change ratio of land-use based damage";
+			attribute<mEur>      LU_DamagePerDikeRing (RegionalUnits/DijkRing) := sum(LU_Damage, RegionalUnits/DijkRing/per_domain), Label = "Potential damage aggregated to dike rings";
+			attribute<float64>   LU_DamageChange      (RegionalUnits/DijkRing) := MakeDefined(LU_DamagePerDikeRing  / Current/LU_DamagePerDikeRing,  sum(LU_DamagePerDikeRing ) / sum(Current/LU_DamagePerDikeRing )), Label = "Change ratio of land-use based damage";
 
 			// The expert-based damage assessments for the current situation are multiplied with the damage change ratio to obtain more realistic damage assessments
 			attribute <mEur>     ExpertDamage      (RegionalUnits/DijkRing) := (Current/ExpertDamage * LU_DamageChange) == 0[mEur] ? LU_DamagePerDikering * sum(Current/ExpertDamage * LU_DamageChange) / sum(Current/LU_DamagePerDikering ) : (Current/ExpertDamage * LU_DamageChange), Label = "Expert-based assessments * change ratio";
