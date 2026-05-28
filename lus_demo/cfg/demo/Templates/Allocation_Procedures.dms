@@ -220,7 +220,7 @@ are explained in this article and the description of the calculation rules refer
 			container LandUse
 			{
 				attribute<ggEndogenous>  Endogenous (domain) := casedata/allocate_discrete/result/landuse_grid;
-				attribute<ggExogenous>   Exogenous  (domain) := ='casedata/allocate_discrete/HasFreeLand ? value(0 / 0,ggExogenous) : value(argmax('+asItemList(+'ExogenousLand/'+classifications/ggExogenous/name)+'), ggExogenous)';
+				attribute<ggExogenous>   Exogenous  (domain) := ='casedata/compacted/HasFreeLand ? value(0 / 0,ggExogenous) : value(argmax('+asItemList(+'ExogenousLand/'+classifications/ggExogenous/name)+'), ggExogenous)';
 				attribute<LUclasses>     Model      (domain) := MakeDefined(classifications/ggEndogenous/org_rel[Endogenous], classifications/ggExogenous/org_rel[Exogenous])[LUclasses];
 			}
 		}
