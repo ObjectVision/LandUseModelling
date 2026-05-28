@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DocType name="GeoDmsMetaInfo">
+<DefaultInfo>
+	<FullName>/Geography/RegionalUnits/DijkRing/NormPeriod
+	</FullName>
+	<GeoDmsVersion>GeoDms 20.0.3 [x64-windows-msbuild] [26/05/2026]
+	</GeoDmsVersion>
+	<SessionStartTime>2026-05-28 13:05:41
+	</SessionStartTime>
+	<CurrentTime>2026-05-28 14:15:33
+	</CurrentTime>
+	<StatusFlags>0x4086e5ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MT1 MT2 MT3 
+	</StatusFlags>
+</DefaultInfo>
+<Software>
+	<GeoDmsVersion>20.0.3
+	</GeoDmsVersion>
+</Software>
+<Config>
+	<FullName>/Geography/RegionalUnits/DijkRing/NormPeriod
+	</FullName>
+	<Expr>value( substr(rjoin(Dijkringnr, DijkringImport/shp/Dijkringnr, DijkringImport/shp/NormFreq), 2, 20), Year)
+	</Expr>
+</Config>
+<Environment>
+	<Processor>AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD
+	</Processor>
+	<User>JipClaassens
+	</User>
+	<ComputerName>OVSRV08
+	</ComputerName>
+	<Date>env:DATE
+	</Date>
+	<Time>env:TIME
+	</Time>
+</Environment>
+</DocType>

@@ -144,11 +144,14 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<NrPersons>          ExpCasualties := DijkringImport/csv/ExpSlachtoffers [NrPersons];
 			attribute<Year>               NormPeriod    := value( substr(rjoin(Dijkringnr, DijkringImport/shp/Dijkringnr, DijkringImport/shp/NormFreq), 2, 20), Year);
 			
-			container AnnualRisk
+		unit<uint32> DijkRing
+		: StorageName = "%projDir%/data/geography/DijkRingen_2009.shp"
+		, StorageType = "gdal.vect"
+		, DialogData  = "rdc_meter"
+		, Descr      = "This is the entity of the 57 most important flood risk management zones (dike rings) in the Nederlands"
 			{
-				attribute <mEur_Yr>      Damage (RegionalUnits/DijkRing) := ExpDamage / NormPeriod;
-			}
-		}
+			attribute<mEur_Yr>      AnnualRisk_Damage    := ExpDamage[mEur] / NormPeriod[Year];
+			attribute<.>            per_domain  (domain) := poly2grid(geometry, domain);
 	}
 	
 	container RegioGrids
