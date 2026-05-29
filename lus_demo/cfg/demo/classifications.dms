@@ -20,7 +20,7 @@ container Classifications: Using = "Units", isHidden = "True"
 {
 	// =========== landusesTypering
 	unit<uint8> ggModel: NrOfRows = 9 // @USERINPUT: keep in sync with the actual nr of model classes
-	{	
+	{
 		unit<uint32>      Elements:= Range(uint32, 0, nrAttr*#ggModel)
 		{
 			attribute<String> Text: [ // @USERINPUT
@@ -49,46 +49,8 @@ container Classifications: Using = "Units", isHidden = "True"
 		parameter<uint32>       nrAttr         := 7; // @USERINPUT: keep in sync with nr of Text-Element attributes in the next lines
 	}
 
-		unit<uint32>            ColorCoord;
-		attribute<ColorCoord>   r:                = value(Elements/Text[value(UInt32(ID(.))* nrAttr +  4, Elements)], ColorCoord);
-		attribute<ColorCoord>   g:                = value(Elements/Text[value(UInt32(ID(.))* nrAttr +  5, Elements)], ColorCoord)*256;
-		attribute<ColorCoord>   b:                = value(Elements/Text[value(UInt32(ID(.))* nrAttr +  6, Elements)], ColorCoord)*256*256;
-		attribute<String>       Claimregion:      = Elements/Text[value(UInt32(ID(.))* nrAttr +  7, Elements)];
-		attribute<Bool>         IsUrban:          = bool(Elements/Text[value(UInt32(ID(.))* nrAttr + 8, Elements)]);
-		attribute<Bool>         IsOpenLandscape:  = bool(Elements/Text[value(UInt32(ID(.))* nrAttr + 9, Elements)]);
-		attribute<Eur_m2>       LandPrice_A1:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 10, Elements)]), Eur_m2);
-		attribute<Eur_m2>       LandPrice_A2:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 11, Elements)]), Eur_m2);
-		attribute<Eur_m2>       LandPrice_B1:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 12, Elements)]), Eur_m2);
-		attribute<Eur_m2>       LandPrice_B2:     = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 13, Elements)]), Eur_m2);
-		attribute<mEur_ha>      MaxDamagePerha:   = value((Elements/Text[value(UInt32(ID(.))* nrAttr + 15, Elements)]), mEUR_ha);
-		
-		parameter<uint32> nrAttr := 16; // @USERINPUT: keep in sync with nr of Text-Element attributes in the next lines
-	}
-
-	unit<uint8> LUclasses := Range(ggModel,uint8(0),uint8(nrofrows(ggModel)))
-	{
-		attribute<ggModel>      NrOrg          := convert(ID(LUclasses), ggModel);
-		attribute<UInt32>       BrushColor     := lookup(NrOrg, ggModel/BrushColor), DialogType = "BrushColor";
-		attribute<String>       Label          := lookup(NrOrg, ggModel/Label);
-		attribute<String>       Name           := lookup(NrOrg, ggModel/Name);
-		attribute<mEUR_ha>      MaxDamagePerHa := lookup(NrOrg, ggModel/MaxDamagePerHa);
-		
-		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
-	}
-
 	unit<uint8> LUclasses := ggModel;
 
-	// unit<uint8> LUclasses := Range(ggModel ,0b, uint8(nrofrows(ggModel)))
-	// {
-		// attribute<ggModel>      NrOrg          := convert(ID(LUclasses), ggModel);
-		// attribute<UInt32>       BrushColor     := lookup(NrOrg, ggModel/BrushColor), DialogType = "BrushColor";
-		// attribute<String>       Label          := lookup(NrOrg, ggModel/Label);
-		// attribute<String>       Name           := lookup(NrOrg, ggModel/Name);
-		// attribute<mEUR_ha>      MaxDamagePerHa := lookup(NrOrg, ggModel/MaxDamagePerHa);
-		
-		// container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
-	// }
-	
 
 	// =========== landusesTypering: subtypes
 	unit<uint8> ggEndogenous:= select_with_org_rel(not(LUclasses/IsExogenous))

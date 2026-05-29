@@ -88,17 +88,12 @@ container Geography: Using = "Units", isHidden = "True"
 	
 	container RegionalUnits
 	{
-		unit<UInt32> RandstadIntermediatePeripheral // Regional division in Randstad Intermediate zone and Peripherap zone
-		:	StorageName     = "%projDir%/data/geography/claimregions_2011.shp"
-		, 	StorageType     = "gdal.vect"
-		,	StorageReadOnly = "True"
-		,	Descr           = "This entity contains the shapes of claimregions."
+		unit<UInt32> RandstadIntermediatePeripheral := cat_range(0, 3)
 		{
-			attribute<rdc_meter> geometry (poly);
-			attribute<.>         claimregio                 : Descr = "This is the entity of shapes of claimregions (0=Exterior)";
-			attribute<Meter2>    area                       := area(geometry, meter2);
-			attribute<String>    Label                      : ['none','Randstad','Intermediate zone','Peripheral zone'], DialogType = "LabelText";
-			attribute<.>         domain_rel        (domain) := poly2grid(geometry, domain);
+			attribute<rdc_meter>      geometry                                 (poly) := geos_union_polygon(Province/geometry, Province/Landsdelen_rel);
+			attribute<String>         label                                           : ['Randstad', 'Intermediate', 'Peripheral'];
+			attribute<.>              per_domain                             (domain) := poly2grid(geometry, domain);
+			container V := for_each_nedv(label, string(id(.))+'[..]', void, .);
 		}
 		
 		unit<UInt32> Province
@@ -110,47 +105,30 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<rdc_meter>    geometry (poly);
 			attribute<.>            prvnr           : Descr = "This is the entity of the 12 provinces in the Nederlands (0=Exterior)";
 			attribute<string>       prvnm;
-			attribute<string>       Province_name := prvnm;
+			attribute<string>       Province_name := prvnm+string(id(.));
+			
+			attribute<RandstadIntermediatePeripheral>     Landsdelen_rel := switch(
+															case(id(.) == v/Groningen14 || id(.) == v/Groningen15 || id(.) == v/Groningen16 || id(.) == v/Drenthe22 
+																	|| id(.) == v/Zeeland31 || id(.) == v/Zeeland32 || id(.) == v/Zeeland33 || id(.) == v/Zeeland34 || id(.) == v/Zeeland35 
+																	|| id(.) == v/Limburg38 || id(.) == v/Friesland17 || id(.) == v/Friesland18 || id(.) == v/Friesland19 
+																	|| id(.) == v/Friesland20 || id(.) == v/Friesland21 || id(.) == v/Overijssel23, RandstadIntermediatePeripheral/v/Peripheral)
+															, case(id(.) == v/Gelderland24  || id(.) == v/Noord_Brabant36 || id(.) == v/Noord_Brabant37 || id(.) == v/Flevoland39, RandstadIntermediatePeripheral/v/Intermediate)
+															, case(id(.) == v/Noord_Holland26 || id(.) == v/Noord_Holland27 || id(.) == v/Zuid_Holland28 || id(.) == v/Zuid_Holland29 
+																	|| id(.) == v/Zuid_Holland30 || id(.) == v/Utrecht25, RandstadIntermediatePeripheral/v/Randstad)
+															, null_u
+														);
+														
+			container V := for_each_nedv(AsItemName(Province_name), string(id(.))+'[..]', void, .);
 		}
 		
-		container DijkringImport
-		{
-			unit<uint32> csv
-			: StorageName = "%ProjDir%/data/DijkRingen.csv"
-			, StorageType = "gdal.vect"
-			{
-				attribute<String> Label;
-			}
-			unit<uint32> shp
-			: StorageName = "%projDir%/data/geography/dijkringen_2009_selection.shp"
-			, StorageType = "gdal.vect"
-			{
-				attribute<rdc_meter> Geometry (poly);
-			}
-			unit<uint8> EK
-			: DialogData = "DijkRing/AsciiGridCode"
-			, DialogType = "Map";
-		}
-			
-		// unit<UInt32> RandstadIntermediatePeripheral // Regional division in Randstad Intermediate zone and Peripherap zone
-		// :	StorageName     = "%projDir%/data/geography/claimregions_2011.shp"
-		// , 	StorageType     = "gdal.vect"
-		// ,	StorageReadOnly = "True"
-		// ,	Descr           = "This entity contains the shapes of claimregions."
-		// ,	DialogData      = "rdc_meter"
-		// {
-			// attribute<String>         Label                                           : ['none','Randstad','Intermediate zone','Peripheral zone'], DialogType = "LabelText";
-			// attribute<.>              per_domain                             (domain) := poly2grid(geometry, domain);
-		// }
-			
 		unit<uint32> DijkRing
 		: StorageName = "%projDir%/data/geography/DijkRingen_2009.shp"
 		, StorageType = "gdal.vect"
 		, DialogData  = "rdc_meter"
 		, Descr      = "This is the entity of the 57 most important flood risk management zones (dike rings) in the Nederlands"
-			{
+		{
 			attribute<mEur_Yr>      AnnualRisk_Damage    := ExpDamage[mEur] / NormPeriod[Year];
 			attribute<.>            per_domain  (domain) := poly2grid(geometry, domain);
-	}
+		}
 	}
 }
