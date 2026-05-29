@@ -24,25 +24,30 @@ container Classifications: Using = "Units", isHidden = "True"
 		unit<uint32>      Elements:= Range(uint32, 0, nrAttr*#ggModel)
 		{
 			attribute<String> Text: [ // @USERINPUT
-			//'Name',			'Label',			'Descr',			'IsExogenous',	'r','g','b',		'Claimregion',	'IsUrbaan',	'IsOpenlandscape',	'LandPrice_A1',	'LandPrice_A2',	'LandPrice_B1',	'LandPrice_B2',	'NrInhPerHa',	'MaxDamagePerHa',
-			'residential',		'residential',		'residential',		'FALSE',		'225','0','0',		'RstIntPer',	'TRUE',		'FALSE',			'40',			'35',			'34',			'30',			'35',			'4',
-			'industrial',		'industrial',		'industrial',		'FALSE',		'128','0','255',	'RstIntPer',	'TRUE',		'FALSE',			'36',			'31',			'32',			'28',			'0',			'6',
-			'recreation',		'recreation',		'recreation',		'FALSE',		'255','228','0',	'RstIntPer',	'FALSE',	'FALSE',			'30',			'28',			'26',			'24',			'0',			'0.3',
-			'nature',			'nature',			'nature',			'FALSE',		'100','192','100',	'RstIntPer',	'FALSE',	'TRUE',				'34',			'29',			'31',			'27',			'0',			'0.2',
-			'agriculture',		'agriculture',		'agriculture',		'FALSE',		'192','255','128',	'RstIntPer',	'FALSE',	'FALSE',			'32',			'27',			'30',			'26',			'0',			'0.1',
-			'buildinglot',		'buildinglot',		'buildinglot',		'FALSE',		'128','128','128',	'RstIntPer',	'FALSE',	'FALSE',			'30',			'28',			'26',			'24',			'0',			'1.3',
-			'infrastructure',	'infrastructure',	'infrastructure',	'TRUE',			'128','0','0',		'',				'FALSE',	'FALSE',			'38',			'33',			'33',			'29',			'0',			'1.9',
-			'water',			'water',			'water',			'TRUE',			'159','255','255',	'',				'FALSE',	'FALSE',			'30',			'28',			'26',			'24',			'0',			'0',
-			'exterior',			'exterior',			'exterior',			'TRUE',			'255','255','228',	'',				'FALSE',	'FALSE',			'25',			'24',			'23',			'22',			'0',			'0'
+			//'Name',			'IsExogenous',	'r','g','b',		'IsUrbaan',	'MaxDamagePerHa',
+			'residential',		'FALSE',		'225','0','0',		'TRUE',		'4',
+			'industrial',		'FALSE',		'128','0','255',	'TRUE',		'6',
+			'recreation',		'FALSE',		'255','228','0',	'FALSE',	'0.3',
+			'nature',			'FALSE',		'100','192','100',	'FALSE',	'0.2',
+			'agriculture',		'FALSE',		'192','255','128',	'FALSE',	'0.1',
+			'buildinglot',		'FALSE',		'128','128','128',	'FALSE',	'1.3',
+			'infrastructure',	'TRUE',			'128','0','0',		'FALSE',	'1.9',
+			'water',			'TRUE',			'159','255','255',	'FALSE',	'0',
+			'exterior',			'TRUE',			'255','255','228',	'FALSE',	'0'
 			];
 		}
-		attribute<string>     Lnr:          = string(ID(.)+1b);
-		attribute<String>     Name:         = Elements/Text[value(UInt32(ID(.))* nrAttr +  0, Elements)];
-		attribute<String>     Label:        = Elements/Text[value(UInt32(ID(.))* nrAttr +  1, Elements)];
-		attribute<String>     Descr:        = Elements/Text[value(UInt32(ID(.))* nrAttr +  2, Elements)];
-		attribute<Bool>       IsExogenous:  = bool(Elements/Text[value(UInt32(ID(.))* nrAttr +  3, Elements)]);
+		attribute<String>       Name           :=        Elements/Text[value(UInt32(ID(.)) * nrAttr + 0, Elements)];
+		attribute<String>       label          := Name;
+		attribute<Bool>         IsExogenous    :=   bool(Elements/Text[value(UInt32(ID(.)) * nrAttr + 1, Elements)]);
+		attribute<ColorCoord>   r              :=  value(Elements/Text[value(UInt32(ID(.)) * nrAttr + 2, Elements)], ColorCoord);
+		attribute<ColorCoord>   g              :=  value(Elements/Text[value(UInt32(ID(.)) * nrAttr + 3, Elements)], ColorCoord)*256;
+		attribute<ColorCoord>   b              :=  value(Elements/Text[value(UInt32(ID(.)) * nrAttr + 4, Elements)], ColorCoord)*256*256;
+		attribute<Bool>         IsUrban        :=   bool(Elements/Text[value(UInt32(ID(.)) * nrAttr + 5, Elements)]);
+		attribute<mEur_ha>      MaxDamagePerha := value((Elements/Text[value(UInt32(ID(.)) * nrAttr + 6, Elements)]), mEUR_ha);
 
-		attribute<uint32>     BrushColor   := rgb(R,G / 256,B / 256 / 256), DialogType = "BrushColor";
+		attribute<uint32>       BrushColor     := rgb(R,G / 256,B / 256 / 256), DialogType = "BrushColor";
+		parameter<uint32>       nrAttr         := 7; // @USERINPUT: keep in sync with nr of Text-Element attributes in the next lines
+	}
 
 		unit<uint32>            ColorCoord;
 		attribute<ColorCoord>   r:                = value(Elements/Text[value(UInt32(ID(.))* nrAttr +  4, Elements)], ColorCoord);
@@ -71,40 +76,44 @@ container Classifications: Using = "Units", isHidden = "True"
 		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
 
+	unit<uint8> LUclasses := ggModel;
+
+	// unit<uint8> LUclasses := Range(ggModel ,0b, uint8(nrofrows(ggModel)))
+	// {
+		// attribute<ggModel>      NrOrg          := convert(ID(LUclasses), ggModel);
+		// attribute<UInt32>       BrushColor     := lookup(NrOrg, ggModel/BrushColor), DialogType = "BrushColor";
+		// attribute<String>       Label          := lookup(NrOrg, ggModel/Label);
+		// attribute<String>       Name           := lookup(NrOrg, ggModel/Name);
+		// attribute<mEUR_ha>      MaxDamagePerHa := lookup(NrOrg, ggModel/MaxDamagePerHa);
+		
+		// container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
+	// }
+	
+
 	// =========== landusesTypering: subtypes
-	unit<uint8> ggEndogenous:= select_with_org_rel_with_attr_by_cond(ggModel, not(ggModel/IsExogenous))
+	unit<uint8> ggEndogenous:= select_with_org_rel(not(LUclasses/IsExogenous))
 	{
-		// attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
-		// attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		// attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
-		// attribute<Eur_m2> Landprice_A1 := lookup(nr_OrgEntity, ggModel/Landprice_A1);
-		// attribute<Eur_m2> Landprice_A2 := lookup(nr_OrgEntity, ggModel/Landprice_A2);
-		// attribute<Eur_m2> Landprice_B1 := lookup(nr_OrgEntity, ggModel/Landprice_B1);
-		// attribute<Eur_m2> Landprice_B2 := lookup(nr_OrgEntity, ggModel/Landprice_B2);
+		attribute<string>       name       := org_rel -> name;
+		attribute<uint32>       BrushColor := org_rel -> BrushColor;
 		
 		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
 
-	unit<uint8> ggExogenous := select_with_org_rel_with_attr_by_cond(ggModel, ggModel/IsExogenous)
+	unit<uint8> ggExogenous := select_with_org_rel(LUclasses/IsExogenous)
 	{
-		// attribute<String> Name :       = lookup(nr_OrgEntity, ggModel/Name);
-		// attribute<UInt32> BrushColor:  = lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		// attribute<String> Label:       = lookup(nr_OrgEntity, ggModel/Label),      DialogType = "LabelText";
+		attribute<string>       name       := org_rel -> name;
+		attribute<uint32>       BrushColor := org_rel -> BrushColor;
+		
+		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
-	unit<uint8> ggUrban:= select_with_attr_by_cond(ggModel, ggModel/IsUrban)
+	
+	unit<uint8> ggUrban:= select_with_org_rel(LUclasses/IsUrban)
 	{
-		// attribute<String> Name         := lookup(nr_OrgEntity, ggModel/Name);
-		// attribute<UInt32> BrushColor   := lookup(nr_OrgEntity, ggModel/BrushColor), DialogType = "BrushColor";
-		// attribute<String> Label        := lookup(nr_OrgEntity, ggModel/Label), DialogType = "LabelText";
-		// attribute<Bool>   IsExogenous  := lookup(nr_OrgEntity, ggModel/IsExogenous);
+		attribute<string>       name       := org_rel -> name;
+		attribute<uint32>       BrushColor := org_rel -> BrushColor;
+		
+		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
-
-	// ============= bool
-	// unit<bool> bool
-	// {
-		// attribute<UInt32> BrQushColor : [rgb(192,192,192),rgb(255,0,0)], DialogType = "BrushColor";
-		// attribute<String> Label      : ['No','Yes'], DialogType = "LabelText";
-	// }
 
 	// ============= LossOrGain
 	unit<uint8> LossOrGain_Class: nrofrows = 3

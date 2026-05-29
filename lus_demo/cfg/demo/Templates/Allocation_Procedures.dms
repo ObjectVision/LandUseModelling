@@ -63,8 +63,8 @@ are explained in this article and the description of the calculation rules refer
 
 			container SuitabilityMaps :=
 				for_each_nedv(
-					  ggEndogenous/label
-					, 'Suitabilities/'+ggEndogenous/label+'[ADomain/org_rel]'
+					  ggEndogenous/name
+					, 'Suitabilities/'+ggEndogenous/name+'[ADomain/org_rel]'
 					, ADomain
 					, EUR_M2
 				);
@@ -97,15 +97,14 @@ are explained in this article and the description of the calculation rules refer
 
 			container SuitabilityMaps := 
 				for_each_nedv(
-					  ggEndogenous/label
-					, 'MakeDefined(Compacted/SuitabilityMaps/'+ggEndogenous/label+' * 100d, 0d)[int32]'
+					  ggEndogenous/name
+					, 'MakeDefined(Compacted/SuitabilityMaps/'+ggEndogenous/name+' * 100d, 0d)[int32]'
 					, ADomain
 					, Int32
 				);
 			
 			unit<uint32> AtomicRegions := RegioUnit
 			{
-				// attribute<.> regio        := id(.);
 				attribute<.> per_domain             (domain) := poly2grid(geometry, domain);
 				attribute<.> per_Adomain           (ADomain) := collect_by_cond(Compacted/ADomain, Compacted/HasFreeLand, per_domain);
 			}
@@ -114,16 +113,16 @@ are explained in this article and the description of the calculation rules refer
 			
 			container minclaims := //in aantal cellen
 				for_each_nedv(
-					  ggEndogenous/Label
-					, 'uint32(0.9d * CaseData/TotalPeriodClaims/'+ggEndogenous/Label+' / domain/NrHaPerCell)' 
+					  ggEndogenous/name
+					, 'uint32(0.9d * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)' 
 					, RegioUnit
 					, uint32
 				);
 				
 			container maxclaims := //in aantal cellen
 				for_each_nedv(
-					  ggEndogenous/Label
-					, 'uint32(1.1d * CaseData/TotalPeriodClaims/'+ggEndogenous/Label+' / domain/NrHaPerCell)'
+					  ggEndogenous/name
+					, 'uint32(1.1d * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)'
 					, RegioUnit
 					, uint32
 				);
@@ -132,7 +131,7 @@ are explained in this article and the description of the calculation rules refer
 	
 			container result :=
 				discrete_alloc_sp(
-					  ggEndogenous/label                  //attr string
+					  ggEndogenous/name                  //attr string
 					, ADomain                             //unit uint32
 					, SuitabilityMaps                     //cont int32
 					, AtomicRegions                       //unit uint16

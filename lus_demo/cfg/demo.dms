@@ -32,7 +32,9 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 	{
 		parameter<string>    ModelResolution     := '100m'; // '100m' '500m'
 		parameter<bool>      EnableBackgroundMap := TRUE; // TRUE FALSE
-		unit<UInt32>         RegioUnit           := Geography/RegionalUnits/RandstadIntermediatePeripheral;
+		parameter<string>    RegioUnit_str       := 'RandstadIntermediatePeripheral'; // RandstadIntermediatePeripheral Provincie
+		
+		unit<UInt32>         RegioUnit           := ='Geography/RegionalUnits/'+RegioUnit_str;
 		
 		container Advanced : IsHidden = "true"
 		{

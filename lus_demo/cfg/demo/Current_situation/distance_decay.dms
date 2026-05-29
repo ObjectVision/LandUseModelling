@@ -22,40 +22,32 @@ container Distance_decay : Using    = "DistMatrices"
 {
 	container Landuse
 	{
-		container Km1 := for_each_nedvld(
-					  Classifications/ggModel/Name
-					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))'
+		container Km1 := for_each_nedv(
+					  LUclasses/Name
+					, 'rescale( potential(current_landuse/'+ LUclasses/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot1000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
-					, Classifications/ggModel/Label
-					, Classifications/ggModel/Descr
 				), Descr = "Cells > 1km have a rescaled potential of less than 0.05";
 
-		container Km5 := for_each_nedvld(
-					  Classifications/ggModel/Name
-					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot5000m/potrange/RelWeightSqrt_demo))'
+		container Km5 := for_each_nedv(
+					  Classifications/LUclasses/Name
+					, 'rescale( potential(current_landuse/'+ /Classifications/LUclasses/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot5000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
-					, Classifications/ggModel/Label
-					, Classifications/ggModel/Descr
 				), Descr = "Cells > 5km have a rescaled potential of less than 0.05";
 
-		container Km25 := for_each_nedvld(
-					  Classifications/ggModel/Name
-					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot25000m/potrange/RelWeightSqrt_demo))'
+		container Km25 := for_each_nedv(
+					  Classifications/LUclasses/Name
+					, 'rescale( potential(current_landuse/'+ /Classifications/LUclasses/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot25000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
-					, Classifications/ggModel/Label
-					, Classifications/ggModel/Descr
 				), Descr = "Cells > 25km have a rescaled potential of less than 0.05";
 				
-		container Km50 := for_each_nedvld(
-					  Classifications/ggModel/Name
-					, 'rescale( potential(current_landuse/'+ /Classifications/ggModel/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot50000m/potrange/RelWeightSqrt_demo))'
+		container Km50 := for_each_nedv(
+					  Classifications/LUclasses/Name
+					, 'rescale( potential(current_landuse/'+ /Classifications/LUclasses/Name + ', /Geography/Distmatrices/Impl_'+ModelParameters/ModelResolution+'/pot50000m/potrange/RelWeightSqrt_demo))'
 					, domain
 					, Potentiaal
-					, Classifications/ggModel/Label
-					, Classifications/ggModel/Descr
 				), Descr = "Cells > 50km have a rescaled potential of less than 0.05";
 	}
 	container PolicyMaps

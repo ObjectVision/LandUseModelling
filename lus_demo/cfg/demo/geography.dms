@@ -132,17 +132,16 @@ container Geography: Using = "Units", isHidden = "True"
 			, DialogType = "Map";
 		}
 			
-		unit<uint32> DijkRing := DijkringImport/csv, Descr      = "This is the entity of the 57 most important flood risk management zones (dike rings) in the Nederlands"
-		{
-			attribute<rdc_meter>          Geometry(poly) := DijkringImport/shp/Geometry[Shape_rel];
-			attribute<DijkringImport/shp> Shape_rel      := rlookup(Dijkringnr, DijkringImport/shp/DijkringNr);
-			attribute<.>                  per_domain (domain) := poly2grid(geometry, domain);
-			attribute<DijkringImport/EK>  AsciiGridCode := DijkringImport/csv/AsciiGridCode[DijkringImport/EK];
-			attribute<mEur>               MinDamage     := DijkringImport/csv/MinSchade [mEur];
-			attribute<mEur>               ExpDamage     := DijkringImport/csv/ExpSchade [mEur];
-			attribute<mEur>               MaxDamage     := DijkringImport/csv/MaxSchade [mEur];
-			attribute<NrPersons>          ExpCasualties := DijkringImport/csv/ExpSlachtoffers [NrPersons];
-			attribute<Year>               NormPeriod    := value( substr(rjoin(Dijkringnr, DijkringImport/shp/Dijkringnr, DijkringImport/shp/NormFreq), 2, 20), Year);
+		// unit<UInt32> RandstadIntermediatePeripheral // Regional division in Randstad Intermediate zone and Peripherap zone
+		// :	StorageName     = "%projDir%/data/geography/claimregions_2011.shp"
+		// , 	StorageType     = "gdal.vect"
+		// ,	StorageReadOnly = "True"
+		// ,	Descr           = "This entity contains the shapes of claimregions."
+		// ,	DialogData      = "rdc_meter"
+		// {
+			// attribute<String>         Label                                           : ['none','Randstad','Intermediate zone','Peripheral zone'], DialogType = "LabelText";
+			// attribute<.>              per_domain                             (domain) := poly2grid(geometry, domain);
+		// }
 			
 		unit<uint32> DijkRing
 		: StorageName = "%projDir%/data/geography/DijkRingen_2009.shp"
@@ -153,10 +152,5 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<mEur_Yr>      AnnualRisk_Damage    := ExpDamage[mEur] / NormPeriod[Year];
 			attribute<.>            per_domain  (domain) := poly2grid(geometry, domain);
 	}
-	
-	container RegioGrids
-	{
-		attribute<RegionalUnits/RandstadIntermediatePeripheral> ClaimRegions (domain) := poly2grid(RegionalUnits/RandstadIntermediatePeripheral/geometry, domain);
-		attribute<RegionalUnits/DijkRing>                       DijkRing     (domain) := poly2grid(RegionalUnits/DijkRing/geometry, domain);
 	}
 }

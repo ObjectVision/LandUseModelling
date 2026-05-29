@@ -61,4 +61,6 @@ container Units : IsHidden = "true"
 	unit<UInt16> YearRange:     Range = "[1900, 2100)";
 	unit<UInt16> IterRange:     nrofrows = 999;
 	unit<Int16>  YearDiffRange: Range = "[-100, 100)";
+	
+	unit<uint32> ColorCoord;
 }
