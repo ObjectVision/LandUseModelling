@@ -129,6 +129,8 @@ container Geography: Using = "Units", isHidden = "True"
 		{
 			attribute<mEur_Yr>      AnnualRisk_Damage    := ExpDamage[mEur] / NormPeriod[Year];
 			attribute<.>            per_domain  (domain) := poly2grid(geometry, domain);
+			attribute<mEur>         ExpDamage;
+			attribute<Year>         NormPeriod;
 		}
 	}
 }

@@ -120,13 +120,13 @@ container Scenario_Components
 			container DepthDataFactors:= 
 				for_each_nedv(
 					ggModel/Name
-					, 'interpolate_linear(Current_Situation/Thematic_maps/Safety/floodWaterdepth, DamageFactors/Depth[Meter], Float32(DamageFactors/'+ggModel/Name+'))'
+					, 'interpolate_linear(Current_Situation/Thematic_maps/Safety/floodWaterdepth, DamageFactors/Depth[Meter], Float32(DamageFactors/'+ggModel/Name+'))[float64]'
 					, domain
-					, Float32
+					, Float64
 				);
 				
 			attribute<LUclasses> LandUse (domain) := Current_situation/current_landuse/predominant;
-			attribute<mEur_Ha>   Damage  (domain) := ='switch('+asItemList('case(LandUse == value('+String(ID(LUclasses))+', LUclasses), DepthDataFactors/'+LUclasses/Name+')')+', 0f) * LUclasses/MaxDamagePerHa[LandUse]';
+			attribute<mEur_Ha>   Damage  (domain) := ='switch('+asItemList('case(LandUse == value('+String(ID(LUclasses))+', LUclasses), DepthDataFactors/'+LUclasses/Name+')')+', 0d) * LUclasses/MaxDamagePerHa[LandUse]';
 
 			attribute<mEur>      DamagePerDikeRing (RegionalUnits/DijkRing):= Sum(Damage * 1[Ha],RegionalUnits/DijkRing/per_domain);
 		}

@@ -47,6 +47,8 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<uint32>       BrushColor     := rgb(R,G / 256,B / 256 / 256), DialogType = "BrushColor";
 		parameter<uint32>       nrAttr         := 7; // @USERINPUT: keep in sync with nr of Text-Element attributes in the next lines
+	
+		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
 
 	unit<uint8> LUclasses := ggModel;
@@ -73,6 +75,7 @@ container Classifications: Using = "Units", isHidden = "True"
 	{
 		attribute<string>       name       := org_rel -> name;
 		attribute<uint32>       BrushColor := org_rel -> BrushColor;
+		attribute<bool>         IsExogenous := org_rel -> IsExogenous;
 		
 		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
