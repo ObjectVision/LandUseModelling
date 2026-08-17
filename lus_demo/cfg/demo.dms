@@ -75,5 +75,5 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 	}
 	
 	#include<ExportSettings.dms>
-	#include<ConfigSettings.dms>
+	// #include<ConfigSettings.dms>
 }
