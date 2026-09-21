@@ -3,7 +3,7 @@
 //                 Configuration Land Use Scanner - Student Edition                               //
 //                          using GeoDMS version 14.14 or newer                                   //
 //                                                                                                //
-//                                July 2004 - June 2024                                           //
+//                                July 2004 - May 2026                                            //
 //                                                                                                //
 //                            Vrije Universiteit Amsterdam                                        //
 //                            Spatial Information Laboratory                                      //
@@ -24,7 +24,7 @@
 //                                                                                                //
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 
-container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
+container LUS_TNO : IntegrityCheck = "GeoDMSVersion() >= 18.0"
 {
 	unit<SPoint> domain := =ModelParameters/ModelResolution == '100m' ? 'Geography/rdc_100m' : 'Geography/rdc_500m', IsHidden = "true";
 
