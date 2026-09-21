@@ -98,7 +98,7 @@ container A1_GE_Policy
 // ========================= INDUSTRIAL
 	attribute <Eur_M2> industrial (domain):= 
 	//Current Landuse
-		   18.0 [Eur_M2] * current_landuse/residential                              / domain/NrHaPerCell
+		   18.0 [Eur_M2] * current_landuse/industrial                               / domain/NrHaPerCell
 		 -  0.0 [Eur_M2] * current_landuse/nature                                   / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
 		 +  0.0 [Eur_M2] * current_landuse/buildinglot                              / domain/NrHaPerCell // you may consider buildinglots likely locations for development
 		 
