@@ -31,14 +31,13 @@ container Thematic_maps
 			:	Source      = "Urban attractiveness index 2024: describes the presence of three types of urban amenities: historic buildings; shops; hotels, restaurants and other catering establishments. The numbers of units per amenity type are counted per 100 m grid cell, rescaled to a maximum value of 0.33 per type, added up and averaged out over a 5 km radius"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/UAI_2024.tif";
 			
-			attribute<Percent> attractive_surroundings (rdc_500m) 
-			:	Source      = "Landscape attractiveness: MNP/RIVM"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/AttractivitySurroundings.tif"
-			, 	cdf = "Classifications/Percentage10k/Classes";
+			attribute<uint8> attractive_surroundings (rdc_100m)
+			:	Source      = "Landscape attractiveness: MNP/RIVM, 500 m, refined to 100 m by Object Vision (2026-10-22): 500 m cells with 0 (no value) get the mean of their neighbours; a regression on the shares of land use (BBG 2022), noise above 50 dB(A) and relief (AHN4) gives the variation within each 500 m cell; the rest is spread pycnophylactically, so that each 500 m cell keeps its original mean over land without visible block edges."
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/AttractiveSurroundings_100m_20261022.tif";
 		}
-		
-		attribute<Percent> urban_attractiveness       (domain) := float64(Impl/urban_attractiveness)[rdc_100m/domain_rel] * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Index expressing relative richness in three types of amenities: historic buildings; shop and hotels & catering outlets (2024)";
-		attribute<Percent> attractive_surroundings    (domain) := Impl/attractive_surroundings[domain/rdc_500m_rel], Descr = "Landscape attractiveness as perceived by the general public", URL = "https://www.clo.nl/indicatoren/nl102305-belevingskaart-van-het-nederlandse-landschap";
+
+		attribute<Percent> urban_attractiveness       (domain) := mean(float64(Impl/urban_attractiveness), rdc_100m/domain_rel) * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Index expressing relative richness in three types of amenities: historic buildings; shop and hotels & catering outlets (2024)";
+		attribute<Percent> attractive_surroundings    (domain) := mean(float64(Impl/attractive_surroundings), rdc_100m/domain_rel) * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Landscape attractiveness as perceived by the general public", URL = "https://www.clo.nl/indicatoren/nl102305-belevingskaart-van-het-nederlandse-landschap";
 	}
 
 	container Accessibility: Descr = "Maps with a.o. accessibility by road and with euclidean distances"
@@ -69,10 +68,10 @@ container Thematic_maps
 			,	Source      = "OpenStreetMap; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_highway_acces_exit_meter_2018.tif";
 
-			attribute<uint16> dist_100kjobs (rdc_100m)
-			:	Label       = "Distance to 100.000 Jobs"
+			attribute<uint16> traveltime_100kjobs (rdc_100m)
+			:	Label       = "Travel time to 100.000 jobs"
 			,	Source      = "Employment: LISA 2018; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2020)"
-			,	Descr       = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2018. "
+			,	Descr       = "Car travel time in seconds to reach 100.000 jobs in 2018, made in the same way as the travel time to 100.000 inhabitants."
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Jobs_2018.tif";
 			
 			attribute<uint16> traveltime_100000inh (rdc_100m)
@@ -81,12 +80,12 @@ container Thematic_maps
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/TraveltimeTo_100k_Inhabitants_2017.tif";
 		}
 
-		attribute<km>  Distance_to_airports             (domain) := Makedefined(impl/dist_airports[km]               , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance to nearest airport (includes the 5 airports used for commercial passenger flights in 2019";
-		attribute<km>  Distance_to_seaports             (domain) := Makedefined(impl/dist_seaports[km]               , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance to nearest seaport (selection of 5 main ports for cargo from IBIS, 2022)";
-		attribute<km>  Distance_to_trainstation         (domain) := Makedefined((impl/dist_train_station[Meter])[km] , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance to nearest railway station (for passenger trains in 2019)";
-		attribute<km>  Distance_to_highwayentry         (domain) := Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km])[rdc_100m/domain_rel], Descr = "Euclidean distance to nearest highway entry (includes dual carriage and smaller highways from Open Street Map, 2018)";
-		attribute<km>  Distance_to_100000_jobs          (domain) := Makedefined((impl/dist_100kjobs[meter])[km]      , 999[km])[rdc_100m/domain_rel], Descr = "Minimum distance that needs to be travelled in order to reach 100.000 jobs in 2018. ";
-		attribute<min> Traveltime_to_100000_inhabitants (domain) := Makedefined((impl/traveltime_100000inh[sec])[min], 999[min])[rdc_100m/domain_rel], Descr = "Minimum car travel time to reach the 100,000th inhabitant in 2018.";
+		attribute<km>  Distance_to_airports             (domain) := mean(Makedefined(impl/dist_airports[km]               , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest airport (includes the 5 airports used for commercial passenger flights in 2019";
+		attribute<km>  Distance_to_seaports             (domain) := mean(Makedefined(impl/dist_seaports[km]               , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest seaport (selection of 5 main ports for cargo from IBIS, 2022)";
+		attribute<km>  Distance_to_trainstation         (domain) := mean(Makedefined((impl/dist_train_station[Meter])[km] , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest railway station (for passenger trains in 2019)";
+		attribute<km>  Distance_to_highwayentry         (domain) := mean(Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest highway entry (includes dual carriage and smaller highways from Open Street Map, 2018)";
+		attribute<min> Traveltime_to_100000_jobs        (domain) := mean(Makedefined((impl/traveltime_100kjobs[sec])[min], 999[min]), rdc_100m/domain_rel), Descr = "Minimum car travel time to reach 100,000 jobs in 2018.";
+		attribute<min> Traveltime_to_100000_inhabitants (domain) := mean(Makedefined((impl/traveltime_100000inh[sec])[min], 999[min]), rdc_100m/domain_rel), Descr = "Minimum car travel time to reach the 100,000th inhabitant in 2018.";
 	}
 	container Noise
 	{
@@ -106,30 +105,34 @@ container Thematic_maps
 	{
 		container impl: isHidden = "True"
 		{
-			attribute<Int32> altitude (rdc_500m)
-			:	Descr       = "Hoogtekaart in dm"
-			,	Source      = "AHN"
-			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/altitude.tif";
+			attribute<Int16> altitude (rdc_100m)
+			:	Descr       = "Ground level in decimetres relative to NAP"
+			,	Source      = "AHN4 digital terrain model (Rijkswaterstaat, measured 2020-2022, licence CC0), coverage dtm_05m of the PDOK web coverage service, averaged by the service to 100 m (2026-10-22). Land cells without a value (under buildings) got the mean of their neighbours."
+			,	URL         = "https://service.pdok.nl/rws/actueel-hoogtebestand-nederland/wcs/v1_0?request=GetCapabilities&service=WCS"
+			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/altitude_AHN4_100m.tif";
 			
 			attribute<Ls_Qual4k> landscape_quality4K (rdc_500m)
 			:	Source      = "Kwaliteit landschap: Alterra. derived from KELK model, see Roos-Klein Lankhorst et al., 2013"
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/landscape_quality4k.tif";
 			attribute<bool> WetSoil (rdc_100m)
 			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/TooWetSoil.tif"
+			,	Source      = "Deltares (2021), GIS data of the maps in the essay Op Waterbasis: locations where the mean highest groundwater level (GHG) is less than 30 cm below the surface in Deltascenario Stoom, climate of 2085 (file Te_Nat_Stoom_2100). Converted to 100 m by Object Vision in January 2024."
 			, 	URL         = "www.deltares.nl/expertise/publicaties/op-waterbasis-grenzen-aan-de-maakbaarheid-van-ons-water-en-bodemsysteem";
 			attribute<bool> WeakSoil (rdc_100m)
 			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/TooWeakSoil.tif"
+			,	Source      = "Deltares (2021), GIS data of the maps in the essay Op Waterbasis: weak soils, the peat class and the classes in the 200 range of the soil map BOFEK (file Te_slap). Converted to 100 m by Object Vision in January 2024."
 			, 	URL         = "www.deltares.nl/expertise/publicaties/op-waterbasis-grenzen-aan-de-maakbaarheid-van-ons-water-en-bodemsysteem";
 			attribute<bool> SubsidenceProne (rdc_100m)
 			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/NatureLandscape/TooSubsidenceProneSoil.tif"
+			,	Source      = "Deltares (2021), GIS data of the maps in the essay Op Waterbasis: soils prone to subsidence, from the same BOFEK classes (file Zettingsgevoelig). Converted to 100 m by Object Vision in January 2024."
 			, 	URL         = "www.deltares.nl/expertise/publicaties/op-waterbasis-grenzen-aan-de-maakbaarheid-van-ons-water-en-bodemsysteem";
 		}
 
 		attribute<Ls_Qual4k>      Landscape_quality     (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500m_rel], Descr = "Landscape values as defined by experts in 4 classes";
-		attribute<Meter>          Altitude              (domain) := MakeDefined(impl/Altitude[dm] / 10.0[dm / Meter], 0[Meter])[domain/rdc_500m_rel];
-		attribute<bool>           IsWetSoil             (domain) := impl/WetSoil[rdc_100m/domain_rel], Descr = "Presence of wet soils (groundwater within 30 cm of surface) where water logging is likely ";
-		attribute<bool>           IsWeakSoil            (domain) := impl/WeakSoil[rdc_100m/domain_rel], Descr = "Presence of peaty, weak soils that limit agricultural use and require costly foundations for construction ";
-		attribute<bool>           IsSubsidenceProne     (domain) := impl/SubsidenceProne[rdc_100m/domain_rel], Descr = "Presence of clay or peaty soil prone to subsidence of 10 cm or more in coming decades ";
+		attribute<Meter>          Altitude              (domain) := mean(MakeDefined(float64(impl/altitude) / 10d, 0d), rdc_100m/domain_rel)[Meter], Descr = "Ground level relative to NAP (AHN4)";
+		attribute<bool>           IsWetSoil             (domain) := mean(float64(impl/WetSoil), rdc_100m/domain_rel) >= 0.5d, Descr = "Presence of wet soils where water logging is likely: groundwater within 30 cm of the surface in the climate of 2085 (Deltascenario Stoom)";
+		attribute<bool>           IsWeakSoil            (domain) := mean(float64(impl/WeakSoil), rdc_100m/domain_rel) >= 0.5d, Descr = "Presence of peaty, weak soils that limit agricultural use and require costly foundations for construction ";
+		attribute<bool>           IsSubsidenceProne     (domain) := mean(float64(impl/SubsidenceProne), rdc_100m/domain_rel) >= 0.5d, Descr = "Presence of clay or peaty soil prone to subsidence of 10 cm or more in coming decades ";
 	}
 	container Safety: Descr = "Maps related to various safety issues"
 	{

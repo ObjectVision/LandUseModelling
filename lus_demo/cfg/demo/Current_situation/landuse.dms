@@ -20,13 +20,21 @@
 // /////////////////////////////////////////////////////////////////////////////////////// 
   
 container Current_landuse :=
-	for_each_ndva(
-	   Classifications/ggModel/Name                                                               // name
-	  ,domain                                                                                     // domain unit
-	  ,ha                                                                                         // values units
-	  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/Advanced/StartYear)+'/bbg'+string(ModelParameters/Advanced/StartYear)+'_LUSdemo_'+ModelParameters/ModelResolution+'_'+Classifications/ggModel/name+'.tif' // storage name
-  )
+	for_each_nedv(
+	   Classifications/ggModel/Name
+	  ,'sum(Read_100m/'+Classifications/ggModel/Name+', rdc_100m/domain_rel)'
+	  ,domain
+	  ,ha
+	), Descr = "Hectares per land-use type per cell of the model grid, summed from the 100 m maps, so that the model also runs on a 500 m grid."
 {
+	container Read_100m :=
+		for_each_ndva(
+		   Classifications/ggModel/Name // name
+		  ,rdc_100m                     // domain unit
+		  ,ha                           // values units
+		  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/Advanced/StartYear)+'/bbg'+string(ModelParameters/Advanced/StartYear)+'_LUSdemo_100m_'+Classifications/ggModel/name+'.tif' // storage name
+		), IsHidden = "true";
+
 	parameter<YearRange> RefJaar              := value(ModelParameters/Advanced/StartYear, YearRange), IsHidden = "true";
 	attribute<Ha>        Total       (domain) := ='add('+asItemList(Classifications/ggModel/Name)+' )', IsHidden = "true";
 	attribute<LUclasses> predominant (domain) := ='argmax('+asItemList(ggModel/Name)+')[LUclasses]';

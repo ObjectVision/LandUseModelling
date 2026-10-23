@@ -25,7 +25,7 @@ are explained in this article and the description of the calculation rules refer
 	container                Suitabilities     : Descr = "Scj:Suitability maps per cell per endogenous lu-type";
 	container                Additional_Claims : Descr = "Crj: Additional Claims per region per lu-type";
 	parameter<YearDiffRange> PeriodDuration    : Descr = "Periodelengte (in jaren) waarnaar de claims geinterpoleerd moeten worden (claims zijn voor 2040 bepaald)";
-	parameter<IterRange>     nrIter            : Descr = "Aantal iteraties voor het fitten van de claims met de beschikbare grond. 4 is weinig; als na 25 iteraties nog steeds geen evenwicht is gevonden, zijn de claims wellicht infeasable";
+	parameter<IterRange>     nrIter            : Descr = "Aantal iteraties voor het fitten van de claims met de beschikbare grond; de loop draait ze altijd allemaal, het stopcriterium in _IterTemplate gebruikt GeoDMS niet.";
 	parameter<m2_Eur>        betaFactor        : Descr = "Zie wiskundige beschrijving; hoog (5.0) geeft een scherp beeld na veel iteraties; laag (0.5) geeft meer verdeeld ruimtegebruik";
 	// End CaseParameters
 	
@@ -111,18 +111,38 @@ are explained in this article and the description of the calculation rules refer
 			
 			attribute<AtomicRegions> AtomicRegionMap (ADomain) := AtomicRegions/per_ADomain;
 			
-			container minclaims := //in aantal cellen
+			container minclaims_ha := //in aantal cellen
 				for_each_nedv(
 					  ggEndogenous/name
-					, 'uint32(0.9d * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)' 
+					, 'uint32(0.9d * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)'
 					, RegioUnit
 					, uint32
 				);
-				
-			container maxclaims := //in aantal cellen
+
+			container maxclaims_ha := //in aantal cellen
 				for_each_nedv(
 					  ggEndogenous/name
 					, 'uint32(1.1d * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)'
+					, RegioUnit
+					, uint32
+				);
+
+			attribute<uint32>  FreeCells (RegioUnit) := sum(uint32(Compacted/HasFreeLand), RegioUnit/per_domain), Descr = "Number of cells with free land per region; the discrete allocation gives each of them one land-use type.";
+			attribute<float64> MinFactor (RegioUnit) := ='min_elem(1d, float64(FreeCells) / float64(add('+AsItemList('minclaims_ha/'+ggEndogenous/name)+')))', Descr = "Lowers the minimum claims of a region only if they add up to more cells than it has free.";
+			attribute<float64> MaxFactor (RegioUnit) := ='max_elem(1d, float64(FreeCells) / float64(add('+AsItemList('maxclaims_ha/'+ggEndogenous/name)+')))', Descr = "Raises the maximum claims of a region only if they add up to fewer cells than it has free. The claims are in hectares, while a cell that is partly water or infrastructure still gets a whole land-use type.";
+
+			container minclaims :=
+				for_each_nedv(
+					  ggEndogenous/name
+					, 'uint32(float64(minclaims_ha/'+ggEndogenous/name+') * MinFactor)'
+					, RegioUnit
+					, uint32
+				);
+
+			container maxclaims :=
+				for_each_nedv(
+					  ggEndogenous/name
+					, 'uint32(roundup(float64(maxclaims_ha/'+ggEndogenous/name+') * MaxFactor))'
 					, RegioUnit
 					, uint32
 				);
@@ -194,6 +214,7 @@ are explained in this article and the description of the calculation rules refer
 				attribute<String>     IterNames          (ThisIterRange) := 'iter'+String(ID(ThisIterRange));
 				attribute<claimHa>    TotalDeviations    (ThisIterRange) := ='add('+asItemList('Float64(ID(ThisIterRange)==value('+String(ID(ThisIterRange))+',ThisIterRange))*casedata/iterator/'+IterNames+'/TotalDeviation')+')';
 				attribute<Potentiaal> LogTotalDeviations (ThisIterRange) := log(TotalDeviations / 1[claimHa]);
+				parameter<Bool>       IsConverged                        := casedata/iterator/lastIter/IsConverged, Descr = "True if the last iteration meets the convergence criterion of the iteration template; if not, raise NrOfIterations.";
 			}
 
 			#include <evaluation.dms>
@@ -218,7 +239,7 @@ are explained in this article and the description of the calculation rules refer
 		{
 			container LandUse
 			{
-				attribute<ggEndogenous>  Endogenous (domain) := casedata/allocate_discrete/result/landuse_grid;
+				attribute<ggEndogenous>  Endogenous (domain) := casedata/allocate_discrete/result/landuse_grid, IntegrityCheck = "casedata/allocate_discrete/result/statusFlag", Descr = "Fails if the discrete allocation found no feasible solution; casedata/allocate_discrete/result/status says which claim could not be met.";
 				attribute<ggExogenous>   Exogenous  (domain) := ='casedata/compacted/HasFreeLand ? value(0 / 0,ggExogenous) : value(argmax('+asItemList(+'ExogenousLand/'+classifications/ggExogenous/name)+'), ggExogenous)';
 				attribute<LUclasses>     Model      (domain) := MakeDefined(classifications/ggEndogenous/org_rel[Endogenous], classifications/ggExogenous/org_rel[Exogenous])[LUclasses];
 			}

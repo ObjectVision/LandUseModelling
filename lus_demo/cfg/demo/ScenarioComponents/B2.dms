@@ -68,7 +68,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -98,7 +98,7 @@ container B2_RC
 // ========================= INDUSTRIAL
 	attribute <Eur_M2> industrial (domain):= 
 	//Current Landuse
-		   18.0 [Eur_M2] * current_landuse/residential                              / domain/NrHaPerCell
+		   18.0 [Eur_M2] * current_landuse/industrial                               / domain/NrHaPerCell
 		 -  0.0 [Eur_M2] * current_landuse/nature                                   / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
 		 +  0.0 [Eur_M2] * current_landuse/buildinglot                              / domain/NrHaPerCell // you may consider buildinglots likely locations for development
 		 
@@ -123,7 +123,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -178,7 +178,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -232,7 +232,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -287,7 +287,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -341,7 +341,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 

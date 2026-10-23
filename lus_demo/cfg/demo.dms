@@ -3,7 +3,7 @@
 //                 Configuration Land Use Scanner - Student Edition                               //
 //                          using GeoDMS version 14.14 or newer                                   //
 //                                                                                                //
-//                                July 2004 - June 2024                                           //
+//                                July 2004 - May 2026                                            //
 //                                                                                                //
 //                            Vrije Universiteit Amsterdam                                        //
 //                            Spatial Information Laboratory                                      //
@@ -41,8 +41,9 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 			parameter<Year>          StartYear       := 2020[year];
 			parameter<Year>          ModelYear       := 2040[year];
 			parameter<YearDiffRange> ClaimPeriod     := (ModelYear - StartYear)[YearDiffRange];
-			parameter<IterRange>     NrOfIterations  := 30[IterRange];
+			parameter<IterRange>     NrOfIterations  := 100[IterRange], Descr = "Number of balancing iterations. The loop always runs all of them, because GeoDMS does not use the stop criterion in the iteration template, so this number decides how closely the claims are met.";
 			parameter<m2_Eur>        BetaFactor      := 1[m2_Eur];
+			parameter<String>        BalancingType_Provincie := 'agriculture', Descr = "With claims per province: the land-use type that absorbs the difference, so that each province keeps the net claim of its landsdeel in proportion to its free land.";
 			
 			unit<uint8> Scenarios : nrofrows = 5
 			{

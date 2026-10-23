@@ -90,12 +90,24 @@ container Geography: Using = "Units", isHidden = "True"
 	{
 		unit<UInt32> RandstadIntermediatePeripheral := cat_range(0, 3)
 		{
-			attribute<rdc_meter>      geometry                                 (poly) := geos_union_polygon(Province/geometry, Province/Landsdelen_rel);
+			attribute<rdc_meter>      geometry                                 (poly) := geos_union_polygon(Provincie/geometry, Provincie/Landsdelen_rel);
 			attribute<String>         label                                           : ['Randstad', 'Intermediate', 'Peripheral'];
+			attribute<UInt32>         RstIntPer                                       : [1, 2, 3], Descr = "Code of the landsdeel in column RstIntPer of the claims file, in which 0 is the exterior.";
 			attribute<.>              per_domain                             (domain) := poly2grid(geometry, domain);
 			container V := for_each_nedv(label, string(id(.))+'[..]', void, .);
 		}
-		
+
+		unit<UInt32> Provincie : nrofrows = 12, Descr = "The twelve provinces with the landsdeel each belongs to; the boundaries come from Province."
+		{
+			attribute<UInt32>                         prvnr                    : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+			attribute<String>                         label                    : ['Groningen', 'Friesland', 'Drenthe', 'Overijssel', 'Gelderland', 'Utrecht', 'Noord-Holland', 'Zuid-Holland', 'Zeeland', 'Noord-Brabant', 'Limburg', 'Flevoland'];
+			attribute<String>                         name                     := AsItemName(label);
+			attribute<RandstadIntermediatePeripheral> Landsdelen_rel           : [2, 2, 2, 2, 1, 0, 0, 0, 2, 1, 2, 1];
+			attribute<rdc_meter>                      geometry          (poly) := geos_union_polygon(Province/geometry, Province/Provincie_rel);
+			attribute<.>                              per_domain      (domain) := poly2grid(geometry, domain);
+			container V := for_each_nedv(name, string(id(.))+'[..]', void, .);
+		}
+
 		unit<UInt32> Province
 		:	StorageName     = "%projDir%/data/geography/provinces_2004_simplified.shp"
 		, 	StorageType     = "gdal.vect"
@@ -105,20 +117,7 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<rdc_meter>    geometry (poly);
 			attribute<.>            prvnr           : Descr = "This is the entity of the 12 provinces in the Nederlands (0=Exterior)";
 			attribute<string>       prvnm;
-			attribute<string>       Province_name := prvnm+string(id(.));
-			
-			attribute<RandstadIntermediatePeripheral>     Landsdelen_rel := switch(
-															case(id(.) == v/Groningen14 || id(.) == v/Groningen15 || id(.) == v/Groningen16 || id(.) == v/Drenthe22 
-																	|| id(.) == v/Zeeland31 || id(.) == v/Zeeland32 || id(.) == v/Zeeland33 || id(.) == v/Zeeland34 || id(.) == v/Zeeland35 
-																	|| id(.) == v/Limburg38 || id(.) == v/Friesland17 || id(.) == v/Friesland18 || id(.) == v/Friesland19 
-																	|| id(.) == v/Friesland20 || id(.) == v/Friesland21 || id(.) == v/Overijssel23, RandstadIntermediatePeripheral/v/Peripheral)
-															, case(id(.) == v/Gelderland24  || id(.) == v/Noord_Brabant36 || id(.) == v/Noord_Brabant37 || id(.) == v/Flevoland39, RandstadIntermediatePeripheral/v/Intermediate)
-															, case(id(.) == v/Noord_Holland26 || id(.) == v/Noord_Holland27 || id(.) == v/Zuid_Holland28 || id(.) == v/Zuid_Holland29 
-																	|| id(.) == v/Zuid_Holland30 || id(.) == v/Utrecht25, RandstadIntermediatePeripheral/v/Randstad)
-															, null_u
-														);
-														
-			container V := for_each_nedv(AsItemName(Province_name), string(id(.))+'[..]', void, .);
+			attribute<Provincie>    Provincie_rel := rlookup(uint32(prvnr), Provincie/prvnr), Descr = "Undefined for the shapes with prvnr 0, the open water that belongs to no province.";
 		}
 		
 		unit<uint32> DijkRing
