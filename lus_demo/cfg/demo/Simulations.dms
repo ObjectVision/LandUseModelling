@@ -23,7 +23,6 @@ container Simulations: Using = "Units"
 			, Scenario_Components/Exogenous_Landuse/A1_GE
 			, Scenario_Components/Local_Suitability/A1_GE
 			, Scenario_Components/Regional_Demand/A1_GE/per_LU_type
-			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
 			, ModelParameters/Advanced/NrOfIterations
 			, ModelParameters/Advanced/BetaFactor
 		);
@@ -32,7 +31,6 @@ container Simulations: Using = "Units"
 			, Scenario_Components/Exogenous_Landuse/A1_GE_Policy
 			, Scenario_Components/Local_Suitability/A1_GE_Policy
 			, Scenario_Components/Regional_Demand/A1_GE_Policy/per_LU_type
-			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
 			, ModelParameters/Advanced/NrOfIterations
 			, ModelParameters/Advanced/BetaFactor
 		);
@@ -41,7 +39,6 @@ container Simulations: Using = "Units"
 			, Scenario_Components/Exogenous_Landuse/A2_TM
 			, Scenario_Components/Local_Suitability/A2_TM
 			, Scenario_Components/Regional_Demand/A2_TM/per_LU_type
-			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
 			, ModelParameters/Advanced/NrOfIterations
 			, ModelParameters/Advanced/BetaFactor
 		);
@@ -50,7 +47,6 @@ container Simulations: Using = "Units"
 			, Scenario_Components/Exogenous_Landuse/B1_SE
 			, Scenario_Components/Local_Suitability/B1_SE
 			, Scenario_Components/Regional_Demand/B1_SE/per_LU_type
-			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
 			, ModelParameters/Advanced/NrOfIterations
 			, ModelParameters/Advanced/BetaFactor
 		);
@@ -59,7 +55,6 @@ container Simulations: Using = "Units"
 			, Scenario_Components/Exogenous_Landuse/B2_RC
 			, Scenario_Components/Local_Suitability/B2_RC
 			, Scenario_Components/Regional_Demand/B2_RC/per_LU_type
-			, (ModelParameters/Advanced/ModelYear - ModelParameters/Advanced/StartYear)[YearDiffRange]
 			, ModelParameters/Advanced/NrOfIterations
 			, ModelParameters/Advanced/BetaFactor
 		);

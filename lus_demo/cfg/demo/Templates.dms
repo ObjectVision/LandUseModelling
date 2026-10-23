@@ -95,15 +95,6 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				attribute<claimHa>      agriculture (RegioUnit) := ../agriculture/Claim;
 				attribute<claimHa>      buildinglot (RegioUnit) := ../buildinglot/Claim;
 			}
-
-			container Provincie_Balance : Descr = "Keeps the net claim of each province at the share of its landsdeel in proportion to its current endogenous area, so that a province gets no more net claim than its landsdeel has relative to its free land."
-			{
-				attribute<claimHa> Endogenous_Landsdeel (RandstadIntermediatePeripheral) := ='add('+AsItemList('../'+/Classifications/ggEndogenous/name+'/Current_RandstadIntermediatePeripheral')+')';
-				attribute<claimHa> Endogenous_Provincie                      (Provincie) := ='add('+AsItemList('../'+/Classifications/ggEndogenous/name+'/Current_Provincie')+')';
-				attribute<claimHa> Net_Landsdeel        (RandstadIntermediatePeripheral) := ='add('+AsItemList('../'+/Classifications/ggEndogenous/name+'/Claim_RandstadIntermediatePeripheral')+')';
-				attribute<claimHa> Net_Provincie                             (Provincie) := Net_Landsdeel[Provincie/Landsdelen_rel] * (Endogenous_Provincie / Endogenous_Landsdeel[Provincie/Landsdelen_rel]);
-				attribute<claimHa> ByShare_Provincie                         (Provincie) := ='add('+AsItemList('../'+/Classifications/ggEndogenous/name+'/ClaimByShare_Provincie')+')';
-			}
 		}
 	}
 	
@@ -116,17 +107,15 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		attribute<OperatorType> Operator (RegioUnit) := const(1, RegioUnit, OperatorType);
 		attribute<EUR_M2>       logAj    (RegioUnit) := const(0, RegioUnit, Eur_m2);
 
-		attribute<claimHa>      Current_RandstadIntermediatePeripheral (RandstadIntermediatePeripheral) := ='sum(Current_situation/current_landuse/'+lu_name+', RandstadIntermediatePeripheral/per_domain)';
-		attribute<claimHa>      Claim_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := ='rjoin(RandstadIntermediatePeripheral/RstIntPer, Read_Excel/'+lu_name+'/RstIntPer[uint32], Read_Excel/'+lu_name+'/'+scenario_name_short+'[claimHa])', Descr = "The claims per landsdeel, joined on the code RstIntPer and not on the order of the rows.";
-		attribute<claimHa>      Total_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := Current_RandstadIntermediatePeripheral + Claim_RandstadIntermediatePeripheral;
+		parameter<String>       PeriodClaim := 'add('+AsItemList('float64('+string(ModelParameters/Advanced/ClaimYears/Weight)+') * Read_Excel/'+lu_name+'/'+scenario_name_short+'_'+ModelParameters/Advanced/ClaimYears/name+'[claimHa]')+')', Descr = "The claim from StartYear to ModelYear as a weighted sum of the cumulative claims per claim year.";
 
 		attribute<claimHa>      Current_Provincie                                           (Provincie) := ='sum(Current_situation/current_landuse/'+lu_name+', Provincie/per_domain)';
-		attribute<claimHa>      ClaimByShare_Provincie                                      (Provincie) := Claim_RandstadIntermediatePeripheral[Provincie/Landsdelen_rel] * (Current_Provincie / Current_RandstadIntermediatePeripheral[Provincie/Landsdelen_rel]), Descr = "The claim per landsdeel divided over its provinces in proportion to the current area of this land-use type.";
-		attribute<claimHa>      Claim_Provincie                                             (Provincie) := =lu_name == ModelParameters/Advanced/BalancingType_Provincie
-																														? '../Provincie_Balance/Net_Provincie - (../Provincie_Balance/ByShare_Provincie - ClaimByShare_Provincie)'
-																														: 'ClaimByShare_Provincie'
-		, Descr = "The claim per province. The balancing type takes the difference between the net claim of the province and the claims of the other types, so the claims per type still add up to those of the landsdeel.";
+		attribute<claimHa>      Claim_Provincie                                             (Provincie) := ='rjoin(Provincie/prvnr, Read_Excel/'+lu_name+'/prvnr[uint32], '+PeriodClaim+')', Descr = "The claims per province from StartYear to ModelYear, joined on the code prvnr and not on the order of the rows.";
 		attribute<claimHa>      Total_Provincie                                             (Provincie) := Current_Provincie + Claim_Provincie;
+
+		attribute<claimHa>      Current_RandstadIntermediatePeripheral (RandstadIntermediatePeripheral) := ='sum(Current_situation/current_landuse/'+lu_name+', RandstadIntermediatePeripheral/per_domain)';
+		attribute<claimHa>      Claim_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := sum(Claim_Provincie, Provincie/Landsdelen_rel), Descr = "The claims per landsdeel: the sum of the claims of its provinces.";
+		attribute<claimHa>      Total_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := Current_RandstadIntermediatePeripheral + Claim_RandstadIntermediatePeripheral;
 
 		attribute<claimHa>      Current                                                     (RegioUnit) := ='Current_'+ModelParameters/RegioUnit_str;
 		attribute<claimHa>      Claim                                                       (RegioUnit) := ='Claim_'+ModelParameters/RegioUnit_str;

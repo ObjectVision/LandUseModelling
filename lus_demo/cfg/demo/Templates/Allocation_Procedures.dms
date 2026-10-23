@@ -24,7 +24,6 @@ are explained in this article and the description of the calculation rules refer
 	container                ExogenousLand     : Descr = "exogenous landuse types";
 	container                Suitabilities     : Descr = "Scj:Suitability maps per cell per endogenous lu-type";
 	container                Additional_Claims : Descr = "Crj: Additional Claims per region per lu-type";
-	parameter<YearDiffRange> PeriodDuration    : Descr = "Periodelengte (in jaren) waarnaar de claims geinterpoleerd moeten worden (claims zijn voor 2040 bepaald)";
 	parameter<IterRange>     nrIter            : Descr = "Aantal iteraties voor het fitten van de claims met de beschikbare grond; de loop draait ze altijd allemaal, het stopcriterium in _IterTemplate gebruikt GeoDMS niet.";
 	parameter<m2_Eur>        betaFactor        : Descr = "Zie wiskundige beschrijving; hoog (5.0) geeft een scherp beeld na veel iteraties; laag (0.5) geeft meer verdeeld ruimtegebruik";
 	// End CaseParameters
@@ -42,12 +41,10 @@ are explained in this article and the description of the calculation rules refer
 			attribute<Ha> FreeLand           (domain) := TotalLand - UsedLand, Descr    = "Lc = TotalLand - exogenousLand: free allocatable land";
 		}
 
-		parameter<Potentiaal> claimFactor := PeriodDuration[float64] / ModelParameters/Advanced/ClaimPeriod[float64], Descr = "Indication of how much of the additional claims must be consumed in this allocation";
-
-		container TotalPeriodClaims := 
+		container TotalPeriodClaims :=
 				for_each_nedv(
 					ggEndogenous/Name
-					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/claim * claimFactor + sum(orgLandUse/'+ggEndogenous/Name+', RegioUnit/per_domain), 0[claimHa])'
+					,'max_elem(Additional_Claims/'+ggEndogenous/Name+'/claim + sum(orgLandUse/'+ggEndogenous/Name+', RegioUnit/per_domain), 0[claimHa])'
 					, RegioUnit
 					, claimHa
 				), Descr    = "Dj: Total Claims";

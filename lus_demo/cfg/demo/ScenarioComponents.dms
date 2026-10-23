@@ -46,13 +46,14 @@ container Scenario_Components
 			for_each_ne(
 				ModelParameters/Advanced/Scenarios/name
 				, 'Templates/Claims_per_Scenario_T('+quote(ModelParameters/Advanced/Scenarios/name_short)+')'
-			),	Source = "Future land use demand: Adapted from WLO(2006), Netherlands Environmental Assessment Agency (PBL)"
+			),	Source = "Future land use demand: cumulative additional claims per province since the base year 2022, for 2030, 2040 and 2050 (sheet Years of the claims file), from the WLO 2025 of the Netherlands Environmental Assessment Agency (PBL): A1 and B1 follow scenario Hoog, A2 and B2 scenario Laag; A follows the exploration Uitleg, B the exploration Verdichting. Nature follows the Nature Network Netherlands and the Nature Outlook; agriculture takes the rest in each province. See the sheet Explanation of the claims file."
 	{
 		container Read_Excel 
 		: StorageName = "%ProjDir%/data/Scenarioclaims/LUS_demo_additionalclaims.xlsx"
 		, StorageType = "gdal.vect"
 		, isHidden = "True"
 		{
+			unit<uint32> Years;
 			unit<uint32> Residential;
 			unit<uint32> Industrial;
 			unit<uint32> Recreation;
