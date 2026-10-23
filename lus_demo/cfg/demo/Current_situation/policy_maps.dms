@@ -71,16 +71,6 @@ container Policy_maps
 	{
 		container Impl: isHidden = "True"
 		{
-			attribute<bool> intake_reservoir (rdc_500m)
-			:	Descr       = "Intake reservoir in polder"
-			,	Source      = "Intake reservoir: MNP/RIVM"
-			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/intake_reservoirs.tif";
-
-			attribute<bool> disaster_retention (rdc_500m)
-			:	Descr       = "Disaster retention"
-			,	Source      = "Disaster retention: VenW, RIZA"
-			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/disaster_retention.tif";
-
 			attribute<bool>  groundwater_protection (rdc_25m)
 			:	Descr       = "Groundwater protection zones around wells."
 			,	Source      = "RIVM, 2025"
@@ -104,10 +94,21 @@ container Policy_maps
 			,	StorageName = "%projDir%/data/Current_situation/policy_maps/water/IsRiverbedMajorRivers_20260119.tif";
 		}
 		
-		attribute<bool>    IsIntake_reservoir       (domain) := Impl/intake_reservoir[domain/rdc_500m_rel], Descr = "Intake reservoir in polder";
-		attribute<bool>    IsDisaster_retention     (domain) := Impl/disaster_retention[domain/rdc_500m_rel], Descr = "Disaster retention";
 		attribute<bool>    IsGroundwater_protection (domain) := Impl/groundwater_protection[domain/rdc_25m_rel], Descr = "Groundwater protection zones around wells.";
 		attribute<bool>    IsGroundwater_intrusion  (domain) := Impl/groundwater_intrusion[domain/rdc_25m_rel], Descr = "Groundwater intrusion zones, legally protected areas";
 		attribute<bool>    IsReservedForRivers      (domain) := Impl/riverbed_major_rivers[domain/rdc_25m_rel] || Impl/reserved_for_rivers[domain/rdc_25m_rel], Descr = "Current riverbed of major rivers and long-term reservation areas for Maas and Rijn rivers ";
+	}
+
+	container Infrastructure
+	{
+		container Impl: isHidden = "True"
+		{
+			attribute<uint8> reserved_for_infrastructure (rdc_25m)
+			:	Descr       = "Reservation areas for widening main roads by 1, 2 or 3 lanes and for a new main railway; the environmental plan allows no building there"
+			,	Source      = "Omgevingsregeling, bijlage III: or_reserveringsgebieden_uitbreiding_hoofdwegen (2025-06-20) and or_reserveringsgebieden_nieuwe_hoofdspoorwegen (2020-10-01), Bkl art. 5.134; rasterised on cell centres (2026-10-22)"
+			,	StorageName = "%projDir%/data/Current_situation/policy_maps/infrastructure/IsReservedForInfrastructure_20261022.tif";
+		}
+
+		attribute<bool>    IsReservedForInfrastructure (domain) := (Impl/reserved_for_infrastructure == 1b)[domain/rdc_25m_rel], Descr = "Reservation areas for widening main roads and for a new main railway";
 	}
 }

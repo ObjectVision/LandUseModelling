@@ -53,11 +53,10 @@ container A1_GE
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [Float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [Float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -108,11 +107,10 @@ container A1_GE
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [Float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [Float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -163,11 +161,10 @@ container A1_GE
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [Float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [Float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -217,11 +214,10 @@ container A1_GE
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [Float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [Float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -272,11 +268,10 @@ container A1_GE
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [Float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [Float64]
 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness        / 100 [Percent]
@@ -326,11 +321,10 @@ container A1_GE
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [Float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [Float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [Float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [Float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness         / 100 [Percent]
