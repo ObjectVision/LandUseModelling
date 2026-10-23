@@ -63,10 +63,10 @@ container Thematic_maps
 			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_Zeehavens_2022_IBIS_km.tif";
 			
 			attribute<uint16> dist_highway_entry (rdc_100m)
-			:	Label       = "Distance to nearest highway entry (2018)"
-			,	Descr       = "Euclidean distance to highway entries"
-			,	Source      = "OpenStreetMap; Calculation: Jip Claassens (Vrije Universiteit; Object Vision, 2018)"
-			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_highway_acces_exit_meter_2018.tif";
+			:	Label       = "Distance to nearest motorway entry or exit (2025)"
+			,	Descr       = "Euclidean distance in metres from the cell centre to the nearest on- or off-ramp of a motorway (A road)"
+			,	Source      = "Nationaal Wegenbestand (NWB), Rijkswaterstaat, 1 November 2025: road sections with BST_CODE OPR or AFR on a road with an A number; calculated with RSopen (SourceData/Grondgebruik/NWB/Snelwegafritten), Object Vision, 2026"
+			,	StorageName = "%projdir%/data/Current_situation/thematic_maps/accessibility/DistTo_MotorwayExit_NWB20251101_meter.tif";
 
 			attribute<uint16> traveltime_100kjobs (rdc_100m)
 			:	Label       = "Travel time to 100.000 jobs"
@@ -83,7 +83,7 @@ container Thematic_maps
 		attribute<km>  Distance_to_airports             (domain) := mean(Makedefined(impl/dist_airports[km]               , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest airport (includes the 5 airports used for commercial passenger flights in 2019";
 		attribute<km>  Distance_to_seaports             (domain) := mean(Makedefined(impl/dist_seaports[km]               , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest seaport (selection of 5 main ports for cargo from IBIS, 2022)";
 		attribute<km>  Distance_to_trainstation         (domain) := mean(Makedefined((impl/dist_train_station[Meter])[km] , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest railway station (for passenger trains in 2019)";
-		attribute<km>  Distance_to_highwayentry         (domain) := mean(Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to nearest highway entry (includes dual carriage and smaller highways from Open Street Map, 2018)";
+		attribute<km>  Distance_to_highwayentry         (domain) := mean(Makedefined((impl/dist_highway_entry[Meter])[km] , 999[km]), rdc_100m/domain_rel), Descr = "Euclidean distance to the nearest on- or off-ramp of a motorway (A roads only, Nationaal Wegenbestand 2025)";
 		attribute<min> Traveltime_to_100000_jobs        (domain) := mean(Makedefined((impl/traveltime_100kjobs[sec])[min], 999[min]), rdc_100m/domain_rel), Descr = "Minimum car travel time to reach 100,000 jobs in 2018.";
 		attribute<min> Traveltime_to_100000_inhabitants (domain) := mean(Makedefined((impl/traveltime_100000inh[sec])[min], 999[min]), rdc_100m/domain_rel), Descr = "Minimum car travel time to reach the 100,000th inhabitant in 2018.";
 	}
