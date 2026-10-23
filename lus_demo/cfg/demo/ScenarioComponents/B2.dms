@@ -53,11 +53,10 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -68,7 +67,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -95,6 +94,61 @@ container B2_RC
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
 
+// ========================= SERVICES
+
+	attribute <Eur_M2> services (domain) := 
+	//Current Landuse
+		   20.0 [Eur_M2] * current_landuse/services                                 / domain/NrHaPerCell
+		 -  0.0 [Eur_M2] * current_landuse/nature                                   / domain/NrHaPerCell // a value can be added to prevent development in current nature areas
+		 +  0.0 [Eur_M2] * current_landuse/buildinglot                              / domain/NrHaPerCell // you may consider buildinglots likely locations for development
+	
+	//Policy maps: Note that these maps are based on the principle Present (= Yes, grid cel value 1.0) or Not present (= No, grid cel value 0.0)
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/residential [float64]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/industrial [float64]
+		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [float64]
+		 
+	//Thematic maps
+		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
+		 +  0.0 [Eur_M2] * Residential_location/attractive_surroundings         / 100 [Percent]
+
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_airports       , 60 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_seaports       , 60 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
+ 		 
+ 		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
+		 
+ 		 +  0.0 [Eur_M2] * NatureLandscape/landscape_quality[float64]           / max(id(Classifications/Ls_Qual4K))[float64]
+ 		 +  0.0 [Eur_M2] * NatureLandscape/altitude                             / max(NatureLandscape/altitude)
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWetSoil[float64]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsWeakSoil[float64]
+  		 -  0.0 [Eur_M2] * NatureLandscape/IsSubsidenceProne[float64]
+		 
+  		 -  0.0 [Eur_M2] * Safety/floodwaterdepth                               / max(Safety/floodwaterdepth)
+  		 -  0.0 [Eur_M2] * Safety/earthquakes[float64]                          / max(id(Classifications/Mercalli4K))[float64]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousSite[float64]
+  		 -  0.0 [Eur_M2] * Safety/IsDangerousTransport [float64]
+  		 -  0.0 [Eur_M2] * Safety/HasFloodHazard[float64]
+		 
+		
+  	//Distance decay maps
+  	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
+  	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/services
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/services
+  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/services
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
+  		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
+ 		; 
+
 // ========================= INDUSTRIAL
 	attribute <Eur_M2> industrial (domain):= 
 	//Current Landuse
@@ -108,11 +162,10 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -123,7 +176,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -163,11 +216,10 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -178,7 +230,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -217,11 +269,10 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness            / 100 [Percent]
@@ -232,7 +283,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -272,11 +323,10 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Policy_maps/Spatial_plans/recreation [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [float64]
 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness        / 100 [Percent]
@@ -287,7 +337,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 
@@ -326,11 +376,10 @@ container B2_RC
 		 +  0.0 [Eur_M2] * Spatial_plans/recreation [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatura2000 [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/NatureLandscape/IsNatureNetworkNL [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsIntake_reservoir [float64]
-		 -  0.0 [Eur_M2] * Policy_maps/Water/IsDisaster_retention [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsReservedForRivers [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_protection [float64]
 		 -  0.0 [Eur_M2] * Policy_maps/Water/IsGroundwater_intrusion [float64]
+		 -  0.0 [Eur_M2] * Policy_maps/Infrastructure/IsReservedForInfrastructure [float64]
 		 
 	//Thematic maps
 		 +  0.0 [Eur_M2] * Residential_location/urban_attractiveness         / 100 [Percent]
@@ -341,7 +390,7 @@ container B2_RC
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_TrainStation   ,  5 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_HighwayEntry   , 15 [Km]), 1d, 0d))
  		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_inhabitants, 30 [Min]), 1d, 0d))
- 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Distance_to_100000_jobs     , 25 [Km]), 1d, 0d))
+ 		 +  0.0 [Eur_M2] * (rescale(min_elem( Accessibility/Traveltime_to_100000_jobs   , 30 [Min]), 1d, 0d))
  		 
  		 -  0.0 [Eur_M2] * Noise/perc_opp_gt_50dba                              / 100 [Percent]
 		 

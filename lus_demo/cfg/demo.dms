@@ -32,17 +32,29 @@ container LUS_TNO : IntegrityCheck = "GeoDMSVersion() >= 18.0"
 	{
 		parameter<string>    ModelResolution     := '100m'; // '100m' '500m'
 		parameter<bool>      EnableBackgroundMap := TRUE; // TRUE FALSE
-		parameter<string>    RegioUnit_str       := 'RandstadIntermediatePeripheral'; // RandstadIntermediatePeripheral Provincie
+		parameter<string>    RegioUnit_str       := 'Provincie'; // RandstadIntermediatePeripheral Provincie
 		
 		unit<UInt32>         RegioUnit           := ='Geography/RegionalUnits/'+RegioUnit_str;
 		
 		container Advanced : IsHidden = "true"
 		{
-			parameter<Year>          StartYear       := 2020[year];
-			parameter<Year>          ModelYear       := 2040[year];
-			parameter<YearDiffRange> ClaimPeriod     := (ModelYear - StartYear)[YearDiffRange];
-			parameter<IterRange>     NrOfIterations  := 30[IterRange];
+			parameter<Year>          StartYear       := 2022[year], IntegrityCheck = "StartYear >= ClaimsBaseYear && StartYear < ModelYear";
+			parameter<Year>          ModelYear       := 2050[year], IntegrityCheck = "ModelYear <= max(ClaimYears/ClaimYear)", Descr = "A claim year from the sheet Years of LUS_demo_additionalclaims.xlsx, or a year in between.";
+			unit<uint32>             ClaimsFileYears := /Scenario_Components/Regional_Demand/Read_Excel/Years, Descr = "The sheet Years of LUS_demo_additionalclaims.xlsx: the base year of the claims (role base) and the years for which it gives cumulative claims (role claim).";
+			parameter<Year>          ClaimsBaseYear  := value(max(ClaimsFileYears/role == 'base' ? float64(ClaimsFileYears/year) : 0d), Year), IntegrityCheck = "sum(uint32(ClaimsFileYears/role == 'base')) == 1", Descr = "The claims in LUS_demo_additionalclaims.xlsx are cumulative from this year, read from its sheet Years.";
+			unit<uint32>             ClaimYears      := select_with_org_rel(ClaimsFileYears/role == 'claim'), Descr = "The years for which LUS_demo_additionalclaims.xlsx gives the cumulative additional claims since ClaimsBaseYear, in the columns <scenario>_<year>, in ascending order."
+			{
+				attribute<Year>    ClaimYear   := value(float64(ClaimsFileYears/year[org_rel]), Year);
+				attribute<String>  name        := string(uint16(ClaimYear));
+				attribute<Year>    PrevYear    := id(.) == 0 ? ClaimsBaseYear : ClaimYear[sub_or_null(id(.), 1)], IntegrityCheck = "ClaimYear > PrevYear", Descr = "The year before this claim year in which the cumulative claim is known: the previous claim year, or the base year (claim 0).";
+				attribute<Year>    NextYear    := ClaimYear[id(.) + 1], Descr = "The next claim year; none for the last one.";
+				attribute<float64> AtModelYear := ModelYear <= ClaimYear ? max_elem(float64(ModelYear - PrevYear) / float64(ClaimYear - PrevYear), 0d) : MakeDefined(max_elem(float64(NextYear - ModelYear) / float64(NextYear - ClaimYear), 0d), 0d), Descr = "Weight of this claim year in the cumulative claim at ModelYear, linear between the claim years.";
+				attribute<float64> AtStartYear := StartYear <= ClaimYear ? max_elem(float64(StartYear - PrevYear) / float64(ClaimYear - PrevYear), 0d) : MakeDefined(max_elem(float64(NextYear - StartYear) / float64(NextYear - ClaimYear), 0d), 0d), Descr = "Weight of this claim year in the cumulative claim at StartYear.";
+				attribute<float64> Weight      := AtModelYear - AtStartYear, Descr = "Weight of the cumulative claim of this year in the claim from StartYear to ModelYear: the claim at ModelYear minus the claim at StartYear.";
+			}
+			parameter<IterRange>     NrOfIterations  := 100[IterRange], Descr = "Number of balancing iterations. The loop always runs all of them, because GeoDMS does not use the stop criterion in the iteration template, so this number decides how closely the claims are met.";
 			parameter<m2_Eur>        BetaFactor      := 1[m2_Eur];
+			parameter<String>        ClaimSheet_services     := 'residential', Descr = "Services has no claims of its own in the claims file; it shares the claims of this sheet with that land-use type, in proportion to their current area per province.";
 			
 			unit<uint8> Scenarios : nrofrows = 5
 			{
@@ -75,5 +87,5 @@ container LUS_TNO : IntegrityCheck = "GeoDMSVersion() >= 18.0"
 	}
 	
 	#include<ExportSettings.dms>
-	#include<ConfigSettings.dms>
+	// #include<ConfigSettings.dms>
 }

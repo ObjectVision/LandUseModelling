@@ -13,20 +13,29 @@
 // ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 // In this configurationfile the dms-trees for current landuse are worked out:          //
-//  * The LUS demo-landusesmap 2017 in 9 classes                                        //
-//    based on CBS Soil Statistics 2017, edited by Object Vision                        //
+//  * The LUS demo land-use maps of StartYear (2022) in 9 classes                       //
+//    based on the CBS Bestand Bodemgebruik (NBBG2022), edited by Object Vision         //
 //  * Predominant landuse in 9 classes                                                  //
 //                                                                                      //
 // /////////////////////////////////////////////////////////////////////////////////////// 
   
 container Current_landuse :=
-	for_each_ndva(
-	   Classifications/ggModel/Name                                                               // name
-	  ,domain                                                                                     // domain unit
-	  ,ha                                                                                         // values units
-	  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/Advanced/StartYear)+'/bbg'+string(ModelParameters/Advanced/StartYear)+'_LUSdemo_'+ModelParameters/ModelResolution+'_'+Classifications/ggModel/name+'.tif' // storage name
-  )
+	for_each_nedv(
+	   Classifications/ggModel/Name
+	  ,'sum(Read_100m/'+Classifications/ggModel/Name+', rdc_100m/domain_rel)'
+	  ,domain
+	  ,ha
+	), Descr = "Hectares per land-use type per cell of the model grid, summed from the 100 m maps, so that the model also runs on a 500 m grid."
+	, Source = "CBS Bestand Bodemgebruik, mutation file NBBG2022 v1 (December 2025), reference date 1 January 2022: dominant land use at 10 m, as the share of each land-use type per 100 m cell (Object Vision, 2026)."
 {
+	container Read_100m :=
+		for_each_ndva(
+		   Classifications/ggModel/Name // name
+		  ,rdc_100m                     // domain unit
+		  ,ha                           // values units
+		  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/Advanced/StartYear)+'/bbg'+string(ModelParameters/Advanced/StartYear)+'_LUSdemo_ext_100m_'+Classifications/ggModel/name+'.tif' // storage name
+		), IsHidden = "true";
+
 	parameter<YearRange> RefJaar              := value(ModelParameters/Advanced/StartYear, YearRange), IsHidden = "true";
 	attribute<Ha>        Total       (domain) := ='add('+asItemList(Classifications/ggModel/Name)+' )', IsHidden = "true";
 	attribute<LUclasses> predominant (domain) := ='argmax('+asItemList(ggModel/Name)+')[LUclasses]';

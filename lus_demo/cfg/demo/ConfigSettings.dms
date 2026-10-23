@@ -2,6 +2,6 @@ container ConfigSettings
 {
 	container Overridable
 	{
-		parameter<String> RSo_DataDir   := '%sourceDataDir%/RuimteScanner/SD/RSopen';
+		// parameter<String> RSo_DataDir   := '%sourceDataDir%/RuimteScanner/SD/RSopen';
 	}
 }

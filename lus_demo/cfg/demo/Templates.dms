@@ -64,7 +64,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 
 		parameter<claimHa>  TotalDeviation := ='sqrt(add('+asItemList('sum(allocated_land/'+ggEndogenous/Name+'/SqrDev)')+'))', Descr = "Sum of distances between claimed and allocated sums of ha per region";
 		parameter<claimHa>  AllocatedAggr  := ='add('+asItemList('allocated_land/'+ggEndogenous/Name+'/nrHaAggr')+')';
-		parameter<Bool>     stop           := TotalDeviation < value(12000.0, Ha), Descr = "Stop iteration if the average deviation of the claims is less than 10 square km";
+		parameter<Bool>     IsConverged    := TotalDeviation < value(12000.0, Ha), Descr = "True if the total deviation of the claims in this iteration is below 12,000 ha. The loop does not stop on it: GeoDMS always runs all NrOfIterations iterations.";
 
 		container nextValue :=
 			for_each_nedv(
@@ -94,6 +94,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				attribute<claimHa>      nature      (RegioUnit) := ../nature/Claim;
 				attribute<claimHa>      agriculture (RegioUnit) := ../agriculture/Claim;
 				attribute<claimHa>      buildinglot (RegioUnit) := ../buildinglot/Claim;
+				attribute<claimHa>      services    (RegioUnit) := ../services/Claim;
 			}
 		}
 	}
@@ -107,8 +108,23 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		attribute<OperatorType> Operator (RegioUnit) := const(1, RegioUnit, OperatorType);
 		attribute<EUR_M2>       logAj    (RegioUnit) := const(0, RegioUnit, Eur_m2);
 
-		attribute<claimHa>      Current  (RegioUnit) := ='sum(Current_situation/current_landuse/'+lu_name+', RegioUnit/per_domain)';
-		attribute<claimHa>      Claim    (RegioUnit) := ='rjoin(id(RegioUnit),Read_Excel/'+lu_name+'/RstIntPer[uint32], Read_Excel/'+lu_name+'/'+scenario_name_short+'[claimHa])';
-		attribute<claimHa>      Total    (RegioUnit) := Current + Claim;
+		parameter<String>       ClaimSheet := lu_name == 'services' ? ModelParameters/Advanced/ClaimSheet_services : lu_name, Descr = "The sheet of the claims file this land-use type takes its claims from.";
+		parameter<String>       PeriodClaim := 'add('+AsItemList('float64('+string(ModelParameters/Advanced/ClaimYears/Weight)+') * Read_Excel/'+ClaimSheet+'/'+scenario_name_short+'_'+ModelParameters/Advanced/ClaimYears/name+'[claimHa]')+')', Descr = "The claim from StartYear to ModelYear as a weighted sum of the cumulative claims per claim year.";
+
+		attribute<claimHa>      Current_Provincie                                           (Provincie) := ='sum(Current_situation/current_landuse/'+lu_name+', Provincie/per_domain)';
+		attribute<claimHa>      SheetClaim_Provincie                                        (Provincie) := ='rjoin(Provincie/prvnr, Read_Excel/'+ClaimSheet+'/prvnr[uint32], '+PeriodClaim+')', Descr = "The claims per province from StartYear to ModelYear in the sheet ClaimSheet, joined on the code prvnr and not on the order of the rows.";
+		attribute<claimHa>      Claim_Provincie                                             (Provincie) := =ClaimSheet == ModelParameters/Advanced/ClaimSheet_services
+																															? 'SheetClaim_Provincie * (Current_Provincie / (../'+ClaimSheet+'/Current_Provincie + ../services/Current_Provincie))'
+																															: 'SheetClaim_Provincie'
+		, Descr = "The claims per province. Services and the type of ClaimSheet_services divide the claims of that sheet in proportion to their current area in the province.";
+		attribute<claimHa>      Total_Provincie                                             (Provincie) := Current_Provincie + Claim_Provincie;
+
+		attribute<claimHa>      Current_RandstadIntermediatePeripheral (RandstadIntermediatePeripheral) := ='sum(Current_situation/current_landuse/'+lu_name+', RandstadIntermediatePeripheral/per_domain)';
+		attribute<claimHa>      Claim_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := sum(Claim_Provincie, Provincie/Landsdelen_rel), Descr = "The claims per landsdeel: the sum of the claims of its provinces.";
+		attribute<claimHa>      Total_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := Current_RandstadIntermediatePeripheral + Claim_RandstadIntermediatePeripheral;
+
+		attribute<claimHa>      Current                                                     (RegioUnit) := ='Current_'+ModelParameters/RegioUnit_str;
+		attribute<claimHa>      Claim                                                       (RegioUnit) := ='Claim_'+ModelParameters/RegioUnit_str;
+		attribute<claimHa>      Total                                                       (RegioUnit) := ='Total_'+ModelParameters/RegioUnit_str;
 	}
 }

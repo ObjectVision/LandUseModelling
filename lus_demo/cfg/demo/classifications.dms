@@ -19,7 +19,7 @@
 container Classifications: Using = "Units", isHidden = "True"
 {
 	// =========== landusesTypering
-	unit<uint8> ggModel: NrOfRows = 9 // @USERINPUT: keep in sync with the actual nr of model classes
+	unit<uint8> ggModel: NrOfRows = 10 // @USERINPUT: keep in sync with the actual nr of model classes
 	{
 		unit<uint32>      Elements:= Range(uint32, 0, nrAttr*#ggModel)
 		{
@@ -33,7 +33,8 @@ container Classifications: Using = "Units", isHidden = "True"
 			'buildinglot',		'FALSE',		'128','128','128',	'FALSE',	'1.3',
 			'infrastructure',	'TRUE',			'128','0','0',		'FALSE',	'1.9',
 			'water',			'TRUE',			'159','255','255',	'FALSE',	'0',
-			'exterior',			'TRUE',			'255','255','228',	'FALSE',	'0'
+			'exterior',			'TRUE',			'255','255','228',	'FALSE',	'0',
+			'services',			'FALSE',		'254','150','0',	'TRUE',		'6'
 			];
 		}
 		attribute<String>       Name           :=        Elements/Text[value(UInt32(ID(.)) * nrAttr + 0, Elements)];
@@ -47,6 +48,8 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<uint32>       BrushColor     := rgb(R,G / 256,B / 256 / 256), DialogType = "BrushColor";
 		parameter<uint32>       nrAttr         := 7; // @USERINPUT: keep in sync with nr of Text-Element attributes in the next lines
+	
+		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
 
 	unit<uint8> LUclasses := ggModel;
@@ -73,6 +76,7 @@ container Classifications: Using = "Units", isHidden = "True"
 	{
 		attribute<string>       name       := org_rel -> name;
 		attribute<uint32>       BrushColor := org_rel -> BrushColor;
+		attribute<bool>         IsExogenous := org_rel -> IsExogenous;
 		
 		container V := for_each_nedv(name, String(ID(.))+'[..]', void, .);
 	}
@@ -81,7 +85,7 @@ container Classifications: Using = "Units", isHidden = "True"
 	unit<uint8> LossOrGain_Class: nrofrows = 3
 	{
 		attribute<LossOrGain> Classes     : [ -1, 0, 1 ], DialogType = "Classification";
-		attribute<UInt32>     BrushColor  : [rgb(0,192,0),rgb(192,192,192),rgb(255,0,0)], DialogType = "BrushColor";
+		attribute<UInt32>     BrushColor  : [rgb(0,192,0),rgb(255,255,255),rgb(255,0,0)], DialogType = "BrushColor";
 		attribute<String>     Label       : ['Loss','Stable','Gain'], DialogType = "LabelText";
 	}
 	
@@ -105,7 +109,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
-			rgb(192,192,192),rgb(  0,  0,255),rgb( 32, 64,224)
+			rgb(255,255,255),rgb(  0,  0,255),rgb( 32, 64,224)
 		,	rgb( 64,128,192),rgb( 96,192,160),rgb(128,255,128)
 		];
 
@@ -126,7 +130,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
-			rgb(192,192,192),rgb(  0,  0,255),rgb( 32, 64,224)
+			rgb(255,255,255),rgb(  0,  0,255),rgb( 32, 64,224)
 		,	rgb( 64,128,192),rgb( 96,192,160),rgb(128,255,128)
 		,	rgb(170,170, 85),rgb(212, 85, 42),rgb(255,  0,  0)
 		];
@@ -151,7 +155,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
-			rgb(255,  0,  0),rgb(255,104,104),rgb(255,149,149),rgb(255,206,206),rgb(255,236,236),rgb(219,219,219)
+			rgb(255,  0,  0),rgb(255,104,104),rgb(255,149,149),rgb(255,206,206),rgb(255,236,236),rgb(255,255,255)
 		,	rgb(200,240,200),rgb(150,200,150),rgb( 89,172, 89),rgb( 29,112, 29),rgb(  0, 64,  0)
 		];
 
@@ -171,7 +175,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
-			rgb(255,  0,  0),rgb(255,104,104),rgb(255,149,149),rgb(255,206,206),rgb(255,236,236),rgb(219,219,219)
+			rgb(255,  0,  0),rgb(255,104,104),rgb(255,149,149),rgb(255,206,206),rgb(255,236,236),rgb(255,255,255)
 		,	rgb(200,240,200),rgb(150,200,150),rgb( 89,172, 89),rgb( 29,112, 29),rgb(  0, 64,  0)
 		];
 
@@ -285,7 +289,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<uint32> Palette: DialogType = "BrushColor",
 		[
-			rgb(218,218,218),rgb(255,255,204),rgb(255,255,128),rgb(255,230,102),rgb(255,179, 51)
+			rgb(255,255,255),rgb(255,255,204),rgb(255,255,128),rgb(255,230,102),rgb(255,179, 51)
 		,	rgb(255,128,  0),rgb(255, 51,  0),rgb(230, 25,  0),rgb(200,  0,  0),rgb(153,  0, 0)
 		];
 
@@ -306,7 +310,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<uint32> Palette: DialogType = "BrushColor",
 		[
-			rgb(218,218,218),rgb(255,255,204),rgb(255,255,128)
+			rgb(255,255,255),rgb(255,255,204),rgb(255,255,128)
 		,	rgb(255, 51,  0),rgb(230,  0,  0),rgb(153,  0,  0)
 		];
 
@@ -328,7 +332,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
-			rgb(192,192,192),rgb(  0,  0,255),rgb(  0, 64,192),rgb(  0,128,128),rgb(  0,192, 64)
+			rgb(255,255,255),rgb(  0,  0,255),rgb(  0, 64,192),rgb(  0,128,128),rgb(  0,192, 64)
 		,	rgb(  0,255,  0),rgb( 64,192,  0),rgb(128,128,  0),rgb(192, 64,  0),rgb(255,  0,  0)
 		];
 
@@ -350,7 +354,7 @@ container Classifications: Using = "Units", isHidden = "True"
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
-			rgb(255,  0,  0),rgb(239, 48, 48),rgb(223, 96, 96),rgb(208,144,144),rgb(192,192,192)
+			rgb(255,  0,  0),rgb(239, 48, 48),rgb(223, 96, 96),rgb(208,144,144),rgb(255,255,255)
 		,	rgb(154,179,154),rgb(115,166,115),rgb( 77,154, 77),rgb( 38,141, 38),rgb(  0,128,  0)
 		];
 
@@ -373,7 +377,7 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
 			rgb(  0,  0,255),rgb( 85, 85,170),rgb(170,170, 85),rgb(255,255,  0)
-		,	rgb(255,204,  0),rgb(255,153,  0),rgb(255,102,  0),rgb(192,192,192)
+		,	rgb(255,204,  0),rgb(255,153,  0),rgb(255,102,  0),rgb(255,255,255)
 		];
 
 		attribute<String> Label: DialogType = "LabelText",
@@ -392,7 +396,7 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
 		[
 			rgb(  0,  0,255),rgb( 85, 85,170),rgb(170,170, 85),rgb(255,255,  0)
-		,	rgb(255,204,  0),rgb(255,153,  0),rgb(255,102,  0),rgb(192,192,192)
+		,	rgb(255,204,  0),rgb(255,153,  0),rgb(255,102,  0),rgb(255,255,255)
 		];
 
 		attribute<String> Label: DialogType = "LabelText",
@@ -462,7 +466,7 @@ container Classifications: Using = "Units", isHidden = "True"
 			[0, 1, 2, 3, 4];
 
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
-			[rgb(192,192,192), rgb(255,255,198),rgb(255,255,0),rgb(0,215,0),rgb(0,70,0)];
+			[rgb(255,255,255), rgb(255,255,198),rgb(255,255,0),rgb(0,215,0),rgb(0,70,0)];
 
 		attribute<String> Label: DialogType = "LabelText",
 			['No quality (e.g. urban)', 'Low quality','Moderate quality','High quality','Very high quality'];
@@ -489,7 +493,7 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute <Mercalli3K> Classes: DialogType = "Classification",
 			[0.0, 6.0, 6.5, 7.0];
 		attribute<UInt32> BrushColor: DialogType = "BrushColor",
-			[rgb(192,192,192),rgb(255,255,0),rgb(255,128,0),rgb(255,0, 0)];
+			[rgb(255,255,255),rgb(255,255,0),rgb(255,128,0),rgb(255,0, 0)];
 		attribute <String> Label: DialogType = "LabelText",
 			[' 0',' 6.0',' 6.5',' 7.0'];
 		container V := for_each_nedv(AsItemName(label), String(ID(.))+'[..]', void, .);
@@ -511,7 +515,7 @@ container Classifications: Using = "Units", isHidden = "True"
 		attribute<string> name        := AsItemName(label);
 		attribute<uint32> BrushColor : DialogType = "BrushColor",
 		[
-			rgb(127,127,127), rgb(218,218,235), rgb(188,184,217), rgb(158,154,200), rgb(106, 81,163), rgb( 63,  0,125)
+			rgb(255,255,255), rgb(218,218,235), rgb(188,184,217), rgb(158,154,200), rgb(106, 81,163), rgb( 63,  0,125)
 		];
 		
 		container V := for_each_nedv(name, string(id(.)) + '[..]', void, .);
