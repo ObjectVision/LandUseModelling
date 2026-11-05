@@ -102,7 +102,7 @@ are explained in this article and the description of the calculation rules refer
 			
 			unit<uint32> AtomicRegions := RegioUnit
 			{
-				attribute<.> per_domain             (domain) := poly2grid(geometry, domain);
+				attribute<.> per_domain             (domain) := value(RegioUnit/per_domain, .);
 				attribute<.> per_Adomain           (ADomain) := collect_by_cond(Compacted/ADomain, Compacted/HasFreeLand, per_domain);
 			}
 			

@@ -93,7 +93,7 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<rdc_meter>      geometry                                 (poly) := geos_union_polygon(Provincie/geometry, Provincie/Landsdelen_rel);
 			attribute<String>         label                                           : ['Randstad', 'Intermediate', 'Peripheral'];
 			attribute<UInt32>         RstIntPer                                       : [1, 2, 3], Descr = "Code of the landsdeel in column RstIntPer of the claims file, in which 0 is the exterior.";
-			attribute<.>              per_domain                             (domain) := poly2grid(geometry, domain);
+			attribute<.>              per_domain                             (domain) := Provincie/Landsdelen_rel[Provincie/per_domain];
 			container V := for_each_nedv(label, string(id(.))+'[..]', void, .);
 		}
 
@@ -104,20 +104,23 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<String>                         name                     := AsItemName(label);
 			attribute<RandstadIntermediatePeripheral> Landsdelen_rel           : [2, 2, 2, 2, 1, 0, 0, 0, 2, 1, 2, 1];
 			attribute<rdc_meter>                      geometry          (poly) := geos_union_polygon(Province/geometry, Province/Provincie_rel);
-			attribute<.>                              per_domain      (domain) := poly2grid(geometry, domain);
+			attribute<rdc_meter>                      geometry_edge     (poly) := geos_buffer_multi_polygon(geometry, float64(/ModelParameters/Advanced/ProvinceEdge), 8b);
+			attribute<.>                              per_domain      (domain) := MakeDefined(poly2grid(geometry, domain), poly2grid(geometry_edge, domain)), Descr = "The province of each cell, by the midpoint of the cell. A cell with its midpoint just outside all provinces, such as a cell on the national border that is partly Dutch land, gets the province within ProvinceEdge.";
 			container V := for_each_nedv(name, string(id(.))+'[..]', void, .);
 		}
 
 		unit<UInt32> Province
-		:	StorageName     = "%projDir%/data/geography/provinces_2004_simplified.shp"
+		:	StorageName     = "%projDir%/data/geography/provinces_2025.shp"
 		, 	StorageType     = "gdal.vect"
 		,	StorageReadOnly = "True"
-		,	Descr           = "This entity contains the shapes of provinces. They add up to more than 12, since for example the islands are separate shapes"
+		,	Source          = "CBS and Kadaster, Wijk- en buurtkaart 2025 version 1; the province of each municipality from the CBS Gebiedsindelingen 2025"
+		,	URL             = "https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2025"
+		,	Descr           = "The twelve provinces in 2025 with their share of the inland and coastal waters: the municipalities of the Wijk- en buurtkaart including their water areas (water = JA), dissolved per province. With the water areas, land on shores, salt marshes and flats also falls within a province."
 		{
 			attribute<rdc_meter>    geometry (poly);
-			attribute<.>            prvnr           : Descr = "This is the entity of the 12 provinces in the Nederlands (0=Exterior)";
+			attribute<.>            prvnr           : Descr = "This is the entity of the 12 provinces in the Nederlands";
 			attribute<string>       prvnm;
-			attribute<Provincie>    Provincie_rel := rlookup(uint32(prvnr), Provincie/prvnr), Descr = "Undefined for the shapes with prvnr 0, the open water that belongs to no province.";
+			attribute<Provincie>    Provincie_rel := rlookup(uint32(prvnr), Provincie/prvnr);
 		}
 		
 		unit<uint32> DijkRing
