@@ -64,15 +64,15 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 
 		parameter<claimHa>  TotalDeviation := ='sqrt(add('+asItemList('sum(allocated_land/'+ggEndogenous/Name+'/SqrDev)')+'))', Descr = "Sum of distances between claimed and allocated sums of ha per region";
 		parameter<claimHa>  AllocatedAggr  := ='add('+asItemList('allocated_land/'+ggEndogenous/Name+'/nrHaAggr')+')';
-		parameter<Bool>     IsConverged    := TotalDeviation < value(12000.0, Ha), Descr = "True if the total deviation of the claims in this iteration is below 12,000 ha. The loop does not stop on it: GeoDMS always runs all NrOfIterations iterations.";
+		parameter<Bool>     IsConverged    := TotalDeviation < /ModelParameters/Advanced/MaxTotalDeviation, Descr = "True if the total deviation of the claims in this iteration is below MaxTotalDeviation. The loop does not stop on it: GeoDMS always runs all NrOfIterations iterations.";
 
 		container nextValue :=
 			for_each_nedv(
 				  ggEndogenous/Name
-				, 'claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+'[float32] * currValue/'+ ggEndogenous/Name+'[float32], allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio[float32], Additional_Claims/'+ggEndogenous/Name+'/Operator)[float64]'
+				, 'MakeDefined(currValue/'+ggEndogenous/Name+' * pow(claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+'[float32] * currValue/'+ ggEndogenous/Name+'[float32], allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio[float32], Additional_Claims/'+ggEndogenous/Name+'/Operator)[float64] / currValue/'+ggEndogenous/Name+', /ModelParameters/Advanced/OverrelaxationFactor), 0d)'
 				, RegioUnit
 				, float64
-			), Descr    = "Aj' = Aj * Dj/Tj: see formula (6b')";
+			), Descr    = "Aj' = Aj * (Dj/Tj)^OverrelaxationFactor: formula (6b') with overrelaxation. Where Dj = Tj nothing changes, so the solution stays the same.";
 	}
 	
 	Template Claims_per_Scenario_T

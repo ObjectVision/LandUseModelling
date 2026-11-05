@@ -52,7 +52,9 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 				attribute<float64> AtStartYear := StartYear <= ClaimYear ? max_elem(float64(StartYear - PrevYear) / float64(ClaimYear - PrevYear), 0d) : MakeDefined(max_elem(float64(NextYear - StartYear) / float64(NextYear - ClaimYear), 0d), 0d), Descr = "Weight of this claim year in the cumulative claim at StartYear.";
 				attribute<float64> Weight      := AtModelYear - AtStartYear, Descr = "Weight of the cumulative claim of this year in the claim from StartYear to ModelYear: the claim at ModelYear minus the claim at StartYear.";
 			}
-			parameter<IterRange>     NrOfIterations  := 100[IterRange], Descr = "Number of balancing iterations. The loop always runs all of them, because GeoDMS does not use the stop criterion in the iteration template, so this number decides how closely the claims are met.";
+			parameter<IterRange>     NrOfIterations  := 200[IterRange], Descr = "Number of balancing iterations. The loop always runs all of them, because GeoDMS does not use the stop criterion in the iteration template, so this number decides how closely the claims are met.";
+			parameter<float64>       OverrelaxationFactor := 1.9d, Descr = "Power on the correction of the balancing factors per iteration. 1 is formula (6b') of Hilferink & Rietveld (1999). A value between 1 and 2 finds the same solution in fewer iterations (overrelaxation of iterative proportional fitting); 2 or more can make the balancing diverge.";
+			parameter<claimHa>       MaxTotalDeviation := 100[claimHa], Descr = "The last iteration counts as converged if the total deviation of the claims is below this value. 100 ha is about 1% of the smallest claim of a land-use type in the delivered scenarios.";
 			parameter<m2_Eur>        BetaFactor      := 1[m2_Eur];
 			
 			unit<uint8> Scenarios : nrofrows = 5
