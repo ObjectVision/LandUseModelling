@@ -55,8 +55,8 @@ container Geography: Using = "Units", isHidden = "True"
 			range(
 				 gridset(
 					 rdc_meter
-					,point_xy(gridsize, -gridsize, rdc_meter)
-					,point_xy(x_min, y_max, rdc_meter)
+					,point_xy(float64(gridsize), -float64(gridsize), rdc_meter)
+					,point_xy(float64(x_min), float64(y_max), rdc_meter)
 					,spoint
 				)
 				,point_xy(0s, 0s)

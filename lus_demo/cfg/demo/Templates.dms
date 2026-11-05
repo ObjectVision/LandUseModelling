@@ -40,7 +40,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				  ggEndogenous/Name
 				, 'exp(betaFactor * MakeDefined(Additional_Claims/' + ggEndogenous/Name +'/logAj, 0[EUR_m2]))'
 				, RegioUnit
-				, float64
+				, float32
 			),	Descr = "Aj: This will be initialized with InitialWeigths and then receives a copy of nextValue (Aj) for each iteration";
 
 		unit<uint32> ADomain := .../Compacted/ADomain;
@@ -50,7 +50,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				  ggEndogenous/Name
 				, 'MakeDefined(CaseData/Compacted/Demands/'+ggEndogenous/Name+' * lookup(CaseData/Compacted/RegioGrids/'+ggEndogenous/Name+', currValue/'+ggEndogenous/Name+'), 0[Units/DemandUnit])'
 				, ADomain
-				, float64
+				, float32
 			), Descr = "Tcj = Aj * exp(beta*Scj): new demands based on given Aj (currValue)";
 
 		attribute<DemandUnit> total_demand  (ADomain) := ='add('+asItemList('adjusted_demands/'+ggEndogenous/Name)+')', Descr = "Tc = sum(j, Tcj): total demand on input"; // for unused land category, add "+'value(1.0, DemandUnit)'"		
@@ -69,9 +69,9 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		container nextValue :=
 			for_each_nedv(
 				  ggEndogenous/Name
-				, 'MakeDefined(currValue/'+ggEndogenous/Name+' * pow(claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+'[float32] * currValue/'+ ggEndogenous/Name+'[float32], allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio[float32], Additional_Claims/'+ggEndogenous/Name+'/Operator)[float64] / currValue/'+ggEndogenous/Name+', /ModelParameters/Advanced/OverrelaxationFactor), 0d)'
+				, 'MakeDefined(currValue/'+ggEndogenous/Name+' * pow(claim_corrF32(CaseData/TotalPeriodClaims/'+ggEndogenous/Name+' * currValue/'+ ggEndogenous/Name+', allocated_land/'+ggEndogenous/Name+'/nrHaPerRegio, Additional_Claims/'+ggEndogenous/Name+'/Operator) / currValue/'+ggEndogenous/Name+', /ModelParameters/Advanced/OverrelaxationFactor), 0f)'
 				, RegioUnit
-				, float64
+				, float32
 			), Descr    = "Aj' = Aj * (Dj/Tj)^OverrelaxationFactor: formula (6b') with overrelaxation. Where Dj = Tj nothing changes, so the solution stays the same.";
 	}
 	
@@ -107,7 +107,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		attribute<OperatorType> Operator (RegioUnit) := const(1, RegioUnit, OperatorType);
 		attribute<EUR_M2>       logAj    (RegioUnit) := const(0, RegioUnit, Eur_m2);
 
-		parameter<String>       PeriodClaim := 'add('+AsItemList('float64('+string(ModelParameters/Advanced/ClaimYears/Weight)+') * Read_Excel/'+lu_name+'/'+scenario_name_short+'_'+ModelParameters/Advanced/ClaimYears/name+'[claimHa]')+')', Descr = "The claim from StartYear to ModelYear as a weighted sum of the cumulative claims per claim year.";
+		parameter<String>       PeriodClaim := 'add('+AsItemList('float32('+string(ModelParameters/Advanced/ClaimYears/Weight)+') * Read_Excel/'+lu_name+'/'+scenario_name_short+'_'+ModelParameters/Advanced/ClaimYears/name+'[claimHa]')+')', Descr = "The claim from StartYear to ModelYear as a weighted sum of the cumulative claims per claim year.";
 
 		attribute<claimHa>      Current_Provincie                                           (Provincie) := ='sum(Current_situation/current_landuse/'+lu_name+', Provincie/per_domain)';
 		attribute<claimHa>      Claim_Provincie                                             (Provincie) := ='rjoin(Provincie/prvnr, Read_Excel/'+lu_name+'/prvnr[uint32], '+PeriodClaim+')', Descr = "The claims per province from StartYear to ModelYear, joined on the code prvnr and not on the order of the rows.";
