@@ -36,8 +36,8 @@ container Thematic_maps
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/Residential/AttractiveSurroundings_100m_20261022.tif";
 		}
 
-		attribute<Percent> urban_attractiveness       (domain) := mean(float64(Impl/urban_attractiveness), rdc_100m/domain_rel) * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Index expressing relative richness in three types of amenities: historic buildings; shop and hotels & catering outlets (2024)";
-		attribute<Percent> attractive_surroundings    (domain) := mean(float64(Impl/attractive_surroundings), rdc_100m/domain_rel) * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Landscape attractiveness as perceived by the general public", URL = "https://www.clo.nl/indicatoren/nl102305-belevingskaart-van-het-nederlandse-landschap";
+		attribute<Percent> urban_attractiveness       (domain) := mean(float32(Impl/urban_attractiveness), rdc_100m/domain_rel) * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Index expressing relative richness in three types of amenities: historic buildings; shop and hotels & catering outlets (2024)";
+		attribute<Percent> attractive_surroundings    (domain) := mean(float32(Impl/attractive_surroundings), rdc_100m/domain_rel) * 1[Percent], cdf = "Classifications/Percentage10k/Classes", Descr = "Landscape attractiveness as perceived by the general public", URL = "https://www.clo.nl/indicatoren/nl102305-belevingskaart-van-het-nederlandse-landschap";
 	}
 
 	container Accessibility: Descr = "Maps with a.o. accessibility by road and with euclidean distances"
@@ -129,10 +129,10 @@ container Thematic_maps
 		}
 
 		attribute<Ls_Qual4k>      Landscape_quality     (domain) := MakeDefined(impl/Landscape_quality4K , 0[Ls_Qual4k])[domain/rdc_500m_rel], Descr = "Landscape values as defined by experts in 4 classes";
-		attribute<Meter>          Altitude              (domain) := mean(MakeDefined(float64(impl/altitude) / 10d, 0d), rdc_100m/domain_rel)[Meter], Descr = "Ground level relative to NAP (AHN4)";
-		attribute<bool>           IsWetSoil             (domain) := mean(float64(impl/WetSoil), rdc_100m/domain_rel) >= 0.5d, Descr = "Presence of wet soils where water logging is likely: groundwater within 30 cm of the surface in the climate of 2085 (Deltascenario Stoom)";
-		attribute<bool>           IsWeakSoil            (domain) := mean(float64(impl/WeakSoil), rdc_100m/domain_rel) >= 0.5d, Descr = "Presence of peaty, weak soils that limit agricultural use and require costly foundations for construction ";
-		attribute<bool>           IsSubsidenceProne     (domain) := mean(float64(impl/SubsidenceProne), rdc_100m/domain_rel) >= 0.5d, Descr = "Presence of clay or peaty soil prone to subsidence of 10 cm or more in coming decades ";
+		attribute<Meter>          Altitude              (domain) := mean(MakeDefined(float32(impl/altitude) / 10f, 0f), rdc_100m/domain_rel)[Meter], Descr = "Ground level relative to NAP (AHN4)";
+		attribute<bool>           IsWetSoil             (domain) := mean(float32(impl/WetSoil), rdc_100m/domain_rel) >= 0.5f, Descr = "Presence of wet soils where water logging is likely: groundwater within 30 cm of the surface in the climate of 2085 (Deltascenario Stoom)";
+		attribute<bool>           IsWeakSoil            (domain) := mean(float32(impl/WeakSoil), rdc_100m/domain_rel) >= 0.5f, Descr = "Presence of peaty, weak soils that limit agricultural use and require costly foundations for construction ";
+		attribute<bool>           IsSubsidenceProne     (domain) := mean(float32(impl/SubsidenceProne), rdc_100m/domain_rel) >= 0.5f, Descr = "Presence of clay or peaty soil prone to subsidence of 10 cm or more in coming decades ";
 	}
 	container Safety: Descr = "Maps related to various safety issues"
 	{
@@ -158,8 +158,8 @@ container Thematic_maps
 			{
 				attribute<rdc_meter> geometry                   := const(point_xy(38910d, 383749d, rdc_meter),.);
 				attribute<rdc_meter> geometry_buffer     (poly) := bg_buffer_point(geometry, 5000d, 16b);
-				attribute<.>         per_25m          (rdc_25m) := poly2grid(geometry_buffer, rdc_25m);
-				attribute<bool>      EvacuationZone   (rdc_25m) := IsDefined(geometry_buffer[per_25m]);
+				attribute<.>         per_domain        (domain) := poly2grid(geometry_buffer, domain);
+				attribute<bool>      EvacuationZone    (domain) := IsDefined(per_domain);
 			}
 
 			attribute<bool> dangerous_transport (rdc_100m)
@@ -169,17 +169,18 @@ container Thematic_maps
 			,	Descr       = "Buffer of 50m around pipelines."
 			,	StorageName = "%projDir%/data/Current_situation/thematic_maps/safety/UndergroundPipelines_20260120.tif";
 			
-			attribute<FloodZonesK> FloodHazardZones (rdc_25m)
-			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/Safety/FloodHazardZones.tif"
+			attribute<FloodZonesK> FloodHazardZones (rdc_100m)
+			:	StorageName = "%projDir%/data/Current_situation/thematic_maps/Safety/FloodHazardZones_100m.tif"
+			, 	Source      = "The most common class per 100 m cell of the original map at 25 m (Object Vision, 2026-11-06)."
 			, 	Descr       = "combinatiekaart waarin LSG (totale lokaal schadegevaar; de schade die gemiddeld jaarlijks te verwachten is door overstromingen als er op die plaats een standaard eengezinswoning zou worden gebouwd) en LVG (lokaal verdrinkingsgevaar; 
 								de gemiddelde kans per jaar voor een hypothetisch daar aanwezige persoon om op die plek door een overstroming te overlijden) zijn gecombineerd, als mogelijk hulpmiddel voor locatiekeuze en/of het vaststellen van bouwvereisten.";
 		}
 		
-		attribute<Meter>       floodWaterdepth     (domain) := convert(impl/waterdepth, meter)[domain/rdc_25m_rel], cdf = "Classifications/Diepte8k/Classes";
+		attribute<Meter>       floodWaterdepth     (domain) := convert(impl/waterdepth[domain/rdc_25m_rel], meter), cdf = "Classifications/Diepte8k/Classes";
 		attribute<Mercalli4K>  earthquakes         (domain) := MakeDefined(impl/earthquakes[domain/rdc_25m_rel], Mercalli4K/v/none), Descr = "Location prone to earth quakes with different intensities (V, VI, VII, or VIII) on the Mercalli scale ";
-		attribute<bool>        IsDangerousSite     (domain) := max_elem(impl/RiskContour_10_6, impl/NuclearPlantBorssele/EvacuationZone)[domain/rdc_25m_rel], Descr = "RiskContour_10_6 / Evac. zone Borssele";
+		attribute<bool>        IsDangerousSite     (domain) := max_elem(impl/RiskContour_10_6[domain/rdc_25m_rel], impl/NuclearPlantBorssele/EvacuationZone), Descr = "RiskContour_10_6 / Evac. zone Borssele";
 		attribute<bool>        IsDangerousTransport (domain) := impl/Dangerous_transport[domain/rdc_100m_rel];
-		attribute<FloodZonesK> FloodHazardZones    (domain) := modus(impl/FloodHazardZones, rdc_25m/domain_rel);
+		attribute<FloodZonesK> FloodHazardZones    (domain) := modus(impl/FloodHazardZones, rdc_100m/domain_rel);
 		attribute<bool>        HasFloodHazard      (domain) := FloodHazardZones >= FloodZonesK/v/moderate; //opties op volgorde: 'Nihil','Gering_20','Gering_200','Enigszins_gevaarlijk','Gevaarlijk','Zeer_gevaarlijk'
 	}
 }

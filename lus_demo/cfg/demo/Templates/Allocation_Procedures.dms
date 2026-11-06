@@ -95,14 +95,14 @@ are explained in this article and the description of the calculation rules refer
 			container SuitabilityMaps := 
 				for_each_nedv(
 					  ggEndogenous/name
-					, 'MakeDefined(Compacted/SuitabilityMaps/'+ggEndogenous/name+' * 100d, 0d)[int32]'
+					, 'MakeDefined(Compacted/SuitabilityMaps/'+ggEndogenous/name+' * 100f, 0f)[int32]'
 					, ADomain
 					, Int32
 				);
 			
 			unit<uint32> AtomicRegions := RegioUnit
 			{
-				attribute<.> per_domain             (domain) := poly2grid(geometry, domain);
+				attribute<.> per_domain             (domain) := value(RegioUnit/per_domain, .);
 				attribute<.> per_Adomain           (ADomain) := collect_by_cond(Compacted/ADomain, Compacted/HasFreeLand, per_domain);
 			}
 			
@@ -111,7 +111,7 @@ are explained in this article and the description of the calculation rules refer
 			container minclaims_ha := //in aantal cellen
 				for_each_nedv(
 					  ggEndogenous/name
-					, 'uint32(0.9d * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)'
+					, 'uint32(0.9f * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)'
 					, RegioUnit
 					, uint32
 				);
@@ -119,19 +119,19 @@ are explained in this article and the description of the calculation rules refer
 			container maxclaims_ha := //in aantal cellen
 				for_each_nedv(
 					  ggEndogenous/name
-					, 'uint32(1.1d * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)'
+					, 'uint32(1.1f * CaseData/TotalPeriodClaims/'+ggEndogenous/name+' / domain/NrHaPerCell)'
 					, RegioUnit
 					, uint32
 				);
 
 			attribute<uint32>  FreeCells (RegioUnit) := sum(uint32(Compacted/HasFreeLand), RegioUnit/per_domain), Descr = "Number of cells with free land per region; the discrete allocation gives each of them one land-use type.";
-			attribute<float64> MinFactor (RegioUnit) := ='min_elem(1d, float64(FreeCells) / float64(add('+AsItemList('minclaims_ha/'+ggEndogenous/name)+')))', Descr = "Lowers the minimum claims of a region only if they add up to more cells than it has free.";
-			attribute<float64> MaxFactor (RegioUnit) := ='max_elem(1d, float64(FreeCells) / float64(add('+AsItemList('maxclaims_ha/'+ggEndogenous/name)+')))', Descr = "Raises the maximum claims of a region only if they add up to fewer cells than it has free. The claims are in hectares, while a cell that is partly water or infrastructure still gets a whole land-use type.";
+			attribute<float32> MinFactor (RegioUnit) := ='min_elem(1f, float32(FreeCells) / float32(add('+AsItemList('minclaims_ha/'+ggEndogenous/name)+')))', Descr = "Lowers the minimum claims of a region only if they add up to more cells than it has free.";
+			attribute<float32> MaxFactor (RegioUnit) := ='max_elem(1f, float32(FreeCells) / float32(add('+AsItemList('maxclaims_ha/'+ggEndogenous/name)+')))', Descr = "Raises the maximum claims of a region only if they add up to fewer cells than it has free. The claims are in hectares, while a cell that is partly water or infrastructure still gets a whole land-use type.";
 
 			container minclaims :=
 				for_each_nedv(
 					  ggEndogenous/name
-					, 'uint32(float64(minclaims_ha/'+ggEndogenous/name+') * MinFactor)'
+					, 'uint32(float32(minclaims_ha/'+ggEndogenous/name+') * MinFactor)'
 					, RegioUnit
 					, uint32
 				);
@@ -139,7 +139,7 @@ are explained in this article and the description of the calculation rules refer
 			container maxclaims :=
 				for_each_nedv(
 					  ggEndogenous/name
-					, 'uint32(roundup(float64(maxclaims_ha/'+ggEndogenous/name+') * MaxFactor))'
+					, 'uint32(roundup(float32(maxclaims_ha/'+ggEndogenous/name+') * MaxFactor))'
 					, RegioUnit
 					, uint32
 				);
@@ -209,7 +209,7 @@ are explained in this article and the description of the calculation rules refer
 			{
 				unit<uint16>          ThisIterRange                      := Range(IterRange, UInt16(0) , UInt16(nrIter));
 				attribute<String>     IterNames          (ThisIterRange) := 'iter'+String(ID(ThisIterRange));
-				attribute<claimHa>    TotalDeviations    (ThisIterRange) := ='add('+asItemList('Float64(ID(ThisIterRange)==value('+String(ID(ThisIterRange))+',ThisIterRange))*casedata/iterator/'+IterNames+'/TotalDeviation')+')';
+				attribute<claimHa>    TotalDeviations    (ThisIterRange) := ='add('+asItemList('Float32(ID(ThisIterRange)==value('+String(ID(ThisIterRange))+',ThisIterRange))*casedata/iterator/'+IterNames+'/TotalDeviation')+')';
 				attribute<Potentiaal> LogTotalDeviations (ThisIterRange) := log(TotalDeviations / 1[claimHa]);
 				parameter<Bool>       IsConverged                        := casedata/iterator/lastIter/IsConverged, Descr = "True if the last iteration meets the convergence criterion of the iteration template; if not, raise NrOfIterations.";
 			}
@@ -227,7 +227,7 @@ are explained in this article and the description of the calculation rules refer
 				attribute<DemandUnit> total_demand (domain):= casedata/iterator/lastIter/total_demand[CaseData/Compacted/BaseGrid];
 				attribute<EUR_M2>     land_price   (domain):= log(total_demand / value(1.0, DemandUnit)) / betaFactor;
 	
-				attribute <ggEndogenous> Dominant_ggEndogenous (domain):= ='CaseData/Land/FreeLand > domain/NrHaPerCell / 10d
+				attribute <ggEndogenous> Dominant_ggEndogenous (domain):= ='CaseData/Land/FreeLand > domain/NrHaPerCell / 10f
 																				? argmax('+asItemList(ggEndogenous/Name)+')[ggEndogenous]
 																				: (0/0)[ggEndogenous]';
 			}
