@@ -87,9 +87,10 @@ container A1_GE
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  	//The 50 km line is switched off because it takes about half of the calculation time. To use it, remove the // at the start of the line, otherwise its weight does nothing.
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/residential
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/residential
-  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/residential
+  		 // +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/residential
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
@@ -140,9 +141,10 @@ container A1_GE
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  	//The 50 km line is switched off because it takes about half of the calculation time. To use it, remove the // at the start of the line, otherwise its weight does nothing.
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/industrial
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/industrial
-  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/industrial
+  		 // +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/industrial
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
@@ -194,9 +196,10 @@ container A1_GE
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  	//The 50 km line is switched off because it takes about half of the calculation time. To use it, remove the // at the start of the line, otherwise its weight does nothing.
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/recreation
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/recreation
-  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/recreation
+  		 // +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/recreation
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
@@ -247,9 +250,10 @@ container A1_GE
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  	//The 50 km line is switched off because it takes about half of the calculation time. To use it, remove the // at the start of the line, otherwise its weight does nothing.
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/nature
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/nature
-  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/nature
+  		 // +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/nature
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
@@ -301,9 +305,10 @@ container A1_GE
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  	//The 50 km line is switched off because it takes about half of the calculation time. To use it, remove the // at the start of the line, otherwise its weight does nothing.
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/agriculture
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/agriculture
-  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/agriculture
+  		 // +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/agriculture
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
@@ -354,9 +359,10 @@ container A1_GE
   	//Distance decay maps
   	//Only distance relations with the same land-use type are included here, but others can be included by copy-pasting and adjusting the lines below
   	//Available distance ranges: 100m through 500m, 1km, 2.5km, 5km, 10km, 25km, 50km
+  	//The 50 km line is switched off because it takes about half of the calculation time. To use it, remove the // at the start of the line, otherwise its weight does nothing.
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km1/buildinglot
   		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km5/buildinglot
-  		 +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/buildinglot
+  		 // +  0.0 [Eur_M2] * Distance_Decay/landuse/Km50/buildinglot
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatura2000
   		 -  0.0 [Eur_M2] * Distance_Decay/PolicyMaps/Km1/IsNatureNetworkNL
  		; 
