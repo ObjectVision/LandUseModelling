@@ -33,7 +33,7 @@ container Current_landuse :=
 		   Classifications/ggModel/Name // name
 		  ,rdc_100m                     // domain unit
 		  ,ha                           // values units
-		  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/Advanced/StartYear)+'/bbg'+string(ModelParameters/Advanced/StartYear)+'_LUSdemo_100m_'+Classifications/ggModel/name+'.tif' // storage name
+		  ,'%projDir%/data/Current_situation/bbg_'+string(ModelParameters/Advanced/StartYear)+'/bbg'+string(ModelParameters/Advanced/StartYear)+'_LUSdemo_ext_100m_'+Classifications/ggModel/name+'.tif' // storage name
 		), IsHidden = "true";
 
 	parameter<YearRange> RefJaar              := value(ModelParameters/Advanced/StartYear, YearRange), IsHidden = "true";

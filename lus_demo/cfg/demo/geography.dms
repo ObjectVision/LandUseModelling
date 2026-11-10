@@ -122,6 +122,24 @@ container Geography: Using = "Units", isHidden = "True"
 			attribute<string>       prvnm;
 			attribute<Provincie>    Provincie_rel := rlookup(uint32(prvnr), Provincie/prvnr);
 		}
+
+		unit<UInt32> COROP
+		:	StorageName     = "%projDir%/data/geography/cbsgebiedsindelingen2026.gpkg"
+		,	StorageType     = "gdal.vect"
+		,	StorageReadOnly = "True"
+		,	SqlString       = "SELECT statcode, statnaam, geom FROM coropgebied_gegeneraliseerd"
+		,	Source          = "CBS, Gebiedsindelingen 2026: layer coropgebied_gegeneraliseerd of cbsgebiedsindelingen2026.gpkg"
+		,	URL             = "https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen"
+		,	Descr           = "The 40 COROP regions of 2026, a level between the provinces and the municipalities. Each region lies within one province; its claims are the claims of that province, divided over its COROP regions (Templates/Claims_per_LU_T)."
+		{
+			attribute<rdc_meter>    geometry          (poly);
+			attribute<String>       statcode;
+			attribute<String>       statnaam;
+			attribute<String>       label                   := statnaam;
+			attribute<Provincie>    Provincie_rel           := modus(Provincie/per_domain, poly2grid(geometry, domain)), Descr = "The province of the COROP region: the province of most of its cells.";
+			attribute<rdc_meter>    geometry_edge     (poly) := geos_buffer_multi_polygon(geometry, float64(/ModelParameters/Advanced/CoropEdge), 8b) * Provincie/geometry_edge[Provincie_rel], Descr = "The region with a margin of CoropEdge, within its own province.";
+			attribute<.>            per_domain      (domain) := MakeDefined(poly2grid(geometry, domain), poly2grid(geometry_edge, domain)), Descr = "The COROP region of each cell, by the midpoint of the cell. The CBS boundaries follow the coastline, while the provinces include the water; a cell outside all COROP regions gets a region of its own province within CoropEdge, so that the land on shores, salt marshes and flats is allocated as well.";
+		}
 		
 		unit<uint32> DijkRing
 		: StorageName = "%projDir%/data/geography/DijkRingen_2009.shp"

@@ -94,6 +94,7 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 				attribute<claimHa>      nature      (RegioUnit) := ../nature/Claim;
 				attribute<claimHa>      agriculture (RegioUnit) := ../agriculture/Claim;
 				attribute<claimHa>      buildinglot (RegioUnit) := ../buildinglot/Claim;
+				attribute<claimHa>      services    (RegioUnit) := ../services/Claim;
 			}
 		}
 	}
@@ -107,15 +108,29 @@ container Templates : isHidden = "True", Using = "Geography;Classifications"
 		attribute<OperatorType> Operator (RegioUnit) := const(1, RegioUnit, OperatorType);
 		attribute<EUR_M2>       logAj    (RegioUnit) := const(0, RegioUnit, Eur_m2);
 
-		parameter<String>       PeriodClaim := 'add('+AsItemList('float32('+string(ModelParameters/Advanced/ClaimYears/Weight)+') * Read_Excel/'+lu_name+'/'+scenario_name_short+'_'+ModelParameters/Advanced/ClaimYears/name+'[claimHa]')+')', Descr = "The claim from StartYear to ModelYear as a weighted sum of the cumulative claims per claim year.";
+		parameter<String>       ClaimSheet := lu_name == 'services' ? ModelParameters/Advanced/ClaimSheet_services : lu_name, Descr = "The sheet of the claims file this land-use type takes its claims from.";
+		parameter<String>       PeriodClaim := 'add('+AsItemList('float32('+string(ModelParameters/Advanced/ClaimYears/Weight)+') * Read_Excel/'+ClaimSheet+'/'+scenario_name_short+'_'+ModelParameters/Advanced/ClaimYears/name+'[claimHa]')+')', Descr = "The claim from StartYear to ModelYear as a weighted sum of the cumulative claims per claim year.";
 
 		attribute<claimHa>      Current_Provincie                                           (Provincie) := ='sum(Current_situation/current_landuse/'+lu_name+', Provincie/per_domain)';
-		attribute<claimHa>      Claim_Provincie                                             (Provincie) := ='rjoin(Provincie/prvnr, Read_Excel/'+lu_name+'/prvnr[uint32], '+PeriodClaim+')', Descr = "The claims per province from StartYear to ModelYear, joined on the code prvnr and not on the order of the rows.";
+		attribute<claimHa>      SheetClaim_Provincie                                        (Provincie) := ='rjoin(Provincie/prvnr, Read_Excel/'+ClaimSheet+'/prvnr[uint32], '+PeriodClaim+')', Descr = "The claims per province from StartYear to ModelYear in the sheet ClaimSheet, joined on the code prvnr and not on the order of the rows.";
+		attribute<claimHa>      Claim_Provincie                                             (Provincie) := =ClaimSheet == ModelParameters/Advanced/ClaimSheet_services
+																															? 'SheetClaim_Provincie * (Current_Provincie / (../'+ClaimSheet+'/Current_Provincie + ../services/Current_Provincie))'
+																															: 'SheetClaim_Provincie'
+		, Descr = "The claims per province. Services and the type of ClaimSheet_services divide the claims of that sheet in proportion to their current area in the province.";
 		attribute<claimHa>      Total_Provincie                                             (Provincie) := Current_Provincie + Claim_Provincie;
 
 		attribute<claimHa>      Current_RandstadIntermediatePeripheral (RandstadIntermediatePeripheral) := ='sum(Current_situation/current_landuse/'+lu_name+', RandstadIntermediatePeripheral/per_domain)';
 		attribute<claimHa>      Claim_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := sum(Claim_Provincie, Provincie/Landsdelen_rel), Descr = "The claims per landsdeel: the sum of the claims of its provinces.";
 		attribute<claimHa>      Total_RandstadIntermediatePeripheral   (RandstadIntermediatePeripheral) := Current_RandstadIntermediatePeripheral + Claim_RandstadIntermediatePeripheral;
+
+		attribute<claimHa>      Current_COROP                                                   (COROP) := ='sum(Current_situation/current_landuse/'+lu_name+', COROP/per_domain)';
+		attribute<float32>      Share_COROP                                                     (COROP) := Current_COROP / sum(Current_COROP, COROP/Provincie_rel)[COROP/Provincie_rel], Descr = "The share of the COROP region in the current area of this land-use type in its province.";
+		attribute<claimHa>      ShareClaim_COROP                                                (COROP) := Claim_Provincie[COROP/Provincie_rel] * Share_COROP, Descr = "The claim of the province, divided over its COROP regions in proportion to their current area of this land-use type.";
+		attribute<claimHa>      Claim_COROP                                                     (COROP) := =lu_name == ModelParameters/Advanced/ClaimRest_COROP
+																															? 'ShareClaim_COROP - add('+AsItemList('../'+/Classifications/ggEndogenous/name+'/ShareClaim_COROP')+')'
+																															: 'ShareClaim_COROP'
+		, Descr = "The claims per COROP region. The type of ClaimRest_COROP takes the rest: its share of the claim of the province minus the shares of all types, so that the claims of a COROP region add up to zero, as the claims per province do, and the claims per province stay the same.";
+		attribute<claimHa>      Total_COROP                                                     (COROP) := Current_COROP + Claim_COROP;
 
 		attribute<claimHa>      Current                                                     (RegioUnit) := ='Current_'+ModelParameters/RegioUnit_str;
 		attribute<claimHa>      Claim                                                       (RegioUnit) := ='Claim_'+ModelParameters/RegioUnit_str;

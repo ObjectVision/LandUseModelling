@@ -182,5 +182,6 @@ container Thematic_maps
 		attribute<bool>        IsDangerousTransport (domain) := impl/Dangerous_transport[domain/rdc_100m_rel];
 		attribute<FloodZonesK> FloodHazardZones    (domain) := modus(impl/FloodHazardZones, rdc_100m/domain_rel);
 		attribute<bool>        HasFloodHazard      (domain) := FloodHazardZones >= FloodZonesK/v/moderate; //opties op volgorde: 'Nihil','Gering_20','Gering_200','Enigszins_gevaarlijk','Gevaarlijk','Zeer_gevaarlijk'
+		attribute<float32>     FloodProbability    (domain) := MakeDefined(min(RegionalUnits/DijkRing/NormPeriod) / RegionalUnits/DijkRing/NormPeriod[RegionalUnits/DijkRing/per_domain], 0f), Descr = "Flood probability per year of the dike ring that protects the cell (1 / NormPeriod), as a share of the highest probability of all dike rings: 1 for the dike ring with the lowest safety standard, 0 outside the dike rings. The high grounds outside the dike rings need no dikes; the river beds are in Policy_maps/Water/IsReservedForRivers.";
 	}
 }

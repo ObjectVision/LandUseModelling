@@ -19,7 +19,7 @@
 container Classifications: Using = "Units", isHidden = "True"
 {
 	// =========== landusesTypering
-	unit<uint8> ggModel: NrOfRows = 9 // @USERINPUT: keep in sync with the actual nr of model classes
+	unit<uint8> ggModel: NrOfRows = 10 // @USERINPUT: keep in sync with the actual nr of model classes
 	{
 		unit<uint32>      Elements:= Range(uint32, 0, nrAttr*#ggModel)
 		{
@@ -33,7 +33,8 @@ container Classifications: Using = "Units", isHidden = "True"
 			'buildinglot',		'FALSE',		'128','128','128',	'FALSE',	'1.3',
 			'infrastructure',	'TRUE',			'128','0','0',		'FALSE',	'1.9',
 			'water',			'TRUE',			'159','255','255',	'FALSE',	'0',
-			'exterior',			'TRUE',			'255','255','228',	'FALSE',	'0'
+			'exterior',			'TRUE',			'255','255','228',	'FALSE',	'0',
+			'services',			'FALSE',		'254','150','0',	'TRUE',		'6'
 			];
 		}
 		attribute<String>       Name           :=        Elements/Text[value(UInt32(ID(.)) * nrAttr + 0, Elements)];

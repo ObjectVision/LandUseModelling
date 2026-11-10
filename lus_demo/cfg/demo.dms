@@ -32,7 +32,7 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 	{
 		parameter<string>    ModelResolution     := '100m'; // '100m' '500m'
 		parameter<bool>      EnableBackgroundMap := TRUE; // TRUE FALSE
-		parameter<string>    RegioUnit_str       := 'RandstadIntermediatePeripheral'; // RandstadIntermediatePeripheral Provincie
+		parameter<string>    RegioUnit_str       := 'COROP'; // RandstadIntermediatePeripheral Provincie COROP
 		
 		unit<UInt32>         RegioUnit           := ='Geography/RegionalUnits/'+RegioUnit_str;
 		
@@ -56,7 +56,10 @@ container LUS_Demo: IntegrityCheck = "GeoDMSVersion() >= 16.0"
 			parameter<float32>       OverrelaxationFactor := 1.9f, Descr = "Power on the correction of the balancing factors per iteration. 1 is formula (6b') of Hilferink & Rietveld (1999). A value between 1 and 2 finds the same solution in fewer iterations (overrelaxation of iterative proportional fitting); 2 or more can make the balancing diverge.";
 			parameter<claimHa>       MaxTotalDeviation := 100[claimHa], Descr = "The last iteration counts as converged if the total deviation of the claims is below this value. 100 ha is about 1% of the smallest claim of a land-use type in the delivered scenarios.";
 			parameter<Meter>         ProvinceEdge    := ModelResolution == '100m' ? 100[Meter] : 500[Meter], Descr = "A cell with its midpoint just outside all provinces gets the province within this distance. It equals the cell size, so that it reaches every cell that is partly within a province.";
+			parameter<Meter>         CoropEdge       := 10000[Meter], Descr = "A cell in a province but outside all COROP regions gets a COROP region of that province within this distance. 10 km reaches all land in the lakes and along the coast outside the CBS boundaries, such as the Marker Wadden.";
 			parameter<m2_Eur>        BetaFactor      := 1[m2_Eur];
+			parameter<String>        ClaimSheet_services     := 'residential', Descr = "Services has no claims of its own in the claims file; it shares the claims of this sheet with that land-use type, in proportion to their current area per province.";
+			parameter<String>        ClaimRest_COROP         := 'agriculture', Descr = "The land-use type that takes the rest of the claims in each COROP region, so that the claims of a region add up to zero, as agriculture does per province in the claims file.";
 			
 			unit<uint8> Scenarios : nrofrows = 5
 			{
