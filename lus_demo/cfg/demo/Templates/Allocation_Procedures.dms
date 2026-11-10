@@ -90,12 +90,14 @@ are explained in this article and the description of the calculation rules refer
 
 		container allocate_discrete
 		{ 
-			unit<uint32> ADomain       := Compacted/ADomain;
+			attribute<bool> IsDiscreteLand (domain) := CaseData/Land/FreeLand >= /ModelParameters/Advanced/MinFreeShareDiscrete * domain/NrHaPerCell && IsDefined(RegioUnit/per_domain), Descr = "Cells that get an endogenous land-use type in the discrete allocation; the other cells get their largest exogenous use.";
+
+			unit<uint32> ADomain := select_with_org_rel(IsDiscreteLand);
 
 			container SuitabilityMaps := 
 				for_each_nedv(
 					  ggEndogenous/name
-					, 'MakeDefined(Compacted/SuitabilityMaps/'+ggEndogenous/name+' * 100f, 0f)[int32]'
+					, 'MakeDefined(Suitabilities/'+ggEndogenous/name+'[ADomain/org_rel] * 100f, 0f)[int32]'
 					, ADomain
 					, Int32
 				);
@@ -103,7 +105,7 @@ are explained in this article and the description of the calculation rules refer
 			unit<uint32> AtomicRegions := RegioUnit
 			{
 				attribute<.> per_domain             (domain) := value(RegioUnit/per_domain, .);
-				attribute<.> per_Adomain           (ADomain) := collect_by_cond(Compacted/ADomain, Compacted/HasFreeLand, per_domain);
+				attribute<.> per_Adomain           (ADomain) := per_domain[ADomain/org_rel];
 			}
 			
 			attribute<AtomicRegions> AtomicRegionMap (ADomain) := AtomicRegions/per_ADomain;
@@ -124,9 +126,9 @@ are explained in this article and the description of the calculation rules refer
 					, uint32
 				);
 
-			attribute<uint32>  FreeCells (RegioUnit) := sum(uint32(Compacted/HasFreeLand), RegioUnit/per_domain), Descr = "Number of cells with free land per region; the discrete allocation gives each of them one land-use type.";
+			attribute<uint32>  FreeCells (RegioUnit) := sum(uint32(IsDiscreteLand), RegioUnit/per_domain), Descr = "Number of cells per region that take part in the discrete allocation; each of them gets one land-use type.";
 			attribute<float32> MinFactor (RegioUnit) := ='min_elem(1f, float32(FreeCells) / float32(add('+AsItemList('minclaims_ha/'+ggEndogenous/name)+')))', Descr = "Lowers the minimum claims of a region only if they add up to more cells than it has free.";
-			attribute<float32> MaxFactor (RegioUnit) := ='max_elem(1f, float32(FreeCells) / float32(add('+AsItemList('maxclaims_ha/'+ggEndogenous/name)+')))', Descr = "Raises the maximum claims of a region only if they add up to fewer cells than it has free. The claims are in hectares, while a cell that is partly water or infrastructure still gets a whole land-use type.";
+			attribute<float32> MaxFactor (RegioUnit) := ='max_elem(1f, float32(FreeCells) / float32(add('+AsItemList('maxclaims_ha/'+ggEndogenous/name)+')))', Descr = "Raises the maximum claims of a region only if they add up to fewer cells than it has free. The claims are in hectares, while a cell with some water or infrastructure still gets a whole land-use type.";
 
 			container minclaims :=
 				for_each_nedv(
@@ -158,7 +160,7 @@ are explained in this article and the description of the calculation rules refer
 					, treshold                            //para int32
 				)
 			{
-				attribute<ggEndogenous> landuse_grid (domain):= landuse[Compacted/BaseGrid];
+				attribute<ggEndogenous> landuse_grid (domain):= landuse[invert(ADomain/org_rel)];
 			}
 		}
 	}
@@ -237,7 +239,7 @@ are explained in this article and the description of the calculation rules refer
 			container LandUse
 			{
 				attribute<ggEndogenous>  Endogenous (domain) := casedata/allocate_discrete/result/landuse_grid, IntegrityCheck = "casedata/allocate_discrete/result/statusFlag", Descr = "Fails if the discrete allocation found no feasible solution; casedata/allocate_discrete/result/status says which claim could not be met.";
-				attribute<ggExogenous>   Exogenous  (domain) := ='casedata/compacted/HasFreeLand ? value(0 / 0,ggExogenous) : value(argmax('+asItemList(+'ExogenousLand/'+classifications/ggExogenous/name)+'), ggExogenous)';
+				attribute<ggExogenous>   Exogenous  (domain) := ='casedata/allocate_discrete/IsDiscreteLand ? value(0 / 0,ggExogenous) : value(argmax('+asItemList(+'ExogenousLand/'+classifications/ggExogenous/name)+'), ggExogenous)';
 				attribute<LUclasses>     Model      (domain) := MakeDefined(classifications/ggEndogenous/org_rel[Endogenous], classifications/ggExogenous/org_rel[Exogenous])[LUclasses];
 			}
 		}
