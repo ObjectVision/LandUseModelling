@@ -1,38 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<DocType name="GeoDmsMetaInfo">
-<DefaultInfo>
-	<FullName>/Temp/Temp2/GridData
-	</FullName>
-	<GeoDmsVersion>GeoDms 7.404 [Jan 10 2022]
-	</GeoDmsVersion>
-	<StatusFlags>0x45ff = AdminMode SuspendForGUI ShowStateColors TraceLogFile TreeViewVisible DetailsVisible EventLogVisible ToolBarVisible MultiThreading1 MultiThreading2 
-	</StatusFlags>
-</DefaultInfo>
-<Software>
-	<GeoDmsVersion>7.404
-	</GeoDmsVersion>
-</Software>
-<Config>
-	<FullName>/Temp/Temp2/GridData
-	</FullName>
-	<Expr>/SourceData/Beleid/Plancapaciteit/Werken/NL/per_domain_grid
-	</Expr>
-</Config>
-<Environment>
-	<Processor>Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
-	</Processor>
-	<User>jipcl
-	</User>
-	<ComputerName>DESKTOP-JJ6THCS
-	</ComputerName>
-</Environment>
-<Svn>
-	<RevisionInfo>SubWCRev: &apos;c:\GeoDMS\ProjDir\RSLight2021_ontwikkel&apos;<BR/>
-		Last committed at revision 8288<BR/>
-		Updated to revision 8312<BR/>
-		Local modifications found<BR/>
-		
-	</RevisionInfo>
-</Svn>
-</DocType>
