@@ -25,7 +25,7 @@ are explained in this article and the description of the calculation rules refer
 	container                Suitabilities     : Descr = "Scj:Suitability maps per cell per endogenous lu-type";
 	container                Additional_Claims : Descr = "Crj: Additional Claims per region per lu-type";
 	parameter<IterRange>     nrIter            : Descr = "Aantal iteraties voor het fitten van de claims met de beschikbare grond; de loop draait ze altijd allemaal, het stopcriterium in _IterTemplate gebruikt GeoDMS niet.";
-	parameter<m2_Eur>        betaFactor        : Descr = "Zie wiskundige beschrijving; hoog (5.0) geeft een scherp beeld na veel iteraties; laag (0.5) geeft meer verdeeld ruimtegebruik";
+	parameter<m2_Eur>        betaFactor        : Descr = "Weight of the suitability Scj in Mcj = Bc * Aj * exp(betaFactor * Scj). A high value makes the cells follow the suitability maps closely and tend to a single land-use type; a low value gives the cells more similar mixes of land use, a more homogeneous pattern.";
 	// End CaseParameters
 	
 	unit<UInt32>             RegioUnit         := /ModelParameters/RegioUnit, IsHidden = "true";
